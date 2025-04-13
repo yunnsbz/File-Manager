@@ -96,6 +96,9 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <property name="elideMode">
+       <enum>Qt::TextElideMode::ElideMiddle</enum>
+      </property>
       <property name="documentMode">
        <bool>true</bool>
       </property>
@@ -207,7 +210,7 @@
      <x>0</x>
      <y>0</y>
      <width>990</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuview">
@@ -263,7 +266,7 @@
   </widget>
   <action name="actionList_View">
    <property name="text">
-    <string>List View</string>
+    <string>Tree View</string>
    </property>
   </action>
   <action name="actionDetails_View">

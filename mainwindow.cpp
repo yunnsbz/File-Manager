@@ -73,3 +73,33 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     }
 }
 
+
+
+void MainWindow::on_splitter_splitterMoved(int pos, int )
+{
+    if(pos < 10 && treeActive ){
+        treeActive = false;
+        qDebug()<< "deactive";
+    }
+    else if(pos > 10 && !treeActive){
+        treeActive = true;
+        qDebug()<< "active";
+    }
+}
+
+
+void MainWindow::on_actionList_View_triggered()
+{
+    if(treeActive){
+        treeActive = false;
+        qDebug()<< "deactive";
+        ui->splitter->setSizes({0,400});
+    }
+    else{
+        treeActive = true;
+        qDebug()<< "active";
+        ui->splitter->setSizes({100,400});
+    }
+
+}
+

@@ -34,10 +34,15 @@ private slots:
     void on_tableView_doubleClicked(const QModelIndex &index);
     void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
+    void on_splitter_splitterMoved(int pos, int index);
+
+    void on_actionList_View_triggered();
 
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *FileModel;
+
+    bool treeActive = true;
 
 };
 #endif // MAINWINDOW_H
