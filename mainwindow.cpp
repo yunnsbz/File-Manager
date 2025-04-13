@@ -1,6 +1,7 @@
 #include "mainwindow.hpp"
 #include "./ui_mainwindow.h"
 #include <QFileSystemModel>
+#include <QAbstractButton>
 #include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -23,7 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->FileTreeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &MainWindow::onTreeSelectionChanged);
 
-
+    ui->splitter->setSizes({100,400});
+    SetTabUI();
     setWindowTitle("File-Manager");
     show();
 }
@@ -32,10 +34,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-auto MainWindow::getUI() -> Ui::MainWindow*
-{
-    return ui;
+void MainWindow::SetTabUI(){
+    // QTabWidget içindeki QTabBar'a erişim:
+    QTabBar *tabBar = ui->tabWidget->tabBar();
+
+    // Her sekme için close butonunu değiştir:
+    for (int i = 0; i < tabBar->count(); ++i) {
+        QWidget *tabButton = tabBar->tabButton(i, QTabBar::RightSide);
+        if (QAbstractButton *closeButton = qobject_cast<QAbstractButton*>(tabButton)) {
+            // Yeni ikon set et
+            QIcon myCloseIcon(":/icons/custom_close.png");
+            QIcon closeIcon = QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton);
+            closeButton->setIcon(closeIcon);
+            closeButton->setIconSize(QSize(12, 12)); // isteğe bağlı boyut
+        }
+    }
 }
+
 
 void MainWindow::on_actionExit_triggered()
 {

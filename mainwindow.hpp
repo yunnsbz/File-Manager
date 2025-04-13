@@ -24,9 +24,6 @@ public:
     auto operator = (MainWindow&&) noexcept -> MainWindow& = delete;
     ~MainWindow();
 
-    auto getUI() -> Ui::MainWindow*;
-
-
 protected:
 
 
@@ -38,5 +35,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *FileModel;
+
+    void SetTabUI();
 };
 #endif // MAINWINDOW_H
