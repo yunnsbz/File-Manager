@@ -6,15 +6,14 @@
 MainWindow::MainWindow(QWidget *parent)
     :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    FileModel(new QFileSystemModel(this))
 {
     ui->setupUi(this);
-    // Model oluştur
-    FileModel = new QFileSystemModel(this);
+
+    // tree view setup:
     FileModel->setRootPath("");
 
-
-    // UI'dan gelen QTreeView'e model bağla
     ui->FileTreeView->setModel(FileModel);
     ui->FileTreeView->setRootIndex(FileModel->index(FileModel->rootPath()));
     ui->FileTreeView->hideColumn(1);

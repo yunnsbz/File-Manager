@@ -13,6 +13,7 @@ int main(int argc, char **argv)
     wnd.show();
 
     return app.exec();
+
 }
 // NOLINTEND(readability-static-accessed-through-instance)
 // NOLINTEND(misc-include-cleaner)

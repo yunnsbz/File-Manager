@@ -6,18 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>804</width>
+    <width>881</width>
     <height>602</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="maximumSize">
    <size>
-    <width>1080</width>
-    <height>720</height>
+    <width>100000</width>
+    <height>100000</height>
    </size>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::FocusPolicy::StrongFocus</enum>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::DockOption::AllowNestedDocks|QMainWindow::DockOption::AllowTabbedDocks|QMainWindow::DockOption::AnimatedDocks|QMainWindow::DockOption::ForceTabbedDocks|QMainWindow::DockOption::GroupedDragging|QMainWindow::DockOption::VerticalTabs</set>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTreeView" name="FileTreeView">
@@ -33,7 +45,7 @@
      <bool>true</bool>
     </property>
     <property name="animated">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <attribute name="headerVisible">
      <bool>false</bool>
@@ -45,12 +57,48 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>804</width>
+     <width>881</width>
      <height>25</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuview">
+    <property name="title">
+     <string>view</string>
+    </property>
+    <addaction name="actionList_View"/>
+    <addaction name="actionDetails_View"/>
+    <addaction name="actionTiles_View"/>
+    <addaction name="actionColumn_View"/>
+    <addaction name="actionDual_Pane_View"/>
+   </widget>
+   <addaction name="menuview"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionList_View">
+   <property name="text">
+    <string>List View</string>
+   </property>
+  </action>
+  <action name="actionDetails_View">
+   <property name="text">
+    <string>Details View</string>
+   </property>
+  </action>
+  <action name="actionTiles_View">
+   <property name="text">
+    <string>Tiles View</string>
+   </property>
+  </action>
+  <action name="actionColumn_View">
+   <property name="text">
+    <string>Column View</string>
+   </property>
+  </action>
+  <action name="actionDual_Pane_View">
+   <property name="text">
+    <string>Dual Pane View</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
