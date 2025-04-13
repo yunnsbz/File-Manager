@@ -32,6 +32,7 @@ protected:
 
 private slots:
     void on_actionExit_triggered();
+    void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
 
 private:

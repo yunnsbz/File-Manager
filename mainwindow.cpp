@@ -20,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->FileTreeView->hideColumn(2);
     ui->FileTreeView->hideColumn(3);
 
+    connect(ui->FileTreeView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &MainWindow::onTreeSelectionChanged);
+
+
     setWindowTitle("File-Manager");
     show();
 }
@@ -36,5 +40,11 @@ auto MainWindow::getUI() -> Ui::MainWindow*
 void MainWindow::on_actionExit_triggered()
 {
     close();
+}
+void MainWindow::onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &)
+{
+    QString path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(current);
+    ui->label->setText(path);
+    ui->label->adjustSize();
 }
 
