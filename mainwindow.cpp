@@ -45,6 +45,7 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex &current, const QModel
 {
     QString path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(current);
     ui->label->setText(path);
-    ui->label->adjustSize();
+    ui->label->setAlignment(Qt::AlignRight);
+    ui->label->setMinimumSize(ui->label->sizeHint());
 }
 
