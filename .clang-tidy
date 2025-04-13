@@ -1,0 +1,53 @@
+Checks: '
+   *,
+  -altera-unroll-loops,
+  -altera-id-dependent-backward-branch,
+
+  -bugprone-easily-swappable-parameters,
+
+  -cppcoreguidelines-avoid-do-while,
+  -cppcoreguidelines-avoid-goto,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-explicit-virtual-functions,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -cppcoreguidelines-owning-memory,
+
+  -fuchsia-default-arguments-calls,
+  -fuchsia-default-arguments-declarations,
+  -fuchsia-overloaded-operator,
+  -fuchsia-trailing-return,
+
+  -google-readability-namespace-comments,
+
+  -hicpp-use-override,
+  -hicpp-avoid-goto,
+  -hicpp-uppercase-literal-suffix,
+
+  -llvm-header-guard,
+  -llvm-inline-function-decl,
+  -llvm-include-order,
+  -llvm-namespace-comment,
+
+  -llvmlibc-callee-namespace,
+  -llvmlibc-implementation-in-namespace,
+  -llvmlibc-inline-function-decl,
+  -llvmlibc-restrict-system-libc-headers,
+
+  -misc-non-private-member-variables-in-classes,
+
+  -modernize-use-override,
+
+  -readability-function-cognitive-complexity,
+  -readability-magic-numbers,
+  -readability-redundant-access-specifiers,
+  -readability-redundant-inline-specifier,
+  -readability-simplify-boolean-expr,
+  -readability-uppercase-literal-suffix
+'
+
+CheckOptions:
+  - key: misc-include-cleaner.IgnoreHeaders
+    value: '.*/FatPound\.hpp'
+
+WarningsAsErrors: false
+HeaderFilterRegex: '(.*\.hpp)'

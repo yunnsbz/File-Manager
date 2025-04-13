@@ -2,13 +2,17 @@
 
 #include <QApplication>
 
-int main(int argc, char *argv[])
+// NOLINTBEGIN(misc-include-cleaner)
+// NOLINTBEGIN(readability-static-accessed-through-instance)
+int main(int argc, char **argv)
 {
-    QApplication a(argc, argv);
+    const QApplication app(argc, argv);
 
-    MainWindow w{};
-    w.setWindowTitle("File-Manager");
-    w.show();
+    MainWindow wnd{};
+    wnd.setWindowTitle("File-Manager");
+    wnd.show();
 
-    return a.exec();
+    return app.exec();
 }
+// NOLINTEND(readability-static-accessed-through-instance)
+// NOLINTEND(misc-include-cleaner)
