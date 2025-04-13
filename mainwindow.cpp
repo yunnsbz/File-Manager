@@ -32,3 +32,9 @@ auto MainWindow::getUI() -> Ui::MainWindow*
 {
     return ui;
 }
+
+void MainWindow::on_actionExit_triggered()
+{
+    close();
+}
+

@@ -30,6 +30,10 @@ public:
 protected:
 
 
+private slots:
+    void on_actionExit_triggered();
+
+
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *FileModel;
