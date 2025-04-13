@@ -32,10 +32,13 @@ private slots:
     void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
 
+    void on_FileTreeView_doubleClicked(const QModelIndex &index);
+
+    void on_tableView_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *FileModel;
 
-    void SetTabUI();
 };
 #endif // MAINWINDOW_H
