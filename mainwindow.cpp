@@ -11,12 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     // Model oluştur
     FileModel = new QFileSystemModel(this);
-    FileModel->setRootPath(QDir::rootPath());
+    FileModel->setRootPath("");
 
 
     // UI'dan gelen QTreeView'e model bağla
     ui->FileTreeView->setModel(FileModel);
-    ui->FileTreeView->setRootIndex(FileModel->index(QDir::rootPath()));
+    ui->FileTreeView->setRootIndex(FileModel->index(FileModel->rootPath()));
     ui->FileTreeView->hideColumn(1);
     ui->FileTreeView->hideColumn(2);
     ui->FileTreeView->hideColumn(3);

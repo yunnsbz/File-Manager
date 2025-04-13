@@ -19,7 +19,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    Ui::MainWindow* getUI();
+
+    auto getUI() -> Ui::MainWindow*;
+
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *FileModel;
