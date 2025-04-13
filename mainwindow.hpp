@@ -5,7 +5,6 @@
 
 class QFileSystemModel;
 
-
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -26,6 +25,10 @@ public:
     ~MainWindow();
 
     auto getUI() -> Ui::MainWindow*;
+
+
+protected:
+
 
 private:
     Ui::MainWindow *ui;
