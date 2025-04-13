@@ -48,9 +48,5 @@ Checks: '
   -readability-uppercase-literal-suffix
 '
 
-CheckOptions:
-  - key: misc-include-cleaner.IgnoreHeaders
-    value: '.*/FatPound\.hpp'
-
 WarningsAsErrors: false
 HeaderFilterRegex: '(.*\.hpp)'
