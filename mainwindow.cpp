@@ -45,6 +45,7 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
 {
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(current);
     ui->label->setText(path);
+    // label default size (in the ui editor) should be bigger than needed
     ui->label->setMinimumSize(ui->label->sizeHint());
 }
 
