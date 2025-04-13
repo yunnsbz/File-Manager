@@ -41,11 +41,10 @@ void MainWindow::on_actionExit_triggered()
 {
     close();
 }
-void MainWindow::onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &)
+void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModelIndex&)
 {
-    QString path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(current);
+    const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(current);
     ui->label->setText(path);
-    ui->label->setAlignment(Qt::AlignRight);
     ui->label->setMinimumSize(ui->label->sizeHint());
 }
 

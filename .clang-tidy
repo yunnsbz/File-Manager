@@ -19,9 +19,10 @@ Checks: '
 
   -google-readability-namespace-comments,
 
-  -hicpp-use-override,
   -hicpp-avoid-goto,
+  -hicpp-named-parameter,
   -hicpp-uppercase-literal-suffix,
+  -hicpp-use-override,
 
   -llvm-header-guard,
   -llvm-inline-function-decl,
@@ -40,6 +41,7 @@ Checks: '
 
   -readability-function-cognitive-complexity,
   -readability-magic-numbers,
+  -readability-named-parameter,
   -readability-redundant-access-specifiers,
   -readability-redundant-inline-specifier,
   -readability-simplify-boolean-expr,
