@@ -139,7 +139,7 @@ void MainWindow::on_actionList_View_triggered()
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
-    if(ui->tabWidget->count() != 1){
+    if(ui->tabWidget->count() > 1){
         // move widget before closing current tab:
         if(ui->tabWidget->currentIndex() == index){
             if(index >=1){
@@ -150,6 +150,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
             }
         }
         ui->tabWidget->removeTab(index);
+        lastLeftTabIndex = ui->tabWidget->currentIndex();
     }
     else{
         // ilk tab içeriğini sıfırla
@@ -191,7 +192,7 @@ void MainWindow::MoveTabWidget(int index)
 void MainWindow::on_tabWidget_tabBarClicked(int index)
 {
     // Aynı sekmeye tıklanmadıysa
-    if (index != lastLeftTabIndex) {
+    if (index != lastLeftTabIndex && index != -1) {
         MoveTabWidget(index);
     }
 }
