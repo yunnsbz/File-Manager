@@ -19,13 +19,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->FileTreeView->hideColumn(1);
     ui->FileTreeView->hideColumn(2);
     ui->FileTreeView->hideColumn(3);
-}
 
+    setWindowTitle("File-Manager");
+    show();
+}
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-Ui::MainWindow* MainWindow::getUI(){
+auto MainWindow::getUI() -> Ui::MainWindow*
+{
     return ui;
 }

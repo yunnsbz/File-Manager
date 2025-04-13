@@ -17,7 +17,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
+
+    explicit MainWindow(const MainWindow&)                 = delete;
+    explicit MainWindow(MainWindow&&) noexcept             = delete;
+    auto operator = (const MainWindow&)     -> MainWindow& = delete;
+    auto operator = (MainWindow&&) noexcept -> MainWindow& = delete;
     ~MainWindow();
 
     auto getUI() -> Ui::MainWindow*;
