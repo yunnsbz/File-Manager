@@ -47,6 +47,9 @@ private:
     QFileSystemModel *FileModel;
 
     void setupTabs();
+    void MoveTabWidget(int index);
+    void SetTabContent(QWidget* tabWidget);
+    void SetTabContentToDefault();
 
     // treeView is collapsed or not:
     bool treeActive = true;
@@ -55,7 +58,7 @@ private:
     int lastLeftTabIndex = 0;
     int lastRightTabIndex = 0;
 
-
-    void MoveTabWidget(int index);
+    QMap<QWidget*, QString> tabFilePathMap;
+    void SetFileIndexMap();
 };
 #endif // MAINWINDOW_H
