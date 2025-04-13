@@ -14,17 +14,21 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // tree view setup:
+    // disk directory
     FileModel->setRootPath("");
-
     ui->FileTreeView->setModel(FileModel);
     ui->FileTreeView->setRootIndex(FileModel->index(FileModel->rootPath()));
+
+    // hiding unnecessary columns
     ui->FileTreeView->hideColumn(1);
     ui->FileTreeView->hideColumn(2);
     ui->FileTreeView->hideColumn(3);
 
+    // table view setup:
     ui->tableView->setModel(FileModel);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
+    // get FileTreeView changes for command label
     connect(ui->FileTreeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &MainWindow::onTreeSelectionChanged);
 
@@ -64,6 +68,10 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     if(!FileModel->hasChildren(index)){
         const QString filePath = FileModel->filePath(index);
         QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
+    }
+    else{
+        ui->tableView->setRootIndex(index);
+        ui->FileTreeView->expand(index);
     }
 }
 
