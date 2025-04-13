@@ -3,6 +3,7 @@
 #include <QFileSystemModel>
 #include <QAbstractButton>
 #include <QDesktopServices>
+#include <QToolButton>
 #include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -29,6 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
     // table view setup:
     ui->tableView->setModel(FileModel);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    // tab widget setup:
+    setupTabs();
 
     // get FileTreeView changes for command label
     connect(ui->FileTreeView->selectionModel(), &QItemSelectionModel::currentChanged,
@@ -71,19 +75,50 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
         ui->tableView->setRootIndex(index);
         ui->FileTreeView->expand(index);
     }
+
+
+
 }
 
+void MainWindow::setupTabs() {
+    // Başlangıçta bir sekme ve bir '+' sekmesi ekle
+    ui->tabWidget->removeTab(1);
+
+    QToolButton* addTabButton = new QToolButton();
+    addTabButton->setText("+");
+    ui->tabWidget->setCornerWidget(addTabButton, Qt::TopLeftCorner);
+
+    // add button onClick:
+    connect(addTabButton, &QToolButton::clicked, this, [this]() {
+        // Mevcut sekmedeki içerikleri al
+        QWidget* currentTabContent = ui->tabWidget->currentWidget();
+
+        // Eğer current tab'da bir splitter varsa
+        QSplitter* currentSplitter = currentTabContent->findChild<QSplitter*>();
+
+        if (currentSplitter) {
+            // Yeni bir widget oluştur (sekme için container)
+            QWidget* newTabWidget = new QWidget();
+            QVBoxLayout* layout = new QVBoxLayout(newTabWidget);
+            layout->addWidget(currentSplitter);  // Mevcut splitter'ı ekle
+            layout->setContentsMargins(0,0,0,0);
+
+            // Yeni sekmeye ekle
+            ui->tabWidget->addTab(newTabWidget, "Yeni Sekme");
+            ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);  // Yeni sekmeye geç
+            lastLeftTabIndex = ui->tabWidget->count() - 1;
+        }
+    });
+}
 
 
 void MainWindow::on_splitter_splitterMoved(int pos, int )
 {
     if(pos < 10 && treeActive ){
         treeActive = false;
-        qDebug()<< "deactive";
     }
     else if(pos > 10 && !treeActive){
         treeActive = true;
-        qDebug()<< "active";
     }
 }
 
@@ -92,14 +127,74 @@ void MainWindow::on_actionList_View_triggered()
 {
     if(treeActive){
         treeActive = false;
-        qDebug()<< "deactive";
         ui->splitter->setSizes({0,400});
     }
     else{
         treeActive = true;
-        qDebug()<< "active";
         ui->splitter->setSizes({100,400});
     }
 
 }
+
+
+void MainWindow::on_tabWidget_tabCloseRequested(int index)
+{
+    if(ui->tabWidget->count() != 1){
+        // move widget before closing current tab:
+        if(ui->tabWidget->currentIndex() == index){
+            if(index >=1){
+                MoveTabWidget(index-1);
+            }
+            else{
+                MoveTabWidget(index+1);
+            }
+        }
+        ui->tabWidget->removeTab(index);
+    }
+    else{
+        // ilk tab içeriğini sıfırla
+        qDebug()<< "silinemiyor";
+    }
+}
+
+
+
+
+void MainWindow::MoveTabWidget(int index)
+{
+    QWidget* currentTabContent = ui->tabWidget->widget(lastLeftTabIndex);
+    QSplitter* currentSplitter = currentTabContent->findChild<QSplitter*>();
+
+    if (currentSplitter) {
+        qDebug() << "tab bar clicked:" << index;
+
+        // Splitter'ı mevcut yerinden kopar
+        currentSplitter->setParent(nullptr);
+
+        // Yeni container oluştur
+        auto* newTabWidget = new QWidget();
+        auto* layout = new QVBoxLayout(newTabWidget);
+        layout->addWidget(currentSplitter);
+        layout->setContentsMargins(0, 0, 0, 0);
+
+        // Yeni sekmeyi oluştur
+        ui->tabWidget->insertTab(index, newTabWidget, ui->tabWidget->tabText(index));
+        ui->tabWidget->removeTab(index + 1); // eski widget'ı kaldır
+        ui->tabWidget->setCurrentIndex(index);
+
+        lastLeftTabIndex = index;
+    } else {
+        qDebug() << "null";
+    }
+}
+
+void MainWindow::on_tabWidget_tabBarClicked(int index)
+{
+    // Aynı sekmeye tıklanmadıysa
+    if (index != lastLeftTabIndex) {
+        MoveTabWidget(index);
+    }
+}
+
+
 

@@ -38,11 +38,24 @@ private slots:
 
     void on_actionList_View_triggered();
 
+    void on_tabWidget_tabCloseRequested(int index);
+
+    void on_tabWidget_tabBarClicked(int index);
+
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *FileModel;
 
+    void setupTabs();
+
+    // treeView is collapsed or not:
     bool treeActive = true;
 
+    // last opened tabs (when moving to another tab system should know the last one)
+    int lastLeftTabIndex = 0;
+    int lastRightTabIndex = 0;
+
+
+    void MoveTabWidget(int index);
 };
 #endif // MAINWINDOW_H
