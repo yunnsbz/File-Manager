@@ -55,16 +55,12 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
     // label default size (in the ui editor) should be bigger than needed
     ui->label->setMinimumSize(ui->label->sizeHint());
 }
-
-
 void MainWindow::on_FileTreeView_doubleClicked(const QModelIndex &index)
 {
     if(FileModel->hasChildren(index)) {
         ui->tableView->setRootIndex(index);
     }
 }
-
-
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
     if(!FileModel->hasChildren(index)){

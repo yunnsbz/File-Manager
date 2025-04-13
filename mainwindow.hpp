@@ -24,17 +24,16 @@ public:
     auto operator = (MainWindow&&) noexcept -> MainWindow& = delete;
     ~MainWindow();
 
+
 protected:
 
 
 private slots:
     void on_actionExit_triggered();
+    void on_FileTreeView_doubleClicked(const QModelIndex &index);
+    void on_tableView_doubleClicked(const QModelIndex &index);
     void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
-
-    void on_FileTreeView_doubleClicked(const QModelIndex &index);
-
-    void on_tableView_doubleClicked(const QModelIndex &index);
 
 private:
     Ui::MainWindow *ui;
