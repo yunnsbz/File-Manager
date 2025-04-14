@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // tab widget setup:
     tabManager = new TabManager(ui->tabWidget, FileModel, this);
-    tabManager->setup();
+
 
     // tree view setup:
     // disk directory
@@ -51,7 +51,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
