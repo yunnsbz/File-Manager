@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 
+
 class QFileSystemModel;
+class TabManager;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,7 +26,8 @@ public:
     auto operator = (MainWindow&&) noexcept -> MainWindow& = delete;
     ~MainWindow();
 
-
+    void SetTabContent(int tabIndex);
+    void setDefaultContent();
 protected:
 
 
@@ -43,32 +46,17 @@ private slots:
 
     void on_FileTreeView_clicked(const QModelIndex &index);
 
-    void onTabMoved(int from, int to);
-
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *FileModel;
-
+    TabManager* tabManager;
 
     bool eventFilter(QObject* obj, QEvent* event) override;
-
-    void setupTabs();
-    void addNewTab();
-    void MoveTabWidget(int index);
-    void SetTabContent(int tabIndex);
-    void SetTabContentToDefault();
 
     // treeView is collapsed or not:
     bool treeActive = true;
 
-    // last opened tabs (when moving to another tab system should know the last one)
-    int lastLeftTabIndex = 0;
-    int lastRightTabIndex = 0;
-
     // tree view expanded Indexes
     QList<QList<QModelIndex>> tabsExpandedIndexes;
-
-    QMap<int, QModelIndex> tabContentMap;
-    void SetFileIndexMap();
 };
 #endif // MAINWINDOW_H

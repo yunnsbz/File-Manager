@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "TabManager.h"
 #include "./ui_mainwindow.h"
 #include <QFileSystemModel>
 #include <QAbstractButton>
@@ -12,10 +13,15 @@ MainWindow::MainWindow(QWidget *parent)
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     FileModel(new QFileSystemModel(this))
+
 {
     ui->setupUi(this);
 
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
+
+    // tab widget setup:
+    tabManager = new TabManager(ui->tabWidget, FileModel, this);
+    tabManager->setup();
 
     // tree view setup:
     // disk directory
@@ -32,9 +38,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->setModel(FileModel);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    // tab widget setup:
-    setupTabs();
-
     // get FileTreeView changes for command label
     connect(ui->FileTreeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &MainWindow::onTreeSelectionChanged);
@@ -49,90 +52,26 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// sekme içeriğini kaydetmek içindir.
-void MainWindow::SetFileIndexMap()
-{
-    auto currentTab = ui->tabWidget->currentIndex();
-    const QModelIndex index = ui->tableView->rootIndex();
-    tabContentMap[currentTab] = index;
-}
+
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
     if (obj == ui->tabWidget && event->type() == QEvent::MouseButtonPress) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->button() == Qt::MiddleButton) {
-            addNewTab();
+            tabManager->addNewTab();
             return true; // event işlendiyse true dön
         }
     }
     return QMainWindow::eventFilter(obj, event);
 }
 
-
-// yeni sekme ekleme butonunun eklenmesi, işlevi ve ilk açılıştaki sekmeleri ayarlama
-void MainWindow::setupTabs() {
-    // Başlangıçta bir sekme ve bir '+' sekmesi ekle
-    ui->tabWidget->removeTab(1);
-
-    connect(ui->tabWidget->tabBar(), &QTabBar::tabMoved, this, &MainWindow::onTabMoved);
-
-    auto* addTabButton = new QToolButton();
-    addTabButton->setText("+");
-    ui->tabWidget->setCornerWidget(addTabButton, Qt::TopLeftCorner);
-
-    // add button onClick:
-    connect(addTabButton, &QToolButton::clicked, this, &MainWindow::addNewTab);
-
-    ui->tabWidget->installEventFilter(this);
-}
-
-void MainWindow::onTabMoved(int to, int from) {
-    qDebug() << "Sekme" << from << "indeksinden" << to << "indeksine taşındı";
-
-    if (from == to) return;
-
-    // İki öğeyi birbirleriyle takas et
-    QModelIndex temp = tabContentMap.value(from);
-    tabContentMap[from] = tabContentMap.value(to);
-    tabContentMap[to] = temp;
-
-    if(from == lastLeftTabIndex){
-        lastLeftTabIndex = to;
-    }else if(to == lastRightTabIndex){
-        lastLeftTabIndex = from;
-    }
-}
-
-void MainWindow::addNewTab()
-{
-    QWidget* currentTabWidget = ui->tabWidget->currentWidget();
-    auto* currentSplitter = currentTabWidget->findChild<QSplitter*>();
-
-    if (currentSplitter != nullptr) {
-        auto* newTabWidget = new QWidget();
-        auto* layout = new QVBoxLayout(newTabWidget);
-        layout->addWidget(currentSplitter);
-        layout->setContentsMargins(0,0,0,0);
-
-        ui->tabWidget->addTab(newTabWidget, "Yeni Sekme");
-        ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
-        lastLeftTabIndex = ui->tabWidget->count() - 1;
-
-        SetTabContent(ui->tabWidget->currentIndex());
-    }
-}
-
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
 void MainWindow::SetTabContent(int tabIndex){
-    if (!tabContentMap.contains(tabIndex)){
-        SetTabContentToDefault();
-        return;
-    }
 
-    const QModelIndex index = tabContentMap[tabIndex];
+    auto index = tabManager->getTabModelIndex(tabIndex);
 
     if (!index.isValid()){
-        SetTabContentToDefault();
+        setDefaultContent();
         return;
     }
     ui->FileTreeView->collapseAll();
@@ -142,38 +81,12 @@ void MainWindow::SetTabContent(int tabIndex){
 }
 
 // sekme içerisindeki view'ların default index'e getirilmesi:
-void MainWindow::SetTabContentToDefault(){
+void MainWindow::setDefaultContent(){
     FileModel->setRootPath("");
     const QModelIndex index = FileModel->index(FileModel->rootPath());
     ui->FileTreeView->setRootIndex(index);
     ui->FileTreeView->collapseAll();
     ui->tableView->setRootIndex(index);
-}
-
-// sekme içerisini kopyalamak yerine taşıyarak sekmeler arasında geçiş yaparız
-void MainWindow::MoveTabWidget(int index)
-{
-    QWidget* currentTabWidget = ui->tabWidget->widget(lastLeftTabIndex);
-    QSplitter* currentSplitter = currentTabWidget->findChild<QSplitter*>();
-
-    if (currentSplitter != nullptr) {
-
-        // Splitter'ı mevcut yerinden kopar
-        currentSplitter->setParent(nullptr);
-
-        // Yeni container oluştur
-        auto* newTabWidget = new QWidget();
-        auto* layout = new QVBoxLayout(newTabWidget);
-        layout->addWidget(currentSplitter);
-        layout->setContentsMargins(0, 0, 0, 0);
-
-        // Yeni sekmeyi oluştur
-        ui->tabWidget->insertTab(index, newTabWidget, ui->tabWidget->tabText(index));
-        ui->tabWidget->removeTab(index + 1); // eski widget'ı kaldır
-        ui->tabWidget->setCurrentIndex(index);
-
-        lastLeftTabIndex = index;
-    }
 }
 
 void MainWindow::on_actionExit_triggered()
@@ -198,7 +111,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     else{
         ui->tableView->setRootIndex(index);
         ui->FileTreeView->expand(index);
-        SetFileIndexMap();
+        tabManager->setFileIndexMap(ui->tableView);
     }
 }
 
@@ -231,14 +144,14 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
         // move widget before closing current tab:
         if(ui->tabWidget->currentIndex() == index){
             if(index >=1){
-                MoveTabWidget(index-1);
+                tabManager->moveTabWidget(index-1);
             }
             else{
-                MoveTabWidget(index+1);
+                tabManager->moveTabWidget(index+1);
             }
         }
         ui->tabWidget->removeTab(index);
-        lastLeftTabIndex = ui->tabWidget->currentIndex();
+        tabManager->setLastLeftTabIndex(ui->tabWidget->currentIndex());
     }
     else{
         // ilk tab içeriğini sıfırla
@@ -249,8 +162,8 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 void MainWindow::on_tabWidget_tabBarClicked(int index)
 {
     // Aynı sekmeye tıklanmadıysa
-    if (index != lastLeftTabIndex && index != -1) {
-        MoveTabWidget(index);
+    if (index != tabManager->getLastLeftTabIndex() && index != -1) {
+        tabManager->moveTabWidget(index);
         SetTabContent(index);
     }
 }
@@ -260,7 +173,7 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &index)
 {
     if(FileModel->hasChildren(index)) {
         ui->tableView->setRootIndex(index);
-        SetFileIndexMap();
+        tabManager->setFileIndexMap(ui->tableView);
     }
 
     // single click tree expanding and collapsing:
