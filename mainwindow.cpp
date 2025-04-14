@@ -54,7 +54,7 @@ void MainWindow::SetFileIndexMap()
 {
     auto* currentTab = ui->tabWidget->currentWidget();
     const QModelIndex index = ui->tableView->currentIndex();
-    QString path = FileModel->filePath(index);
+    const QString path = FileModel->filePath(index);
     tabFilePathMap[currentTab] = path;
 }
 
@@ -87,8 +87,8 @@ void MainWindow::setupTabs() {
 
 void MainWindow::addNewTab()
 {
-    QWidget* currentTabContent = ui->tabWidget->currentWidget();
-    auto* currentSplitter = currentTabContent->findChild<QSplitter*>();
+    QWidget* currentTabWidget = ui->tabWidget->currentWidget();
+    auto* currentSplitter = currentTabWidget->findChild<QSplitter*>();
 
     if (currentSplitter != nullptr) {
         auto* newTabWidget = new QWidget();
@@ -124,7 +124,7 @@ void MainWindow::SetTabContent(QWidget* tabWidget){
     ui->tableView->setRootIndex(index);
 }
 
-// sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
+// sekme içerisindeki view'ların default index'e getirilmesi:
 void MainWindow::SetTabContentToDefault(){
     FileModel->setRootPath("");
     const QModelIndex index = FileModel->index(FileModel->rootPath());
@@ -136,8 +136,8 @@ void MainWindow::SetTabContentToDefault(){
 // sekme içerisini kopyalamak yerine taşıyarak sekmeler arasında geçiş yaparız
 void MainWindow::MoveTabWidget(int index)
 {
-    QWidget* currentTabContent = ui->tabWidget->widget(lastLeftTabIndex);
-    QSplitter* currentSplitter = currentTabContent->findChild<QSplitter*>();
+    QWidget* currentTabWidget = ui->tabWidget->widget(lastLeftTabIndex);
+    QSplitter* currentSplitter = currentTabWidget->findChild<QSplitter*>();
 
     if (currentSplitter != nullptr) {
 
@@ -170,14 +170,6 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
     ui->label->setText(path);
     // label default size (in the ui editor) should be bigger than needed
     ui->label->setMinimumSize(ui->label->sizeHint());
-}
-
-void MainWindow::on_FileTreeView_doubleClicked(const QModelIndex &index)
-{
-    if(FileModel->hasChildren(index)) {
-        ui->tableView->setRootIndex(index);
-        SetFileIndexMap();
-    }
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
@@ -243,6 +235,23 @@ void MainWindow::on_tabWidget_tabBarClicked(int index)
     if (index != lastLeftTabIndex && index != -1) {
         MoveTabWidget(index);
         SetTabContent(ui->tabWidget->currentWidget());
+    }
+}
+
+
+void MainWindow::on_FileTreeView_clicked(const QModelIndex &index)
+{
+    if(FileModel->hasChildren(index)) {
+        ui->tableView->setRootIndex(index);
+        SetFileIndexMap();
+    }
+
+    // single click tree expanding and collapsing:
+    if(ui->FileTreeView->isExpanded(index)){
+        ui->FileTreeView->collapse(index);
+    }
+    else{
+        ui->FileTreeView->expand(index);
     }
 }
 
