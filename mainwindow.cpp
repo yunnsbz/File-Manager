@@ -139,7 +139,6 @@ void MainWindow::on_actionList_View_triggered()
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
-    qDebug() << index;
     if(ui->tabWidget->count() > 1){
         // move widget before closing current tab:
         if(ui->tabWidget->currentIndex() == index){

@@ -56,7 +56,7 @@ void TabManager::RemoveTabContent(int tabIndex)
 }
 
 void TabManager::onTabMoved(int to, int from) {
-    qDebug() << "Sekme" << from << "indeksinden" << to << "indeksine taşındı";
+    //qDebug() << "Sekme" << from << "indeksinden" << to << "indeksine taşındı";
 
     if (from == to) return;
 
@@ -84,7 +84,7 @@ void TabManager::addNewTab()
         layout->addWidget(currentSplitter);
         layout->setContentsMargins(0,0,0,0);
 
-        tabWidget->addTab(newTabWidget, "Yeni Sekme");
+        tabWidget->addTab(newTabWidget, "new tab");
         tabWidget->setCurrentIndex(tabWidget->count() - 1);
         lastLeftTabIndex = tabWidget->count() - 1;
 
