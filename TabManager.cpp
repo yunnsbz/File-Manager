@@ -1,9 +1,9 @@
 #include "TabManager.h"
 #include "mainwindow.hpp"
+
 #include <QToolButton>
 #include <QTabBar>
 #include <qboxlayout.h>
-
 
 TabManager::TabManager(QTabWidget* tabWidget, QFileSystemModel* fileModel, QObject* parent)
     :
@@ -12,12 +12,13 @@ TabManager::TabManager(QTabWidget* tabWidget, QFileSystemModel* fileModel, QObje
     fileModel(fileModel),
     mainWindow(static_cast<MainWindow*>(parent))
 {
-    // Başlangıçta tab setup yapılabilir
-    setup(); // bu senin daha önce yazdığın setupTabs() fonksiyonu olur.
+    Setup_();
 }
 
-// yeni sekme ekleme butonunun eklenmesi, işlevi ve ilk açılıştaki sekmeleri ayarlama
-void TabManager::setup() {
+void TabManager::Setup_()
+{
+    // yeni sekme ekleme butonunun eklenmesi, işlevi ve ilk açılıştaki sekmeleri ayarlama
+
     // Başlangıçta bir sekme ve bir '+' sekmesi ekle
     tabWidget->removeTab(1);
 
@@ -33,9 +34,10 @@ void TabManager::setup() {
     tabWidget->installEventFilter(this);
 }
 
-// sekme içeriğini kaydetmek içindir.
 void TabManager::setFileIndexMap(QTableView* tableView)
 {
+    // sekme içeriğini kaydetmek için
+
     auto currentTab = tabWidget->currentIndex();
     const QModelIndex index = tableView->rootIndex();
     tabContentMap[currentTab] = index;
@@ -43,7 +45,8 @@ void TabManager::setFileIndexMap(QTableView* tableView)
 
 QModelIndex TabManager::getTabModelIndex(int tabIndex) const
 {
-    if (!tabContentMap.contains(tabIndex)){
+    if (!tabContentMap.contains(tabIndex))
+    {
         return QModelIndex();
     }
 
@@ -55,10 +58,14 @@ void TabManager::RemoveTabContent(int tabIndex)
     tabContentMap.remove(tabIndex);
 }
 
-void TabManager::onTabMoved(int to, int from) {
+void TabManager::onTabMoved(int to, int from)
+{
     //qDebug() << "Sekme" << from << "indeksinden" << to << "indeksine taşındı";
 
-    if (from == to) return;
+    if (from == to)
+    {
+        return;
+    }
 
     // İki öğeyi birbirleriyle takas et
     QModelIndex temp = tabContentMap.value(from);
@@ -66,23 +73,27 @@ void TabManager::onTabMoved(int to, int from) {
     tabContentMap[to] = temp;
 
     // lastLeftTabIndex is the one moved it should register
-    if(from == lastLeftTabIndex){
+    if (from == lastLeftTabIndex)
+    {
         lastLeftTabIndex = to;
-    }else if(to == lastRightTabIndex){
+    }
+    else if (to == lastRightTabIndex)
+    {
         lastLeftTabIndex = from;
     }
 }
 
 void TabManager::addNewTab()
 {
-    QWidget* currentTabWidget = tabWidget->currentWidget();
-    auto* currentSplitter = currentTabWidget->findChild<QSplitter*>();
+    auto* currentTabWidget = tabWidget->currentWidget();
+    auto* currentSplitter  = currentTabWidget->findChild<QSplitter*>();
 
-    if (currentSplitter != nullptr) {
+    if (currentSplitter != nullptr)
+    {
         auto* newTabWidget = new QWidget();
         auto* layout = new QVBoxLayout(newTabWidget);
         layout->addWidget(currentSplitter);
-        layout->setContentsMargins(0,0,0,0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         tabWidget->addTab(newTabWidget, "new tab");
         tabWidget->setCurrentIndex(tabWidget->count() - 1);
@@ -92,14 +103,15 @@ void TabManager::addNewTab()
     }
 }
 
-// sekme içerisini kopyalamak yerine taşıyarak sekmeler arasında geçiş yaparız
 void TabManager::moveTabWidget(int index)
 {
-    QWidget* currentTabWidget = tabWidget->widget(lastLeftTabIndex);
-    QSplitter* currentSplitter = currentTabWidget->findChild<QSplitter*>();
+    // sekme içerisini kopyalamak yerine taşıyarak sekmeler arasında geçiş yaparız
 
-    if (currentSplitter != nullptr) {
+    auto* currentTabWidget = tabWidget->widget(lastLeftTabIndex);
+    auto* currentSplitter = currentTabWidget->findChild<QSplitter*>();
 
+    if (currentSplitter != nullptr)
+    {
         // Splitter'ı mevcut yerinden kopar
         currentSplitter->setParent(nullptr);
 
@@ -117,5 +129,3 @@ void TabManager::moveTabWidget(int index)
         lastLeftTabIndex = index;
     }
 }
-
-

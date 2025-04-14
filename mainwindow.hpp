@@ -28,30 +28,32 @@ public:
 
     void SetTabContent(int tabIndex);
     void setDefaultContent();
+
+
 protected:
 
 
 private slots:
+    void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void on_actionExit_triggered();
     void on_tableView_doubleClicked(const QModelIndex &index);
-    void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
-
     void on_splitter_splitterMoved(int pos, int index);
-
     void on_actionList_View_triggered();
-
     void on_tabWidget_tabCloseRequested(int index);
-
     void on_tabWidget_tabBarClicked(int index);
-
     void on_FileTreeView_clicked(const QModelIndex &index);
 
+
+// member functions
+private:
+    bool eventFilter(QObject* obj, QEvent* event) override;
+
+
+// member variables
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *FileModel;
     TabManager* tabManager;
-
-    bool eventFilter(QObject* obj, QEvent* event) override;
 
     // treeView is collapsed or not:
     bool treeActive = true;
