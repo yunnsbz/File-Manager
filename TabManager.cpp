@@ -9,7 +9,8 @@ TabManager::TabManager(QTabWidget* tabWidget, QFileSystemModel* fileModel, QObje
     :
     QObject(parent),
     tabWidget(tabWidget),
-    fileModel(fileModel)
+    fileModel(fileModel),
+    mainWindow(static_cast<MainWindow*>(parent))
 {
     // Başlangıçta tab setup yapılabilir
     setup(); // bu senin daha önce yazdığın setupTabs() fonksiyonu olur.
