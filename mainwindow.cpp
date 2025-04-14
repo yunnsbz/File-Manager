@@ -52,10 +52,9 @@ MainWindow::~MainWindow()
 // sekme içeriğini kaydetmek içindir.
 void MainWindow::SetFileIndexMap()
 {
-    auto* currentTab = ui->tabWidget->currentWidget();
-    const QModelIndex index = ui->tableView->currentIndex();
-    const QString path = FileModel->filePath(index);
-    tabFilePathMap[currentTab] = path;
+    auto currentTab = ui->tabWidget->currentIndex();
+    const QModelIndex index = ui->tableView->rootIndex();
+    tabContentMap[currentTab] = index;
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
@@ -75,6 +74,8 @@ void MainWindow::setupTabs() {
     // Başlangıçta bir sekme ve bir '+' sekmesi ekle
     ui->tabWidget->removeTab(1);
 
+    connect(ui->tabWidget->tabBar(), &QTabBar::tabMoved, this, &MainWindow::onTabMoved);
+
     auto* addTabButton = new QToolButton();
     addTabButton->setText("+");
     ui->tabWidget->setCornerWidget(addTabButton, Qt::TopLeftCorner);
@@ -83,6 +84,23 @@ void MainWindow::setupTabs() {
     connect(addTabButton, &QToolButton::clicked, this, &MainWindow::addNewTab);
 
     ui->tabWidget->installEventFilter(this);
+}
+
+void MainWindow::onTabMoved(int to, int from) {
+    qDebug() << "Sekme" << from << "indeksinden" << to << "indeksine taşındı";
+
+    if (from == to) return;
+
+    // İki öğeyi birbirleriyle takas et
+    QModelIndex temp = tabContentMap.value(from);
+    tabContentMap[from] = tabContentMap.value(to);
+    tabContentMap[to] = temp;
+
+    if(from == lastLeftTabIndex){
+        lastLeftTabIndex = to;
+    }else if(to == lastRightTabIndex){
+        lastLeftTabIndex = from;
+    }
 }
 
 void MainWindow::addNewTab()
@@ -99,25 +117,24 @@ void MainWindow::addNewTab()
         ui->tabWidget->addTab(newTabWidget, "Yeni Sekme");
         ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
         lastLeftTabIndex = ui->tabWidget->count() - 1;
-        SetTabContent(ui->tabWidget->currentWidget());
+
+        SetTabContent(ui->tabWidget->currentIndex());
     }
 }
 
-
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
-void MainWindow::SetTabContent(QWidget* tabWidget){
-    if (!tabFilePathMap.contains(tabWidget)){
+void MainWindow::SetTabContent(int tabIndex){
+    if (!tabContentMap.contains(tabIndex)){
         SetTabContentToDefault();
         return;
     }
-    const QString path = tabFilePathMap[tabWidget];
-    const QModelIndex index = FileModel->index(path);
+
+    const QModelIndex index = tabContentMap[tabIndex];
 
     if (!index.isValid()){
         SetTabContentToDefault();
         return;
     }
-    ui->FileTreeView->setRootIndex(index);
     ui->FileTreeView->collapseAll();
     ui->FileTreeView->expand(index);
 
@@ -225,7 +242,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     }
     else{
         // ilk tab içeriğini sıfırla
-        SetTabContent(ui->tabWidget->currentWidget());
+        SetTabContent(ui->tabWidget->currentIndex());
     }
 }
 
@@ -234,7 +251,7 @@ void MainWindow::on_tabWidget_tabBarClicked(int index)
     // Aynı sekmeye tıklanmadıysa
     if (index != lastLeftTabIndex && index != -1) {
         MoveTabWidget(index);
-        SetTabContent(ui->tabWidget->currentWidget());
+        SetTabContent(index);
     }
 }
 
@@ -252,6 +269,7 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &index)
     }
     else{
         ui->FileTreeView->expand(index);
+        //tabsExpandedIndexes.value(ui->tabWidget->currentIndex()).append(index);
     }
 }
 

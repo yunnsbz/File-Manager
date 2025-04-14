@@ -43,6 +43,8 @@ private slots:
 
     void on_FileTreeView_clicked(const QModelIndex &index);
 
+    void onTabMoved(int from, int to);
+
 private:
     Ui::MainWindow *ui;
     QFileSystemModel *FileModel;
@@ -53,7 +55,7 @@ private:
     void setupTabs();
     void addNewTab();
     void MoveTabWidget(int index);
-    void SetTabContent(QWidget* tabWidget);
+    void SetTabContent(int tabIndex);
     void SetTabContentToDefault();
 
     // treeView is collapsed or not:
@@ -63,7 +65,10 @@ private:
     int lastLeftTabIndex = 0;
     int lastRightTabIndex = 0;
 
-    QMap<QWidget*, QString> tabFilePathMap;
+    // tree view expanded Indexes
+    QList<QList<QModelIndex>> tabsExpandedIndexes;
+
+    QMap<int, QModelIndex> tabContentMap;
     void SetFileIndexMap();
 };
 #endif // MAINWINDOW_H
