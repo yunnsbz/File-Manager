@@ -46,7 +46,11 @@ private:
     Ui::MainWindow *ui;
     QFileSystemModel *FileModel;
 
+
+    bool eventFilter(QObject* obj, QEvent* event) override;
+
     void setupTabs();
+    void addNewTab();
     void MoveTabWidget(int index);
     void SetTabContent(QWidget* tabWidget);
     void SetTabContentToDefault();

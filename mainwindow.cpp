@@ -58,6 +58,18 @@ void MainWindow::SetFileIndexMap()
     tabFilePathMap[currentTab] = path;
 }
 
+bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
+    if (obj == ui->tabWidget && event->type() == QEvent::MouseButtonPress) {
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+        if (mouseEvent->button() == Qt::MiddleButton) {
+            addNewTab();
+            return true; // event işlendiyse true dön
+        }
+    }
+    return QMainWindow::eventFilter(obj, event);
+}
+
+
 // yeni sekme ekleme butonunun eklenmesi, işlevi ve ilk açılıştaki sekmeleri ayarlama
 void MainWindow::setupTabs() {
     // Başlangıçta bir sekme ve bir '+' sekmesi ekle
@@ -68,28 +80,29 @@ void MainWindow::setupTabs() {
     ui->tabWidget->setCornerWidget(addTabButton, Qt::TopLeftCorner);
 
     // add button onClick:
-    connect(addTabButton, &QToolButton::clicked, this, [this]() {
-        // Mevcut sekmedeki içerikleri al
-        QWidget* currentTabContent = ui->tabWidget->currentWidget();
+    connect(addTabButton, &QToolButton::clicked, this, &MainWindow::addNewTab);
 
-        // Eğer current tab'da bir splitter varsa
-        auto* currentSplitter = currentTabContent->findChild<QSplitter*>();
-
-        if (currentSplitter != nullptr) {
-            // Yeni bir widget oluştur (sekme için container)
-            auto* newTabWidget = new QWidget();
-            auto* layout = new QVBoxLayout(newTabWidget);
-            layout->addWidget(currentSplitter);  // Mevcut splitter'ı ekle
-            layout->setContentsMargins(0,0,0,0);
-
-            // Yeni sekmeye ekle
-            ui->tabWidget->addTab(newTabWidget, "Yeni Sekme");
-            ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);  // Yeni sekmeye geç
-            lastLeftTabIndex = ui->tabWidget->count() - 1;
-            SetTabContent(ui->tabWidget->currentWidget());
-        }
-    });
+    ui->tabWidget->installEventFilter(this);
 }
+
+void MainWindow::addNewTab()
+{
+    QWidget* currentTabContent = ui->tabWidget->currentWidget();
+    auto* currentSplitter = currentTabContent->findChild<QSplitter*>();
+
+    if (currentSplitter != nullptr) {
+        auto* newTabWidget = new QWidget();
+        auto* layout = new QVBoxLayout(newTabWidget);
+        layout->addWidget(currentSplitter);
+        layout->setContentsMargins(0,0,0,0);
+
+        ui->tabWidget->addTab(newTabWidget, "Yeni Sekme");
+        ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
+        lastLeftTabIndex = ui->tabWidget->count() - 1;
+        SetTabContent(ui->tabWidget->currentWidget());
+    }
+}
+
 
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
 void MainWindow::SetTabContent(QWidget* tabWidget){
@@ -126,7 +139,7 @@ void MainWindow::MoveTabWidget(int index)
     QWidget* currentTabContent = ui->tabWidget->widget(lastLeftTabIndex);
     QSplitter* currentSplitter = currentTabContent->findChild<QSplitter*>();
 
-    if (currentSplitter) {
+    if (currentSplitter != nullptr) {
 
         // Splitter'ı mevcut yerinden kopar
         currentSplitter->setParent(nullptr);
