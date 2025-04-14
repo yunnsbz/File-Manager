@@ -50,6 +50,11 @@ QModelIndex TabManager::getTabModelIndex(int tabIndex) const
     return tabContentMap[tabIndex];
 }
 
+void TabManager::RemoveTabContent(int tabIndex)
+{
+    tabContentMap.remove(tabIndex);
+}
+
 void TabManager::onTabMoved(int to, int from) {
     qDebug() << "Sekme" << from << "indeksinden" << to << "indeksine taşındı";
 

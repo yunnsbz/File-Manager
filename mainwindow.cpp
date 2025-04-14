@@ -139,6 +139,7 @@ void MainWindow::on_actionList_View_triggered()
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
+    qDebug() << index;
     if(ui->tabWidget->count() > 1){
         // move widget before closing current tab:
         if(ui->tabWidget->currentIndex() == index){
@@ -150,12 +151,10 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
             }
         }
         ui->tabWidget->removeTab(index);
+        tabManager->RemoveTabContent(index);
         tabManager->setLastLeftTabIndex(ui->tabWidget->currentIndex());
     }
-    else{
-        // ilk tab içeriğini sıfırla
-        SetTabContent(ui->tabWidget->currentIndex());
-    }
+    SetTabContent(ui->tabWidget->currentIndex());
 }
 
 void MainWindow::on_tabWidget_tabBarClicked(int index)

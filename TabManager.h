@@ -29,6 +29,8 @@ public:
     void onTabClicked(int index);
     QModelIndex getTabModelIndex(int tabIndex) const;
 
+    void RemoveTabContent(int tabIndex);
+
     // setters:
     void setLastLeftTabIndex(int value){lastLeftTabIndex = value;}
 
