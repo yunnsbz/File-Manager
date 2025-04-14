@@ -1,4 +1,4 @@
-#[[FatSettings]]#
+#[[ fatpound ]]#
 
 add_library (CompileOptions INTERFACE)
 
@@ -6,7 +6,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     target_compile_options(CompileOptions INTERFACE
         ##################################
         -pedantic # Conform to ISO/IEC C++
-
+        
 
         ## Active warnings
         -Wall
@@ -20,7 +20,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
         ## Preprocessor
         -DFAT_BUILDING_WITH_MSVC=0
-
+        
 
         ## Configuration-specific
         $<$<CONFIG:Debug>:
@@ -31,6 +31,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         $<$<CONFIG:Release>:
             -O2
         >
+
+        ## Standard library
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME}, Linux>:
+            -stdlib=libstdc++
+        >
     )
 
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
@@ -38,7 +43,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "
         ##################################
         -pedantic # Conform to ISO/IEC C++
 
-
+        
         ## Active warnings
         -Weverything
 
@@ -46,7 +51,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "
         ## Inactive warnings
         -Wno-c++98-compat
         -Wno-c++98-compat-pedantic
-
+        
         -Wno-c++20-compat
         -Wno-c++20-extensions
 
@@ -61,11 +66,16 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "
         ## Configuration-specific
         $<$<CONFIG:Debug>:
             -O0
-
+            
             -Werror
         >
         $<$<CONFIG:Release>:
             -O2
+        >
+
+        ## Standard library
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME}, Linux>:
+            -stdlib=libc++
         >
     )
 
@@ -87,13 +97,13 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         /wd4514 # Unreferenced inline function has been removed
         /wd4820 # n bytes padding added after construct MyClass
         /wd5045 # Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
-        /wd5246 # outdated warning, the initialization of a subobject should be wrapped in braces
-
+	    /wd5246 # outdated warning, the initialization of a subobject should be wrapped in braces
+        
 
         ## Preprocessor
         -DFAT_BUILDING_WITH_MSVC=1
 
-
+        
         ## Configuration-specific
         $<$<CONFIG:Debug>:
             /Od
