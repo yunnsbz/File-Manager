@@ -168,11 +168,30 @@ void MainWindow::on_actionList_View_triggered()
     {
         treeActive = false;
         ui->splitter->setSizes({0,400});
+
+        // sürüklemeyi devre dışı bırakma:
+        for (int i = 0; i < 2; ++i)
+        {
+            QSplitterHandle* handle = ui->splitter->handle(i);
+            if (handle)
+            {
+                handle->setEnabled(false);
+            }
+        }
     }
     else
     {
         treeActive = true;
         ui->splitter->setSizes({100,400});
+        //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
+        for (int i = 0; i < 2; ++i)
+        {
+            QSplitterHandle* handle = ui->splitter->handle(i);
+            if (handle)
+            {
+                handle->setEnabled(true);
+            }
+        }
     }
 }
 
