@@ -189,7 +189,7 @@
           <bool>false</bool>
          </property>
          <property name="text">
-          <string>etiket</string>
+          <string>_</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -418,10 +418,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionList_View">
-   <property name="icon">
-    <iconset>
-     <normaloff>:/resources/img/file-tree.svg</normaloff>:/resources/img/file-tree.svg</iconset>
-   </property>
    <property name="text">
     <string>Tree View</string>
    </property>
@@ -443,19 +439,11 @@
    </property>
   </action>
   <action name="actionColumn_View">
-   <property name="icon">
-    <iconset>
-     <normaloff>:/resources/img/columns-white.svg</normaloff>:/resources/img/columns-white.svg</iconset>
-   </property>
    <property name="text">
     <string>Column View</string>
    </property>
   </action>
   <action name="actionDual_Pane_View">
-   <property name="icon">
-    <iconset>
-     <normaloff>:/resources/img/dual-pane.svg</normaloff>:/resources/img/dual-pane.svg</iconset>
-   </property>
    <property name="text">
     <string>Dual Pane View</string>
    </property>

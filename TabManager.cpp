@@ -46,10 +46,7 @@ void TabManager::Setup_()
         QString path = fileModel->filePath(index);
         int currentTab = tabWidget->currentIndex();
         tabContentMap[currentTab].ExpandedPaths.remove(path);
-
-
     });
-
 
     tabWidget->installEventFilter(this);
 }

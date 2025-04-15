@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QStyleFactory>
+#include <qdir.h>
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 int main(int argc, char **argv)
@@ -10,41 +11,14 @@ int main(int argc, char **argv)
 
     const MainWindow wnd{};
 
-    QString styleSheet = R"(
+    // style:
+    QString qss;
+    QFile file1(":/resources/styles/style.qss");
 
-    QToolButton {
-        background-color: #00000000;
-        border: none;
-        padding: 5px;
-        border-radius: 5px;
-    }
+    file1.open(QFile::ReadOnly);
 
-    QTabWidget QToolButton {
-        padding: 5px 5px 8px 5px;
-        height: 100%;
-    }
-
-    QTabBar::tab {
-        background-color: #22222255;
-        padding: 3px 20px;
-        border: none;
-        border-radius: 5px;
-        margin-left: 2px;
-    }
-    QTabBar::tab:selected {
-        background: #222222ff;
-    }
-
-    QToolButton:hover {
-        background-color: #999;
-    }
-    QToolButton:pressed {
-        background-color: #555;
-    }
-)";
-
-    qApp->setStyleSheet(styleSheet);
-    app.setStyle("windows11");
+    qss += file1.readAll();
+    qApp->setStyleSheet(qss);
 
     return app.exec();
 

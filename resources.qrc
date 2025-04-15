@@ -1,13 +1,5 @@
 <RCC>
     <qresource prefix="/resources">
-        <file>img/arrow-left.svg</file>
-        <file>img/arrow-left-white.svg</file>
-        <file>img/arrow-right.svg</file>
-        <file>img/arrow-right-white.svg</file>
-        <file>img/columns-white.svg</file>
-        <file>img/dual-pane.svg</file>
-        <file>img/file-tree.svg</file>
-        <file>img/sidebar-white.svg</file>
         <file>styles/style.qss</file>
     </qresource>
 </RCC>
