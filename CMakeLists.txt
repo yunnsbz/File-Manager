@@ -29,6 +29,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         .clang-tidy
         TabManager.h
         TabManager.cpp
+        ToolBarManager.h
+        ToolBarManager.cpp
+        resources.qrc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET File-Manager APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

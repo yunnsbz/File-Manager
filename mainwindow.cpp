@@ -1,6 +1,7 @@
 #include "mainwindow.hpp"
 #include "TabManager.h"
 #include "./ui_mainwindow.h"
+#include "ToolBarManager.h"
 
 #include <QFileSystemModel>
 #include <QAbstractButton>
@@ -22,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     // tab widget setup:
     tabManager = new TabManager(ui->tabWidget, FileModel, this);
 
+    // tool bar setup:
+    toolBarManager = new ToolBarManager(ui->toolBar,this);
 
     // tree view setup:
     // disk directory
@@ -210,3 +213,9 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &index)
         //tabsExpandedIndexes.value(ui->tabWidget->currentIndex()).append(index);
     }
 }
+
+void MainWindow::on_actionback_triggered()
+{
+
+}
+

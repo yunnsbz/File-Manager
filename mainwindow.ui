@@ -303,9 +303,6 @@
    <property name="checkable">
     <bool>false</bool>
    </property>
-   <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::DocumentRevert"/>
-   </property>
    <property name="text">
     <string>back</string>
    </property>
@@ -317,9 +314,6 @@
    </property>
   </action>
   <action name="actionforward">
-   <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::EditRedo"/>
-   </property>
    <property name="text">
     <string>forward</string>
    </property>
