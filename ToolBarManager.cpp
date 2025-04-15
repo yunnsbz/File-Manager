@@ -12,8 +12,8 @@ ToolBarManager::ToolBarManager(QToolBar *toolBar, QObject *parent)
 {
 
     // icon updates:
-    mainWindow->getUI()->actionback->setIcon(QIcon(":/resources/arrow-left-white.svg"));
+    mainWindow->getUI()->actionback->setIcon(QIcon(":/resources/img/arrow-left-white.svg"));
 
 
-    mainWindow->getUI()->actionforward->setIcon(QIcon(":/resources/arrow-right-white.svg"));
+    mainWindow->getUI()->actionforward->setIcon(QIcon(":/resources/img/arrow-right-white.svg"));
 }
