@@ -97,7 +97,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         /wd4514 # Unreferenced inline function has been removed
         /wd4820 # n bytes padding added after construct MyClass
         /wd5045 # Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
-	    /wd5246 # outdated warning, the initialization of a subobject should be wrapped in braces
+        /wd5246 # outdated warning, the initialization of a subobject should be wrapped in braces
         
 
         ## Preprocessor
@@ -112,6 +112,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         >
         $<$<CONFIG:Release>:
             /O2
+
             /GF # String pooling
             /GL # Whole-program optimization
 
