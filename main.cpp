@@ -21,15 +21,18 @@ int main(int argc, char **argv)
 
     QTabWidget QToolButton {
         padding: 5px 5px 8px 5px;
+        height: 100%;
     }
 
     QTabBar::tab {
-        background: #444;
-        color: white;
-        padding: 3px 10px;
+        background-color: #22222255;
+        padding: 3px 20px;
         border: none;
         border-radius: 5px;
         margin-left: 2px;
+    }
+    QTabBar::tab:selected {
+        background: #222222ff;
     }
 
     QToolButton:hover {
@@ -38,7 +41,7 @@ int main(int argc, char **argv)
 )";
 
     qApp->setStyleSheet(styleSheet);
-
+    app.setStyle("windows11");
 
     return app.exec();
 
