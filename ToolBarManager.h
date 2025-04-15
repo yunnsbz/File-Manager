@@ -12,7 +12,8 @@ class ToolBarManager : public QObject{
 
 public:
     explicit ToolBarManager(QHBoxLayout* toolBar, QObject* parent);
-
+    void SetBackButtonEnabled(bool enabled);
+    void SetForwardButtonEnabled(bool enabled);
 
 private:
     QHBoxLayout* toolBar;

@@ -20,13 +20,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
-    // tab widget setup:
-    tabManager = new TabManager(ui->tabWidget, FileModel, this);
-
-
-
     // tool bar setup:
     toolBarManager = new ToolBarManager(ui->toolBar,this);
+
+    // tab widget setup:
+    tabManager = new TabManager(ui->tabWidget, FileModel, toolBarManager, this);
 
     // tree view setup:
     // disk directory
@@ -235,16 +233,14 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &index)
     }
 }
 
-void MainWindow::on_actionback_triggered()
+void MainWindow::on_toolBackButton_clicked()
 {
-
+    tabManager->onBackButtonClicked();
 }
 
 
-
-
-void MainWindow::on_toolBackButton_triggered(QAction*)
+void MainWindow::on_toolForwardButton_clicked()
 {
-
+    tabManager->onForwardButtonClicked();
 }
 

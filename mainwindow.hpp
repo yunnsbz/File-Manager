@@ -45,9 +45,9 @@ private slots:
     void on_tabWidget_tabBarClicked(int index);
     void on_FileTreeView_clicked(const QModelIndex &index);
 
+    void on_toolBackButton_clicked();
 
-// member functions
-    void on_actionback_triggered();
+    void on_toolForwardButton_clicked();
 
 private:
     bool eventFilter(QObject* obj, QEvent* event) override;

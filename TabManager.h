@@ -27,13 +27,14 @@ struct TabContent
 
 class QFileSystemModel;
 class MainWindow;
+class ToolBarManager;
 
 class TabManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit TabManager(QTabWidget* tabWidget, QFileSystemModel* fileModel, QObject* parent);
+    explicit TabManager(QTabWidget* tabWidget, QFileSystemModel* fileModel, ToolBarManager* toolBarManager, QObject* parent);
 
     void moveTabWidget(int index);
     void setFileIndexMap(QTableView* tableView);
@@ -41,6 +42,9 @@ public:
     void onTabClicked(int index);
 
     void RemoveTabContent(int tabIndex);
+    void onBackButtonClicked();
+    void onForwardButtonClicked();
+
 
     // getters:
     QModelIndex getTabModelIndex(int tabIndex) const;
@@ -69,8 +73,12 @@ private:
     QTabWidget* tabWidget;
     QFileSystemModel* fileModel;
     MainWindow* mainWindow;
+    ToolBarManager* toolBarManager;
 
     QMap<int, TabContent> tabContentMap;
+
+    QList<TabContent> BackHistoryTabContent;
+    QList<TabContent> ForwardHistoryTabContent;
 
     // last opened tabs (when moving to another tab system should know the last one)
     int lastRightTabIndex = 0;
