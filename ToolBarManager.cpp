@@ -4,16 +4,23 @@
 
 #include <QStyle>
 
-ToolBarManager::ToolBarManager(QToolBar *toolBar, QObject *parent)
+ToolBarManager::ToolBarManager(QHBoxLayout *toolBar, QObject *parent)
 :
     QObject(parent),
     toolBar(toolBar),
     mainWindow(static_cast<MainWindow*>(parent))
 {
+    // uygulama ilk açıldığında back ve forward history boş olur bu yüzden butonlar disable edilir.
+    mainWindow->getUI()->toolBackButton->setDisabled(true);
+    mainWindow->getUI()->toolForwardButton->setDisabled(true);
+}
 
-    // icon updates:
-    mainWindow->getUI()->actionback->setIcon(QIcon(":/resources/img/arrow-left-white.svg"));
+void ToolBarManager::SetBackButtonEnabled(bool enabled)
+{
+    mainWindow->getUI()->toolBackButton->setEnabled(enabled);
+}
 
-
-    mainWindow->getUI()->actionforward->setIcon(QIcon(":/resources/img/arrow-right-white.svg"));
+void ToolBarManager::SetForwardButtonEnabled(bool enabled)
+{
+    mainWindow->getUI()->toolForwardButton->setEnabled(enabled);
 }

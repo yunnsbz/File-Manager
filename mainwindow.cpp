@@ -20,11 +20,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
-    // tab widget setup:
-    tabManager = new TabManager(ui->tabWidget, FileModel, this);
-
     // tool bar setup:
     toolBarManager = new ToolBarManager(ui->toolBar,this);
+
+    // tab widget setup:
+    tabManager = new TabManager(ui->tabWidget, FileModel, toolBarManager, this);
 
     // tree view setup:
     // disk directory
@@ -79,6 +79,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
 void MainWindow::SetTabContent(int tabIndex)
 {
+    // set table view content:
     auto index = tabManager->getTabModelIndex(tabIndex);
 
     if (!index.isValid())
@@ -87,10 +88,26 @@ void MainWindow::SetTabContent(int tabIndex)
         return;
     }
 
-    ui->FileTreeView->collapseAll();
-    ui->FileTreeView->expand(index);
-
     ui->tableView->setRootIndex(index);
+
+    auto expandedPaths = tabManager->getTreeExpandedPaths(tabIndex);
+
+
+    // set tree view content:
+    if(expandedPaths.isEmpty())
+    {
+        setDefaultContent();
+        return;
+    }
+
+    ui->FileTreeView->collapseAll();
+
+    for (const QString& path : expandedPaths) {
+        QModelIndex index = FileModel->index(path);
+        if (index.isValid()) {
+            ui->FileTreeView->expand(index);
+        }
+    }
 }
 
 // sekme içerisindeki view'ların default index'e getirilmesi:
@@ -118,15 +135,17 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
-    if (!FileModel->hasChildren(index))
+    QModelIndex firstColumnIndex = index.siblingAtColumn(0); // her zaman ilk sütunu al
+
+    if (!FileModel->hasChildren(firstColumnIndex))
     {
         const QString filePath = FileModel->filePath(index);
         QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
     }
     else
     {
-        ui->tableView->setRootIndex(index);
-        ui->FileTreeView->expand(index);
+        ui->tableView->setRootIndex(firstColumnIndex);
+        ui->FileTreeView->expand(firstColumnIndex);
         tabManager->setFileIndexMap(ui->tableView);
     }
 }
@@ -149,11 +168,33 @@ void MainWindow::on_actionList_View_triggered()
     {
         treeActive = false;
         ui->splitter->setSizes({0,400});
+
+        // sürüklemeyi devre dışı bırakma:
+        for (int i = 0; i < 2; ++i)
+        {
+            QSplitterHandle* handle = ui->splitter->handle(i);
+            if (handle)
+            {
+                handle->setEnabled(false);
+            }
+        }
+        ui->splitter->setHandleWidth(0);
     }
     else
     {
         treeActive = true;
         ui->splitter->setSizes({100,400});
+        //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
+        for (int i = 0; i < 2; ++i)
+        {
+            QSplitterHandle* handle = ui->splitter->handle(i);
+            if (handle)
+            {
+                handle->setEnabled(true);
+            }
+        }
+
+        ui->splitter->setHandleWidth(5);
     }
 }
 
@@ -214,8 +255,14 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &index)
     }
 }
 
-void MainWindow::on_actionback_triggered()
+void MainWindow::on_toolBackButton_clicked()
 {
+    tabManager->onBackButtonClicked();
+}
 
+
+void MainWindow::on_toolForwardButton_clicked()
+{
+    tabManager->onForwardButtonClicked();
 }
 

@@ -1,16 +1,20 @@
 #include "TabManager.h"
 #include "mainwindow.hpp"
+#include "ui_mainwindow.h"
+#include "ToolBarManager.h"
 
 #include <QToolButton>
 #include <QTabBar>
 #include <qboxlayout.h>
+#include <qfilesystemmodel.h>
 
-TabManager::TabManager(QTabWidget* tabWidget, QFileSystemModel* fileModel, QObject* parent)
+TabManager::TabManager(QTabWidget* tabWidget, QFileSystemModel* fileModel, ToolBarManager* toolBarManager, QObject* parent)
     :
     QObject(parent),
     tabWidget(tabWidget),
     fileModel(fileModel),
-    mainWindow(static_cast<MainWindow*>(parent))
+    mainWindow(static_cast<MainWindow*>(parent)),
+    toolBarManager(toolBarManager)
 {
     Setup_();
 }
@@ -31,6 +35,19 @@ void TabManager::Setup_()
     // add button onClick:
     connect(addTabButton, &QToolButton::clicked, this, &TabManager::addNewTab);
 
+    // tree view açılma ve kapanma durumlarında değişiklikleri tabContents içine kaydetmeliyiz:
+    connect(mainWindow->getUI()->FileTreeView, &QTreeView::expanded, this, [=, this](const QModelIndex &index) {
+        QString path = fileModel->filePath(index);
+        int currentTab = tabWidget->currentIndex();
+        tabContentMap[currentTab].ExpandedPaths.insert(path);
+    });
+
+    connect(mainWindow->getUI()->FileTreeView, &QTreeView::collapsed, this, [=, this](const QModelIndex &index) {
+        QString path = fileModel->filePath(index);
+        int currentTab = tabWidget->currentIndex();
+        tabContentMap[currentTab].ExpandedPaths.remove(path);
+    });
+
     tabWidget->installEventFilter(this);
 }
 
@@ -40,7 +57,27 @@ void TabManager::setFileIndexMap(QTableView* tableView)
 
     auto currentTab = tabWidget->currentIndex();
     const QModelIndex index = tableView->rootIndex();
-    tabContentMap[currentTab] = index;
+
+    // sekme içeriğini tutan struct içerisinde indexsi set et. eğer yoksa tree view için expanded paths listesini de oluşturur.
+    if(tabContentMap.contains(currentTab))
+    {
+        // yeni bir yer açıldığında geçmiş set edilir
+        BackHistoryTabContent.append(tabContentMap[currentTab]);
+        qDebug()<< "history added";
+
+        // yeni index'e geç:
+        tabContentMap[currentTab].ModelIndex = index;
+    }
+    else
+    {
+        tabContentMap[currentTab] = TabContent(index,*new QSet<QString>());
+    }
+    // boş sayfa açıldığında ileri geçmiş silinir:
+    ForwardHistoryTabContent.clear();
+
+    // buton kontrolü:
+    toolBarManager->SetBackButtonEnabled(!BackHistoryTabContent.isEmpty());
+    toolBarManager->SetForwardButtonEnabled(!ForwardHistoryTabContent.isEmpty());
 }
 
 QModelIndex TabManager::getTabModelIndex(int tabIndex) const
@@ -50,12 +87,49 @@ QModelIndex TabManager::getTabModelIndex(int tabIndex) const
         return QModelIndex();
     }
 
-    return tabContentMap[tabIndex];
+    return tabContentMap[tabIndex].ModelIndex;
+}
+
+QSet<QString> TabManager::getTreeExpandedPaths(int tabIndex) const
+{
+    if (!tabContentMap.contains(tabIndex))
+    {
+        return QSet<QString>();
+    }
+    return tabContentMap[tabIndex].ExpandedPaths;
 }
 
 void TabManager::RemoveTabContent(int tabIndex)
 {
     tabContentMap.remove(tabIndex);
+}
+
+void TabManager::onBackButtonClicked()
+{
+    if (!BackHistoryTabContent.isEmpty()) {
+        ForwardHistoryTabContent.append(tabContentMap[tabWidget->currentIndex()]);
+        auto backContent = BackHistoryTabContent.takeLast();
+        tabContentMap[tabWidget->currentIndex()] = backContent;
+        mainWindow->SetTabContent(tabWidget->currentIndex());
+
+        // buton kontrolü:
+        toolBarManager->SetBackButtonEnabled(!BackHistoryTabContent.isEmpty());
+        toolBarManager->SetForwardButtonEnabled(!ForwardHistoryTabContent.isEmpty());
+    }
+}
+
+void TabManager::onForwardButtonClicked()
+{
+    if (!ForwardHistoryTabContent.isEmpty()) {
+        BackHistoryTabContent.append(tabContentMap[tabWidget->currentIndex()]);
+        auto backContent = ForwardHistoryTabContent.takeLast();
+        tabContentMap[tabWidget->currentIndex()] = backContent;
+        mainWindow->SetTabContent(tabWidget->currentIndex());
+
+        // buton kontrolü:
+        toolBarManager->SetBackButtonEnabled(!BackHistoryTabContent.isEmpty());
+        toolBarManager->SetForwardButtonEnabled(!ForwardHistoryTabContent.isEmpty());
+    }
 }
 
 void TabManager::onTabMoved(int to, int from)
@@ -68,7 +142,7 @@ void TabManager::onTabMoved(int to, int from)
     }
 
     // İki öğeyi birbirleriyle takas et
-    QModelIndex temp = tabContentMap.value(from);
+    TabContent temp = tabContentMap.value(from);
     tabContentMap[from] = tabContentMap.value(to);
     tabContentMap[to] = temp;
 
