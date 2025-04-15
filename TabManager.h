@@ -9,6 +9,22 @@
 #include <QTableView>
 #include <QTreeView>
 
+struct TabContent
+{
+    QModelIndex ModelIndex;
+
+    // for tree view
+    QSet<QString> ExpandedPaths;
+
+    TabContent() = default;
+    TabContent(QModelIndex ModelIndex, QSet<QString> ExpandedPaths)
+    {
+        this->ModelIndex = ModelIndex;
+        this->ExpandedPaths = ExpandedPaths;
+    }
+};
+
+
 class QFileSystemModel;
 class MainWindow;
 
@@ -29,6 +45,7 @@ public:
     // getters:
     QModelIndex getTabModelIndex(int tabIndex) const;
     int getLastLeftTabIndex(){return lastLeftTabIndex;}
+    QSet<QString> getTreeExpandedPaths(int tabIndex) const;
 
     // setters:
     void setLastLeftTabIndex(int value){lastLeftTabIndex = value;}
@@ -53,7 +70,7 @@ private:
     QFileSystemModel* fileModel;
     MainWindow* mainWindow;
 
-    QMap<int, QModelIndex> tabContentMap;
+    QMap<int, TabContent> tabContentMap;
 
     // last opened tabs (when moving to another tab system should know the last one)
     int lastRightTabIndex = 0;

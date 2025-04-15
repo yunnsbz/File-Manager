@@ -1,9 +1,11 @@
 #include "TabManager.h"
 #include "mainwindow.hpp"
+#include "ui_mainwindow.h"
 
 #include <QToolButton>
 #include <QTabBar>
 #include <qboxlayout.h>
+#include <qfilesystemmodel.h>
 
 TabManager::TabManager(QTabWidget* tabWidget, QFileSystemModel* fileModel, QObject* parent)
     :
@@ -31,6 +33,20 @@ void TabManager::Setup_()
     // add button onClick:
     connect(addTabButton, &QToolButton::clicked, this, &TabManager::addNewTab);
 
+    // tree view açılma ve kapanma durumlarında değişiklikleri tabContents içine kaydetmeliyiz:
+    connect(mainWindow->getUI()->FileTreeView, &QTreeView::expanded, this, [=, this](const QModelIndex &index) {
+        QString path = fileModel->filePath(index);
+        int currentTab = tabWidget->currentIndex();
+        tabContentMap[currentTab].ExpandedPaths.insert(path);
+    });
+
+    connect(mainWindow->getUI()->FileTreeView, &QTreeView::collapsed, this, [=, this](const QModelIndex &index) {
+        QString path = fileModel->filePath(index);
+        int currentTab = tabWidget->currentIndex();
+        tabContentMap[currentTab].ExpandedPaths.remove(path);
+    });
+
+
     tabWidget->installEventFilter(this);
 }
 
@@ -40,7 +56,16 @@ void TabManager::setFileIndexMap(QTableView* tableView)
 
     auto currentTab = tabWidget->currentIndex();
     const QModelIndex index = tableView->rootIndex();
-    tabContentMap[currentTab] = index;
+
+    // sekme içeriğini tutan struct içerisinde indexsi set et. eğer yoksa tree view için expanded paths listesini de oluşturur.
+    if(tabContentMap.contains(currentTab)){
+        tabContentMap[currentTab].ModelIndex = index;
+        // expanded paths signal ile set edilir.
+    }
+    else{
+        tabContentMap[currentTab] = TabContent(index,*new QSet<QString>());
+    }
+
 }
 
 QModelIndex TabManager::getTabModelIndex(int tabIndex) const
@@ -50,7 +75,16 @@ QModelIndex TabManager::getTabModelIndex(int tabIndex) const
         return QModelIndex();
     }
 
-    return tabContentMap[tabIndex];
+    return tabContentMap[tabIndex].ModelIndex;
+}
+
+QSet<QString> TabManager::getTreeExpandedPaths(int tabIndex) const
+{
+    if (!tabContentMap.contains(tabIndex))
+    {
+        return QSet<QString>();
+    }
+    return tabContentMap[tabIndex].ExpandedPaths;
 }
 
 void TabManager::RemoveTabContent(int tabIndex)
@@ -68,7 +102,7 @@ void TabManager::onTabMoved(int to, int from)
     }
 
     // İki öğeyi birbirleriyle takas et
-    QModelIndex temp = tabContentMap.value(from);
+    TabContent temp = tabContentMap.value(from);
     tabContentMap[from] = tabContentMap.value(to);
     tabContentMap[to] = temp;
 

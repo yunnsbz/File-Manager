@@ -81,6 +81,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
 void MainWindow::SetTabContent(int tabIndex)
 {
+    // set table view content:
     auto index = tabManager->getTabModelIndex(tabIndex);
 
     if (!index.isValid())
@@ -89,10 +90,26 @@ void MainWindow::SetTabContent(int tabIndex)
         return;
     }
 
-    ui->FileTreeView->collapseAll();
-    ui->FileTreeView->expand(index);
-
     ui->tableView->setRootIndex(index);
+
+    auto expandedPaths = tabManager->getTreeExpandedPaths(tabIndex);
+
+
+    // set tree view content:
+    if(expandedPaths.isEmpty())
+    {
+        setDefaultContent();
+        return;
+    }
+
+    ui->FileTreeView->collapseAll();
+
+    for (const QString& path : expandedPaths) {
+        QModelIndex index = FileModel->index(path);
+        if (index.isValid()) {
+            ui->FileTreeView->expand(index);
+        }
+    }
 }
 
 // sekme içerisindeki view'ların default index'e getirilmesi:
@@ -217,6 +234,14 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &index)
 }
 
 void MainWindow::on_actionback_triggered()
+{
+
+}
+
+
+
+
+void MainWindow::on_toolBackButton_triggered(QAction*)
 {
 
 }
