@@ -137,15 +137,17 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
-    if (!FileModel->hasChildren(index))
+    QModelIndex firstColumnIndex = index.siblingAtColumn(0); // her zaman ilk sütunu al
+
+    if (!FileModel->hasChildren(firstColumnIndex))
     {
         const QString filePath = FileModel->filePath(index);
         QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
     }
     else
     {
-        ui->tableView->setRootIndex(index);
-        ui->FileTreeView->expand(index);
+        ui->tableView->setRootIndex(firstColumnIndex);
+        ui->FileTreeView->expand(firstColumnIndex);
         tabManager->setFileIndexMap(ui->tableView);
     }
 }
