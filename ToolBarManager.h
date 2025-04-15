@@ -2,7 +2,7 @@
 #define TOOLBARMANAGER_H
 
 #include <qobject.h>
-#include <qtoolbar.h>
+#include <QHBoxLayout>
 
 class MainWindow;
 
@@ -11,11 +11,11 @@ class ToolBarManager : public QObject{
     Q_OBJECT
 
 public:
-    explicit ToolBarManager(QToolBar* toolBar, QObject* parent);
+    explicit ToolBarManager(QHBoxLayout* toolBar, QObject* parent);
 
 
 private:
-    QToolBar* toolBar;
+    QHBoxLayout* toolBar;
     MainWindow* mainWindow;
 
 };
