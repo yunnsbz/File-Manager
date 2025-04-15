@@ -60,7 +60,7 @@
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="documentMode">
        <bool>true</bool>
@@ -230,6 +230,9 @@
         <property name="icon">
          <iconset theme="QIcon::ThemeIcon::GoUp"/>
         </property>
+        <property name="popupMode">
+         <enum>QToolButton::ToolButtonPopupMode::InstantPopup</enum>
+        </property>
        </widget>
       </item>
       <item>
@@ -242,6 +245,9 @@
         </property>
         <property name="icon">
          <iconset theme="QIcon::ThemeIcon::ViewRefresh"/>
+        </property>
+        <property name="popupMode">
+         <enum>QToolButton::ToolButtonPopupMode::InstantPopup</enum>
         </property>
        </widget>
       </item>

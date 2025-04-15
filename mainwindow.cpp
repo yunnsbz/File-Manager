@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     // tab widget setup:
     tabManager = new TabManager(ui->tabWidget, FileModel, this);
 
+
+
     // tool bar setup:
     toolBarManager = new ToolBarManager(ui->toolBar,this);
 
