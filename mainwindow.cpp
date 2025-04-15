@@ -178,6 +178,7 @@ void MainWindow::on_actionList_View_triggered()
                 handle->setEnabled(false);
             }
         }
+        ui->splitter->setHandleWidth(0);
     }
     else
     {
@@ -192,6 +193,8 @@ void MainWindow::on_actionList_View_triggered()
                 handle->setEnabled(true);
             }
         }
+
+        ui->splitter->setHandleWidth(5);
     }
 }
 
