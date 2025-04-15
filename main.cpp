@@ -38,6 +38,9 @@ int main(int argc, char **argv)
     QToolButton:hover {
         background-color: #999;
     }
+    QToolButton:pressed {
+        background-color: #555;
+    }
 )";
 
     qApp->setStyleSheet(styleSheet);
