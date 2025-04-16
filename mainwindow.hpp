@@ -49,6 +49,8 @@ private slots:
 
     void on_toolForwardButton_clicked();
 
+    void on_actionAbout_triggered();
+
 private:
     bool eventFilter(QObject* obj, QEvent* event) override;
 

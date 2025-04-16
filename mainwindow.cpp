@@ -9,6 +9,8 @@
 #include <QToolButton>
 #include <QMouseEvent>
 #include <QDir>
+#include <QDialog>
+#include <QDialogButtonBox>
 
 MainWindow::MainWindow(QWidget *parent)
     :
@@ -271,3 +273,22 @@ void MainWindow::on_toolForwardButton_clicked()
     tabManager->onForwardButtonClicked();
 }
 
+void MainWindow::on_actionAbout_triggered()
+{
+    QDialog dialog(this);
+    dialog.setWindowTitle("About");
+
+    QVBoxLayout* layout = new QVBoxLayout(&dialog);
+
+    QLabel *label = new QLabel("Made by fatpound & yunns\nCopyright (c) 2025", &dialog);
+    label->setWordWrap(true);
+    layout->addWidget(label);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok, &dialog);
+    connect(buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    layout->addWidget(buttonBox);
+
+    dialog.setLayout(layout);
+    dialog.setFixedSize(200, 80);
+    dialog.exec();
+}
