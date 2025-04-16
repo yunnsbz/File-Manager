@@ -52,7 +52,7 @@ void FileOperations::RemoveTabModelIndex(int tabIndex)
 
     // sekmeden sonra gelenlerin map key'leri (tabIndex'leri) bir geriye alınır:
     auto keys = TabModelIndexMap.keys();
-    std::sort(keys.begin(), keys.end(), std::less<int>()); // sıralanmazsa yanlış sekmenin üzerine yazabilir
+    std::ranges::sort(keys); // sıralanmazsa yanlış sekmenin üzerine yazabilir
     for(auto _tabIndex : keys)
     {
         if(_tabIndex > tabIndex)
