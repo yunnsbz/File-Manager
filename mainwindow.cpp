@@ -123,7 +123,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
     treeManager->ExpandTreeView(firstColumnIndex);
 
-    int tabIndex = ui->tabWidget->currentIndex();
+    const auto tabIndex = ui->tabWidget->currentIndex();
 
     toolBarManager->SetBackButtonEnabled(!FileOperations::IsBackHistoryEmpty(tabIndex));
     toolBarManager->SetForwardButtonEnabled(!FileOperations::IsForwardHistoryEmpty(tabIndex));
@@ -241,7 +241,7 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
 
 void MainWindow::on_toolBackButton_clicked()
 {
-    int tabIndex = ui->tabWidget->currentIndex();
+    const auto tabIndex = ui->tabWidget->currentIndex();
 
     FileOperations::OnBackButtonClicked(tabIndex);
     //tree back onClick missing
@@ -256,7 +256,7 @@ void MainWindow::on_toolBackButton_clicked()
 
 void MainWindow::on_toolForwardButton_clicked()
 {
-    int tabIndex = ui->tabWidget->currentIndex();
+    const auto tabIndex = ui->tabWidget->currentIndex();
 
     FileOperations::OnForwardButtonClicked(tabIndex);
     //tree back onClick missing
