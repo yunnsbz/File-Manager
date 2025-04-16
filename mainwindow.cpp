@@ -14,6 +14,7 @@
 #include <QDir>
 #include <QDialog>
 #include <QDialogButtonBox>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent)
     :
@@ -91,6 +92,13 @@ void MainWindow::OnTabMoved(int toIndex, int fromIndex)
     treeManager->swapExpandedPathsMap(toIndex, fromIndex);
 }
 
+void MainWindow::UpdateLabel_(const QString& path)
+{
+    ui->label->setText(path);
+    // label default size (in the ui editor) should be bigger than needed
+    ui->label->setMinimumSize(ui->label->sizeHint());
+}
+
 void MainWindow::on_actionExit_triggered()
 {
     close();
@@ -99,9 +107,8 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModelIndex&)
 {
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(current);
-    ui->label->setText(path);
-    // label default size (in the ui editor) should be bigger than needed
-    ui->label->setMinimumSize(ui->label->sizeHint());
+
+    UpdateLabel_(path);
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
@@ -116,6 +123,9 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
     toolBarManager->SetBackButtonEnabled(!FileOperations::IsBackHistoryEmpty(tabIndex));
     toolBarManager->SetForwardButtonEnabled(!FileOperations::IsForwardHistoryEmpty(tabIndex));
+
+    const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(firstColumnIndex);
+    UpdateLabel_(path);
 }
 
 void MainWindow::on_splitter_splitterMoved(int pos, int )
@@ -275,3 +285,26 @@ void MainWindow::on_actionAbout_triggered()
     dialog.setFixedSize(300, 200);
     dialog.exec();
 }
+
+void MainWindow::on_lineEdit_returnPressed()
+{
+    auto path = FileOperations::GetFilePath(FileOperations::GetTabModelIndex(ui->tabWidget->currentIndex()));
+
+    if (path.isEmpty())
+    {
+        path = "\\";
+    }
+
+    path = QDir::toNativeSeparators(path);
+
+    const auto args = QStringList() << "/c " << "start cd " << path;
+
+    QString str = "";
+    for (int i{}; i < args.size(); ++i)
+    {
+        str += args[i];
+    }
+
+    QProcess::startDetached("cmd", QStringList() << str);
+}
+

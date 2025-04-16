@@ -56,8 +56,12 @@ private slots:
 
     void on_actionAbout_triggered();
 
+    void on_lineEdit_returnPressed();
+
 private:
     bool eventFilter(QObject* obj, QEvent* event) override;
+
+    void UpdateLabel_(const QString& path);
 
 
 // member variables
