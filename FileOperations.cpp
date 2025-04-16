@@ -17,7 +17,7 @@ QFileSystemModel* FileOperations::GetFileModel()
 
 void FileOperations::SetTabModelIndex(int tabIndex, QModelIndex modelIndex)
 {
-    TabBackHistoryModelIndex[tabIndex].push_back(modelIndex);
+    TabBackHistoryModelIndex[tabIndex].push_back(TabModelIndexMap[tabIndex]);
     qDebug()<< "history added";
 
     // yeni index'e geçildiğinden ileri geçmiş silinir:
