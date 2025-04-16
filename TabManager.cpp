@@ -65,7 +65,7 @@ auto TabManager::GetSplitter()
     return tabWidget->widget(lastLeftTabIndex)->findChild<QSplitter*>();
 }
 
-auto TabManager::getLastLeftTabIndex() -> int
+auto TabManager::getLastLeftTabIndex() const -> int
 {
     return lastLeftTabIndex;
 }
