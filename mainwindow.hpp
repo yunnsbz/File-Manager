@@ -7,6 +7,9 @@
 class QFileSystemModel;
 class TabManager;
 class ToolBarManager;
+class FileOperations;
+class TableManager;
+class TreeManager;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -28,7 +31,9 @@ public:
     ~MainWindow();
 
     void SetTabContent(int tabIndex);
-    void setDefaultContent();
+
+    auto GetCurrentTabIndex() -> int;
+    void OnTabMoved(int toIndex, int fromIndex);
 
     Ui::MainWindow* getUI(){return ui;}
 
@@ -58,9 +63,11 @@ private:
 // member variables
 private:
     Ui::MainWindow *ui;
-    QFileSystemModel *FileModel;
+    FileOperations* fileOperations;
     TabManager* tabManager;
     ToolBarManager* toolBarManager;
+    TableManager* tableManager;
+    TreeManager* treeManager;
 
     // treeView is collapsed or not:
     bool treeActive = true;

@@ -3,6 +3,7 @@
 
 #include <qobject.h>
 #include <QTableView>
+#include <QFileSystemModel>
 
 class TableManager : public QObject
 {
@@ -10,6 +11,11 @@ class TableManager : public QObject
 
 public:
     explicit TableManager(QTableView* tableView, QObject* parent);
+
+    void SetTableToDefault();
+    void SetTableContent(int tabIndex);
+
+    void navigateToFolder(int tabIndex, QModelIndex firstColumnIndex);
 
 private:
     QTableView* tableView;
