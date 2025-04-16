@@ -24,14 +24,13 @@ TreeManager::TreeManager(QTreeView *treeView, QObject *parent)
     connect(treeView, &QTreeView::expanded, this, [this](const QModelIndex &index) {
         const QString& path = FileOperations::GetFilePath(index);
         const int currentTab = mainWindow->GetCurrentTabIndex();
-        ExpandedPathsMap[currentTab].push_back(path);
+        ExpandedPathsMap[currentTab].append(path);
     });
 
     connect(treeView, &QTreeView::collapsed, this, [this](const QModelIndex &index) {
         const QString& path = FileOperations::GetFilePath(index);
         const int currentTab = mainWindow->GetCurrentTabIndex();
-        int i = ExpandedPathsMap[currentTab].indexOf(path);
-        ExpandedPathsMap[currentTab].removeAt(i);
+        ExpandedPathsMap[currentTab].removeOne(path);
     });
 
 }
@@ -56,17 +55,26 @@ void TreeManager::SetTreeContent(int tabIndex)
 
     treeView->collapseAll();
 
-    for (const auto &path : ExpandedPathsMap[tabIndex]) {
-        const QModelIndex index = FileOperations::GetFileIndex(path);
-        if (index.isValid()) {
-            treeView->expand(index);
+    if(!ExpandedPathsMap[tabIndex].isEmpty())
+    {
+        for (auto &path : ExpandedPathsMap[tabIndex])
+        {
+            const QModelIndex index = FileOperations::GetFileIndex(path);
+            if (index.isValid())
+            {
+                treeView->expand(index);
+            }
         }
+    }
+    else
+    {
+        setTreeToDefault();
     }
 }
 
 void TreeManager::navigateToFolder(const QModelIndex &modelIndex, int tabIndex)
 {
-    auto fileModel = FileOperations::GetFileModel();
+    auto *fileModel = FileOperations::GetFileModel();
     if (fileModel->hasChildren(modelIndex))
     {
         FileOperations::SetTabModelIndex(tabIndex, modelIndex);
