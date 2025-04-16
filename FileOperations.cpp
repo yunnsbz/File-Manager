@@ -31,7 +31,7 @@ auto FileOperations::GetFilePath(QModelIndex modelIndex) -> QString
     return fileModel->filePath(modelIndex);
 }
 
-auto FileOperations::GetFileIndex(QString path) -> QModelIndex
+auto FileOperations::GetFileIndex(const QString& path) -> QModelIndex
 {
     return fileModel->index(path);
 }
