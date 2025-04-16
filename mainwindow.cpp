@@ -16,27 +16,23 @@
 #include <QDialogButtonBox>
 #include <QProcess>
 
+UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
+{
+    theUi->setupUi(pWnd);
+}
+
 MainWindow::MainWindow(QWidget *parent)
     :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    fileOperations(new FileOperations())
+    m_ui_mgr_(ui, this),
+    fileOperations(new FileOperations()),
+    toolBarManager(new ToolBarManager(ui->toolBar ,this)),
+    tabManager(new TabManager(ui->tabWidget, this)),
+    tableManager(new TableManager(ui->tableView,this)),
+    treeManager(new TreeManager(ui->FileTreeView, this))
 {
-    ui->setupUi(this);
-
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
-
-    // tool bar setup:
-    toolBarManager = new ToolBarManager(ui->toolBar,this);
-
-    // tab widget setup:
-    tabManager = new TabManager(ui->tabWidget, this);
-
-    // table setup:
-    tableManager = new TableManager(ui->tableView,this);
-
-    // tree setup:
-    treeManager = new TreeManager(ui->FileTreeView, this);
 
     // get FileTreeView changes for command label
     connect(

@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 
-
 class QFileSystemModel;
 class TabManager;
 class ToolBarManager;
@@ -16,6 +15,11 @@ namespace Ui {
 class MainWindow;
 }
 QT_END_NAMESPACE
+
+struct UIManager final
+{
+    UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd);
+};
 
 class MainWindow : public QMainWindow
 {
@@ -68,9 +72,11 @@ private:
 // member variables
 private:
     Ui::MainWindow *ui;
+    UIManager m_ui_mgr_;
+
     FileOperations* fileOperations;
-    TabManager* tabManager;
     ToolBarManager* toolBarManager;
+    TabManager* tabManager;
     TableManager* tableManager;
     TreeManager* treeManager;
 

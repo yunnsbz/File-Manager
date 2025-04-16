@@ -30,11 +30,12 @@ public:
 
 private:
     static inline QFileSystemModel* fileModel;
+    // NOLINTBEGIN(fuchsia-statically-constructed-objects)
     static inline QMap<int, QModelIndex> TabModelIndexMap;
 
     // her sekmeye özel olarak ileri ve geri butonları için file modelin index değerlerini turar
     static inline QMap<int, QList<QModelIndex>> TabBackHistoryModelIndex;
     static inline QMap<int, QList<QModelIndex>> TabForwardHistoryModelIndex;
-
+    // NOLINTEND(fuchsia-statically-constructed-objects)
 };
 #endif // FILEOPERATIONS_H
