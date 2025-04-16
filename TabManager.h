@@ -26,7 +26,7 @@ public:
 
     // getters:
     auto GetSplitter();
-    auto getLastLeftTabIndex() const -> int;
+    [[nodiscard]] auto getLastLeftTabIndex() const -> int;
 
     // setters:
     void setLastLeftTabIndex(int value);
