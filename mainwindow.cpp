@@ -60,7 +60,7 @@ MainWindow::~MainWindow()
 }
 
 
-bool MainWindow::eventFilter(QObject* obj, QEvent* event)
+auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
 {
     if (obj == ui->tabWidget && event->type() == QEvent::MouseButtonPress)
     {
@@ -103,7 +103,7 @@ void MainWindow::SetTabContent(int tabIndex)
     ui->FileTreeView->collapseAll();
 
     for (const QString& path : expandedPaths) {
-        QModelIndex index = FileModel->index(path);
+        const QModelIndex index = FileModel->index(path);
         if (index.isValid()) {
             ui->FileTreeView->expand(index);
         }
@@ -135,7 +135,7 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
-    QModelIndex firstColumnIndex = index.siblingAtColumn(0); // her zaman ilk sütunu al
+    const QModelIndex firstColumnIndex = index.siblingAtColumn(0); // her zaman ilk sütunu al
 
     if (!FileModel->hasChildren(firstColumnIndex))
     {
@@ -173,7 +173,7 @@ void MainWindow::on_actionList_View_triggered()
         for (int i = 0; i < 2; ++i)
         {
             QSplitterHandle* handle = ui->splitter->handle(i);
-            if (handle)
+            if (handle != nullptr)
             {
                 handle->setEnabled(false);
             }
@@ -188,7 +188,7 @@ void MainWindow::on_actionList_View_triggered()
         for (int i = 0; i < 2; ++i)
         {
             QSplitterHandle* handle = ui->splitter->handle(i);
-            if (handle)
+            if (handle != nullptr)
             {
                 handle->setEnabled(true);
             }

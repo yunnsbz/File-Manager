@@ -142,7 +142,7 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
     }
 
     // İki öğeyi birbirleriyle takas et
-    TabContent temp = tabContentMap.value(fromIndex);
+    const TabContent temp = tabContentMap.value(fromIndex);
     tabContentMap[fromIndex] = tabContentMap.value(toIndex);
     tabContentMap[toIndex] = temp;
 
