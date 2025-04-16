@@ -35,7 +35,8 @@ public:
     auto GetCurrentTabIndex() -> int;
     void OnTabMoved(int toIndex, int fromIndex);
 
-    Ui::MainWindow* getUI(){return ui;}
+    auto getUI() -> Ui::MainWindow*;
+
 
 protected:
 
@@ -59,7 +60,7 @@ private slots:
     void on_lineEdit_returnPressed();
 
 private:
-    bool eventFilter(QObject* obj, QEvent* event) override;
+    auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 
     void UpdateLabel_(const QString& path);
 

@@ -22,8 +22,9 @@ public:
 
     void ExpandTreeView(const QModelIndex &index);
 
-    bool IsBackHistoryEmpty(int tabIndex);
-    bool IsForwardHistoryEmpty(int tabIndex);
+    auto IsBackHistoryEmpty(int tabIndex) -> bool;
+    auto IsForwardHistoryEmpty(int tabIndex) -> bool;
+
 
 private:
     MainWindow* mainWindow;

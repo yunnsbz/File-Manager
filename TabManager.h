@@ -26,10 +26,10 @@ public:
 
     // getters:
     auto GetSplitter();
-    int getLastLeftTabIndex(){return lastLeftTabIndex;}
+    auto getLastLeftTabIndex() -> int;
 
     // setters:
-    void setLastLeftTabIndex(int value){lastLeftTabIndex = value;}
+    void setLastLeftTabIndex(int value);
 
 
 public slots:
@@ -41,7 +41,7 @@ protected:
 
 
 private:
-    QWidget* createTabFromSplitter(QSplitter* splitter);
+    auto createTabFromSplitter(QSplitter* splitter) -> QWidget*;
 
     void Setup_();
 

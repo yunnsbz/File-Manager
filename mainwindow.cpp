@@ -57,6 +57,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+auto MainWindow::getUI() -> Ui::MainWindow*
+{
+    return ui;
+}
 
 auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
 {
@@ -82,7 +86,7 @@ void MainWindow::SetTabContent(int tabIndex)
     treeManager->SetTreeContent(tabIndex);
 }
 
-int MainWindow::GetCurrentTabIndex()
+auto MainWindow::GetCurrentTabIndex() -> int
 {
     return ui->tabWidget->currentIndex();
 }

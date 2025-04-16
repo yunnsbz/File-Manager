@@ -10,7 +10,7 @@ FileOperations::FileOperations()
     fileModel->setRootPath("");
 }
 
-QFileSystemModel* FileOperations::GetFileModel()
+auto FileOperations::GetFileModel() -> QFileSystemModel*
 {
     return fileModel;
 }
@@ -26,22 +26,22 @@ void FileOperations::SetTabModelIndex(int tabIndex, QModelIndex modelIndex)
     TabModelIndexMap[tabIndex] = modelIndex;
 }
 
-QString FileOperations::GetFilePath(QModelIndex modelIndex)
+auto FileOperations::GetFilePath(QModelIndex modelIndex) -> QString
 {
     return fileModel->filePath(modelIndex);
 }
 
-QModelIndex FileOperations::GetFileIndex(QString path)
+auto FileOperations::GetFileIndex(QString path) -> QModelIndex
 {
     return fileModel->index(path);
 }
 
-bool FileOperations::IsBackHistoryEmpty(int tabIndex)
+auto FileOperations::IsBackHistoryEmpty(int tabIndex) -> bool
 {
     return TabBackHistoryModelIndex[tabIndex].isEmpty();
 }
 
-bool FileOperations::IsForwardHistoryEmpty(int tabIndex)
+auto FileOperations::IsForwardHistoryEmpty(int tabIndex) -> bool
 {
     return TabForwardHistoryModelIndex[tabIndex].isEmpty();
 }
