@@ -11,6 +11,9 @@ class TableManager : public QObject
 public:
     explicit TableManager(QTableView* tableView, QObject* parent);
 
+private:
+    QTableView* tableView;
+
 
 };
 
