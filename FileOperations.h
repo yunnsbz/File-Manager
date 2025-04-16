@@ -1,8 +1,8 @@
 #ifndef FILEOPERATIONS_H
 #define FILEOPERATIONS_H
 
-#include <qfilesystemmodel.h>
-#include <qobject.h>
+#include <QFileSystemModel>
+#include <QObject>
 
 
 class FileOperations : public QObject
@@ -11,6 +11,7 @@ class FileOperations : public QObject
 
 public:
     FileOperations();
+
 
 public:
     static auto GetFileModel() -> QFileSystemModel*;

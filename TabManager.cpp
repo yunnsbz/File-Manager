@@ -5,8 +5,8 @@
 
 #include <QToolButton>
 #include <QTabBar>
-#include <qboxlayout.h>
-#include <qfilesystemmodel.h>
+#include <QBoxLayout>
+#include <QFileSystemModel>
 
 TabManager::TabManager(QTabWidget* tabWidget,  QObject* parent)
     :

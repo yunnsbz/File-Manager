@@ -1,8 +1,8 @@
 #ifndef TREEMANAGER_H
 #define TREEMANAGER_H
 
-#include <qobject.h>
-#include <qtreeview.h>
+#include <QObject>
+#include <QTreeView>
 
 class MainWindow;
 

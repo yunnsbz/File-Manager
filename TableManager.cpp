@@ -1,9 +1,8 @@
 #include "TableManager.h"
 #include "FileOperations.h"
 
-#include <qurl.h>
+#include <QUrl>
 #include <QDesktopServices>
-
 
 
 TableManager::TableManager(QTableView *tableView, QObject *parent)

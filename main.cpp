@@ -2,7 +2,7 @@
 
 #include <QApplication>
 #include <QStyleFactory>
-#include <qdir.h>
+#include <QDir>
 
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 int main(int argc, char **argv)

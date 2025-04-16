@@ -1,7 +1,7 @@
 #ifndef TABLEMANAGER_H
 #define TABLEMANAGER_H
 
-#include <qobject.h>
+#include <QObject>
 #include <QTableView>
 #include <QFileSystemModel>
 

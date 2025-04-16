@@ -1,7 +1,7 @@
 #ifndef TOOLBARMANAGER_H
 #define TOOLBARMANAGER_H
 
-#include <qobject.h>
+#include <QObject>
 #include <QHBoxLayout>
 
 class MainWindow;
