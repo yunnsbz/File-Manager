@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("File-Manager");
     show();
 }
+
 MainWindow::~MainWindow()
 {
     delete ui;

@@ -1,0 +1,4 @@
+#ifndef TREEMANAGER_H
+#define TREEMANAGER_H
+
+#endif // TREEMANAGER_H
