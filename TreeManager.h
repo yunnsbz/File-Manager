@@ -1,0 +1,45 @@
+#ifndef TREEMANAGER_H
+#define TREEMANAGER_H
+
+#include <qobject.h>
+#include <qtreeview.h>
+
+class MainWindow;
+
+class TreeManager : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit TreeManager(QTreeView* treeView, QObject* parent);
+
+    void setTreeToDefault();
+    void SetTreeContent(int tabIndex);
+
+    void navigateToFolder(const QModelIndex &modelIndex, int tabIndex);
+    void removeTabExpandedPaths(int tabIndex);
+    void swapExpandedPathsMap(int toIndex, int fromIndex);
+
+    void ExpandTreeView(const QModelIndex &index);
+
+    auto IsBackHistoryEmpty(int tabIndex) -> bool;
+    auto IsForwardHistoryEmpty(int tabIndex) -> bool;
+
+
+private:
+    MainWindow* mainWindow;
+
+    QTreeView* treeView;
+
+    // treeView için her sekmede açılmış yolları tutar:
+    QMap<int, QList<QString>> ExpandedPathsMap;
+
+    // her sekmeye özel history:
+    using Path = QList<QString>;
+    using PathHistory = QList<Path>;
+    QMap<int, PathHistory> BackHistoryExpandedPaths;
+    QMap<int, PathHistory> ForwardHistoryExpandedPaths;
+
+};
+
+#endif // TREEMANAGER_H

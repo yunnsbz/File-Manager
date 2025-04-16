@@ -3,16 +3,23 @@
 
 #include <QMainWindow>
 
-
 class QFileSystemModel;
 class TabManager;
 class ToolBarManager;
+class FileOperations;
+class TableManager;
+class TreeManager;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
 }
 QT_END_NAMESPACE
+
+struct UIManager final
+{
+    UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd);
+};
 
 class MainWindow : public QMainWindow
 {
@@ -28,9 +35,12 @@ public:
     ~MainWindow();
 
     void SetTabContent(int tabIndex);
-    void setDefaultContent();
 
-    Ui::MainWindow* getUI(){return ui;}
+    auto GetCurrentTabIndex() -> int;
+    void OnTabMoved(int toIndex, int fromIndex);
+
+    auto getUI() -> Ui::MainWindow*;
+
 
 protected:
 
@@ -49,16 +59,26 @@ private slots:
 
     void on_toolForwardButton_clicked();
 
+    void on_actionAbout_triggered();
+
+    void on_lineEdit_returnPressed();
+
 private:
-    bool eventFilter(QObject* obj, QEvent* event) override;
+    auto eventFilter(QObject* obj, QEvent* event) -> bool override;
+
+    void UpdateLabel_(const QString& path);
 
 
 // member variables
 private:
     Ui::MainWindow *ui;
-    QFileSystemModel *FileModel;
-    TabManager* tabManager;
+    UIManager m_ui_mgr_;
+
+    FileOperations* fileOperations;
     ToolBarManager* toolBarManager;
+    TabManager* tabManager;
+    TableManager* tableManager;
+    TreeManager* treeManager;
 
     // treeView is collapsed or not:
     bool treeActive = true;
