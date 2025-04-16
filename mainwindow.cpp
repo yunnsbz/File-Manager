@@ -218,9 +218,13 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
         ui->tabWidget->removeTab(index);
         tabManager->RemoveTabContent(index);
         tabManager->setLastLeftTabIndex(ui->tabWidget->currentIndex());
+        SetTabContent(ui->tabWidget->currentIndex());
+    }
+    else
+    {
+        setDefaultContent();
     }
 
-    SetTabContent(ui->tabWidget->currentIndex());
 }
 
 void MainWindow::on_tabWidget_tabBarClicked(int index)

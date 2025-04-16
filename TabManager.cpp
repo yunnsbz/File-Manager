@@ -101,7 +101,21 @@ auto TabManager::getTreeExpandedPaths(int tabIndex) const -> QSet<QString>
 
 void TabManager::RemoveTabContent(int tabIndex)
 {
+    // sekme silinir:
     tabContentMap.remove(tabIndex);
+
+    // sekmeden sonra gelenlerin map key'leri (tabIndex'leri) bir geriye alınır:
+    auto keys = tabContentMap.keys();
+    std::sort(keys.begin(), keys.end(), std::greater<int>()); // sıralanmazsa yanlış sekmenin üzerine yazabilir
+    for(auto _tabIndex : keys)
+    {
+        if(_tabIndex > tabIndex)
+        {
+            auto content = tabContentMap[_tabIndex];
+            tabContentMap.remove(_tabIndex);
+            tabContentMap[_tabIndex-1] = content;
+        }
+    }
 }
 
 void TabManager::onBackButtonClicked()
