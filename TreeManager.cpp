@@ -110,8 +110,8 @@ void TreeManager::swapExpandedPathsMap(int toIndex, int fromIndex)
 
 void TreeManager::ExpandTreeView(const QModelIndex &modelIndex)
 {
-    auto fileModel = FileOperations::GetFileModel();
-    if(!fileModel->hasChildren(modelIndex)){
+    auto* fileModel = FileOperations::GetFileModel();
+    if(fileModel->hasChildren(modelIndex)){
         treeView->expand(modelIndex);
     }
 }
