@@ -37,7 +37,7 @@ TreeManager::TreeManager(QTreeView *treeView, QObject *parent)
 
 void TreeManager::setTreeToDefault()
 {
-    auto fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileOperations::GetFileModel();
     fileModel->setRootPath("");
     const QModelIndex index = fileModel->index(fileModel->rootPath());
     treeView->setRootIndex(index);

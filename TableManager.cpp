@@ -18,7 +18,7 @@ TableManager::TableManager(QTableView *tableView, QObject *parent)
 
 void TableManager::SetTableToDefault()
 {
-    auto fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileOperations::GetFileModel();
     fileModel->setRootPath("");
     const QModelIndex index = fileModel->index(fileModel->rootPath());
     tableView->setRootIndex(index);
@@ -40,7 +40,7 @@ void TableManager::SetTableContent(int tabIndex)
 
 void TableManager::navigateToFolder(int tabIndex, QModelIndex firstColumnIndex)
 {
-    auto fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileOperations::GetFileModel();
     if (!fileModel->hasChildren(firstColumnIndex))
     {
         const QString filePath = fileModel->filePath(firstColumnIndex);

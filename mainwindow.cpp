@@ -229,7 +229,7 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
     int const tabIndex = ui->tabWidget->currentIndex();
     treeManager->navigateToFolder(modelIndex, tabIndex);
 
-    auto fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileOperations::GetFileModel();
     // girilen yer klasör ise table view set edilir:
     if (fileModel->hasChildren(modelIndex))
     {
