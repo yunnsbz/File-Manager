@@ -11,8 +11,8 @@
 TabManager::TabManager(QTabWidget* tabWidget,  QObject* parent)
     :
     QObject(parent),
-    tabWidget(tabWidget),
-    mainWindow(static_cast<MainWindow*>(parent))
+    mainWindow(static_cast<MainWindow*>(parent)),
+    tabWidget(tabWidget)
 {
     Setup_();
 }

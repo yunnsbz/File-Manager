@@ -47,10 +47,9 @@ private:
 
 
 private:
-    QTabWidget* tabWidget;
-    QFileSystemModel* fileModel;
     MainWindow* mainWindow;
-    ToolBarManager* toolBarManager;
+    QTabWidget* tabWidget;
+    QFileSystemModel* fileModel{};
 
     // last opened tabs (when moving to another tab system should know the last one)
     int lastRightTabIndex = 0;
