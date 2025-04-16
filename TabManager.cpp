@@ -23,7 +23,7 @@ void TabManager::Setup_()
 {
     // yeni sekme ekleme butonunun eklenmesi, işlevi ve ilk açılıştaki sekmeleri ayarlama
 
-    // Başlangıçta bir sekme ve bir '+' sekmesi ekle
+    // default olarak gelen ikinci sekmeyi kaldır:
     tabWidget->removeTab(1);
 
     connect(tabWidget->tabBar(), &QTabBar::tabMoved, this, &TabManager::onTabMoved);
@@ -36,15 +36,15 @@ void TabManager::Setup_()
     connect(addTabButton, &QToolButton::clicked, this, &TabManager::addNewTab);
 
     // tree view açılma ve kapanma durumlarında değişiklikleri tabContents içine kaydetmeliyiz:
-    connect(mainWindow->getUI()->FileTreeView, &QTreeView::expanded, this, [=, this](const QModelIndex &index) {
-        QString path = fileModel->filePath(index);
-        int currentTab = tabWidget->currentIndex();
+    connect(mainWindow->getUI()->FileTreeView, &QTreeView::expanded, this, [this](const QModelIndex &index) {
+        const QString path = fileModel->filePath(index);
+        const int currentTab = tabWidget->currentIndex();
         tabContentMap[currentTab].ExpandedPaths.insert(path);
     });
 
-    connect(mainWindow->getUI()->FileTreeView, &QTreeView::collapsed, this, [=, this](const QModelIndex &index) {
-        QString path = fileModel->filePath(index);
-        int currentTab = tabWidget->currentIndex();
+    connect(mainWindow->getUI()->FileTreeView, &QTreeView::collapsed, this, [this](const QModelIndex &index) {
+        const QString path = fileModel->filePath(index);
+        const int currentTab = tabWidget->currentIndex();
         tabContentMap[currentTab].ExpandedPaths.remove(path);
     });
 
@@ -80,21 +80,21 @@ void TabManager::setFileIndexMap(QTableView* tableView)
     toolBarManager->SetForwardButtonEnabled(!ForwardHistoryTabContent.isEmpty());
 }
 
-QModelIndex TabManager::getTabModelIndex(int tabIndex) const
+auto TabManager::getTabModelIndex(int tabIndex) const -> QModelIndex
 {
     if (!tabContentMap.contains(tabIndex))
     {
-        return QModelIndex();
+        return {};
     }
 
     return tabContentMap[tabIndex].ModelIndex;
 }
 
-QSet<QString> TabManager::getTreeExpandedPaths(int tabIndex) const
+auto TabManager::getTreeExpandedPaths(int tabIndex) const -> QSet<QString>
 {
     if (!tabContentMap.contains(tabIndex))
     {
-        return QSet<QString>();
+        return {};
     }
     return tabContentMap[tabIndex].ExpandedPaths;
 }
@@ -132,28 +132,28 @@ void TabManager::onForwardButtonClicked()
     }
 }
 
-void TabManager::onTabMoved(int to, int from)
+void TabManager::onTabMoved(int toIndex, int fromIndex)
 {
-    //qDebug() << "Sekme" << from << "indeksinden" << to << "indeksine taşındı";
+    //qDebug() << "Sekme" << fromIndex << "indeksinden" << toIndex << "indeksine taşındı";
 
-    if (from == to)
+    if (fromIndex == toIndex)
     {
         return;
     }
 
     // İki öğeyi birbirleriyle takas et
-    TabContent temp = tabContentMap.value(from);
-    tabContentMap[from] = tabContentMap.value(to);
-    tabContentMap[to] = temp;
+    TabContent temp = tabContentMap.value(fromIndex);
+    tabContentMap[fromIndex] = tabContentMap.value(toIndex);
+    tabContentMap[toIndex] = temp;
 
     // lastLeftTabIndex is the one moved it should register
-    if (from == lastLeftTabIndex)
+    if (fromIndex == lastLeftTabIndex)
     {
-        lastLeftTabIndex = to;
+        lastLeftTabIndex = toIndex;
     }
-    else if (to == lastRightTabIndex)
+    else if (toIndex == lastRightTabIndex)
     {
-        lastLeftTabIndex = from;
+        lastLeftTabIndex = fromIndex;
     }
 }
 

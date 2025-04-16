@@ -47,16 +47,16 @@ public:
 
 
     // getters:
-    QModelIndex getTabModelIndex(int tabIndex) const;
+    auto getTabModelIndex(int tabIndex) const -> QModelIndex;
     int getLastLeftTabIndex(){return lastLeftTabIndex;}
-    QSet<QString> getTreeExpandedPaths(int tabIndex) const;
+    auto getTreeExpandedPaths(int tabIndex) const -> QSet<QString>;
 
     // setters:
     void setLastLeftTabIndex(int value){lastLeftTabIndex = value;}
 
 
 public slots:
-    void onTabMoved(int to, int from);
+    void onTabMoved(int toIndex, int fromIndex);
     void addNewTab();
 
 
