@@ -171,10 +171,14 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
     }
 }
 
+auto TabManager::GetSplitter()
+{
+    return tabWidget->widget(lastLeftTabIndex)->findChild<QSplitter*>();
+}
+
 void TabManager::addNewTab()
 {
-    auto* currentTabWidget = tabWidget->currentWidget();
-    auto* currentSplitter  = currentTabWidget->findChild<QSplitter*>();
+    auto* currentSplitter = GetSplitter();
 
     if (currentSplitter != nullptr)
     {
@@ -195,8 +199,7 @@ void TabManager::moveTabWidget(int index)
 {
     // sekme içerisini kopyalamak yerine taşıyarak sekmeler arasında geçiş yaparız
 
-    auto* currentTabWidget = tabWidget->widget(lastLeftTabIndex);
-    auto* currentSplitter = currentTabWidget->findChild<QSplitter*>();
+    auto* currentSplitter = GetSplitter();
 
     if (currentSplitter != nullptr)
     {

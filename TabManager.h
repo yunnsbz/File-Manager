@@ -47,6 +47,7 @@ public:
 
 
     // getters:
+    auto GetSplitter();
     auto getTabModelIndex(int tabIndex) const -> QModelIndex;
     int getLastLeftTabIndex(){return lastLeftTabIndex;}
     auto getTreeExpandedPaths(int tabIndex) const -> QSet<QString>;
