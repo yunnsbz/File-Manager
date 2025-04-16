@@ -274,14 +274,14 @@ void MainWindow::on_actionAbout_triggered()
     QDialog dialog(this);
     dialog.setWindowTitle("About");
 
-    QVBoxLayout* layout = new QVBoxLayout(&dialog);
+    auto* layout = new QVBoxLayout(&dialog);
 
-    QLabel *label = new QLabel("Made by fatpound & yunns\nCopyright (c) 2025", &dialog);
+    auto* label = new QLabel("Made by fatpound & yunns\nCopyright (c) 2025", &dialog);
     label->setAlignment(Qt::AlignmentFlag::AlignCenter);
     label->setWordWrap(true);
     layout->addWidget(label);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok, &dialog);
+    auto* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok, &dialog);
     connect(buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
     layout->addWidget(buttonBox);
 
