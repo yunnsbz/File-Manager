@@ -5,6 +5,8 @@
 
 #include <QTableView>
 
+#include <algorithm>
+
 TreeManager::TreeManager(QTreeView *treeView, QObject *parent)
     :
     QObject(parent),

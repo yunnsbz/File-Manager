@@ -1,5 +1,8 @@
 #include "FileOperations.h"
 
+#include <QtLogging>
+
+#include <algorithm>
 
 FileOperations::FileOperations()
 {

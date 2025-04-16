@@ -3,7 +3,8 @@
 
 #include <QFileSystemModel>
 #include <QObject>
-
+#include <QMap>
+#include <QList>
 
 class FileOperations : public QObject
 {

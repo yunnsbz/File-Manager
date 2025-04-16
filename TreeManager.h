@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QTreeView>
+#include <QMap>
+#include <QList>
 
 class MainWindow;
 

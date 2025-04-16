@@ -1,9 +1,11 @@
 #include "mainwindow.hpp"
 
 #include <QApplication>
+#include <QString>
 #include <QStyleFactory>
 #include <QDir>
 
+// NOLINTBEGIN(misc-include-cleaner)
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 int main(int argc, char **argv)
 {
@@ -24,3 +26,4 @@ int main(int argc, char **argv)
 
 }
 // NOLINTEND(readability-static-accessed-through-instance)
+// NOLINTEND(misc-include-cleaner)

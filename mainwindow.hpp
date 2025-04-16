@@ -2,8 +2,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QObject>
+#include <QFileSystemModel>
+#include <QWidget>
+#include <QModelIndex>
+#include <QEvent>
+#include <QString>
+#include <QList>
 
-class QFileSystemModel;
 class TabManager;
 class ToolBarManager;
 class FileOperations;
