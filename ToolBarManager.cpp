@@ -5,7 +5,7 @@
 #include <QStyle>
 
 ToolBarManager::ToolBarManager(QHBoxLayout *toolBar, QObject *parent)
-:
+    :
     QObject(parent),
     toolBar(toolBar),
     mainWindow(static_cast<MainWindow*>(parent))

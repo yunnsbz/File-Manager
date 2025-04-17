@@ -51,7 +51,6 @@ private:
 private:
     MainWindow* mainWindow;
     QTabWidget* tabWidget;
-    QFileSystemModel* fileModel{};
 
     // last opened tabs (when moving to another tab system should know the last one)
     int lastRightTabIndex = 0;
@@ -61,7 +60,6 @@ private:
     // daha sonra current index'e eşitlenir.
     int _previousLeftTabIndex = 0;
     int persistentPreviousLeftTabIndex = 0;
-
 };
 
 

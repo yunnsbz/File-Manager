@@ -12,9 +12,10 @@
 #include <QList>
 #include <qevent.h>
 
+#include "FileModelOperations.h"
+
 class TabManager;
 class ToolBarManager;
-class FileModelOperations;
 class TableManager;
 class TreeManager;
 
@@ -84,9 +85,10 @@ private:
 // member variables
 private:
     Ui::MainWindow *ui;
-    UIManager m_ui_mgr_;
 
-    FileModelOperations* fileOperations;
+    UIManager m_ui_mgr_;
+    FileModelOperations fileOperations;
+
     ToolBarManager* toolBarManager;
     TabManager* tabManager;
     TableManager* tableManager;

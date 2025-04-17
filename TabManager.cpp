@@ -89,21 +89,22 @@ void TabManager::addNewTab()
 {
     auto* currentSplitter = GetPreviousSplitter();
 
-    if (currentSplitter != nullptr)
+    if (currentSplitter == nullptr)
     {
-
-        auto* newTabWidget = new QWidget();
-        auto* layout = new QVBoxLayout(newTabWidget);
-        layout->addWidget(currentSplitter);
-        layout->setContentsMargins(0, 0, 0, 0);
-
-        tabWidget->addTab(newTabWidget, "new tab");
-        tabWidget->setCurrentIndex(tabWidget->count() - 1);
-
-        setPreviousLeftTabIndex(tabWidget->count() - 1);
-
-        mainWindow->SetTabContent(tabWidget->currentIndex());
+        return;
     }
+
+    auto* newTabWidget = new QWidget();
+    auto* layout = new QVBoxLayout(newTabWidget);
+    layout->addWidget(currentSplitter);
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    tabWidget->addTab(newTabWidget, "new tab");
+    tabWidget->setCurrentIndex(tabWidget->count() - 1);
+
+    setPreviousLeftTabIndex(tabWidget->count() - 1);
+
+    mainWindow->SetTabContent(tabWidget->currentIndex());
 }
 
 void TabManager::moveTabWidget(int index)
@@ -112,22 +113,24 @@ void TabManager::moveTabWidget(int index)
 
     auto* currentSplitter = GetPreviousSplitter();
 
-    if (currentSplitter != nullptr)
+    if (currentSplitter == nullptr)
     {
-        // Splitter'ı mevcut yerinden kopar
-        currentSplitter->setParent(nullptr);
-
-        // Yeni container oluştur
-        auto* newTabWidget = new QWidget();
-        auto* layout = new QVBoxLayout(newTabWidget);
-        layout->addWidget(currentSplitter);
-        layout->setContentsMargins(0, 0, 0, 0);
-
-        // Yeni sekmeyi oluştur
-        tabWidget->insertTab(index, newTabWidget, tabWidget->tabText(index));
-        tabWidget->removeTab(index + 1); // eski widget'ı kaldır
-        tabWidget->setCurrentIndex(index);
-
-        setPreviousLeftTabIndex(index);
+        return;
     }
+
+    // Splitter'ı mevcut yerinden kopar
+    currentSplitter->setParent(nullptr);
+
+    // Yeni container oluştur
+    auto* newTabWidget = new QWidget();
+    auto* layout = new QVBoxLayout(newTabWidget);
+    layout->addWidget(currentSplitter);
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    // Yeni sekmeyi oluştur
+    tabWidget->insertTab(index, newTabWidget, tabWidget->tabText(index));
+    tabWidget->removeTab(index + 1); // eski widget'ı kaldır
+    tabWidget->setCurrentIndex(index);
+
+    setPreviousLeftTabIndex(index);
 }

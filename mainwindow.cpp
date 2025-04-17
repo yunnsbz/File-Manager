@@ -26,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_ui_mgr_(ui, this),
-    fileOperations(new FileModelOperations()),
     toolBarManager(new ToolBarManager(ui->toolBar ,this)),
     tabManager(new TabManager(ui->tabWidget, this)),
     tableManager(new TableManager(ui->tableView,this)),
@@ -78,7 +77,6 @@ auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
 void MainWindow::SetTabContent(int tabIndex)
 {
     tableManager->SetTableContent(tabIndex);
-
     treeManager->SetTreeContent(tabIndex);
 }
 

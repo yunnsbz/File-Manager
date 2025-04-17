@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>901</width>
-    <height>540</height>
+    <width>1226</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -41,7 +41,7 @@
    <set>QMainWindow::DockOption::AllowNestedDocks|QMainWindow::DockOption::AllowTabbedDocks|QMainWindow::DockOption::AnimatedDocks|QMainWindow::DockOption::ForceTabbedDocks|QMainWindow::DockOption::GroupedDragging|QMainWindow::DockOption::VerticalTabs</set>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="1,1,10,1">
     <property name="leftMargin">
      <number>5</number>
     </property>
@@ -455,8 +455,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>901</width>
-     <height>25</height>
+     <width>1226</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuview">
