@@ -209,7 +209,7 @@
      </widget>
     </item>
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,0,0,1,0,40,0,0,0">
+     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,0,0,0,1,0,40,0,0,0">
       <property name="spacing">
        <number>2</number>
       </property>
@@ -221,6 +221,9 @@
       </property>
       <item>
        <widget class="QToolButton" name="toolUpButton">
+        <property name="toolTip">
+         <string>upper folder</string>
+        </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -237,6 +240,9 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolRefreshButton">
+        <property name="toolTip">
+         <string>refresh</string>
+        </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -253,6 +259,9 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolBackButton">
+        <property name="toolTip">
+         <string>backward</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -263,6 +272,9 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolForwardButton">
+        <property name="toolTip">
+         <string>forward</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -286,6 +298,9 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolCutButton">
+        <property name="toolTip">
+         <string>cut</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -296,6 +311,9 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolCopyButton">
+        <property name="toolTip">
+         <string>copy</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -306,11 +324,27 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolPasteButton">
+        <property name="toolTip">
+         <string>paste</string>
+        </property>
         <property name="text">
          <string/>
         </property>
         <property name="icon">
          <iconset theme="QIcon::ThemeIcon::EditPaste"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolButton">
+        <property name="toolTip">
+         <string>rename</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::MailMessageNew"/>
         </property>
        </widget>
       </item>
@@ -329,6 +363,9 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolDelButton">
+        <property name="toolTip">
+         <string>delete</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -352,6 +389,9 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolNotePadButton">
+        <property name="toolTip">
+         <string>open notepad</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -362,6 +402,9 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolCmdButton">
+        <property name="toolTip">
+         <string>open cmd</string>
+        </property>
         <property name="text">
          <string>cmd</string>
         </property>
@@ -369,6 +412,9 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolSearchButton">
+        <property name="toolTip">
+         <string>search</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -387,7 +433,7 @@
      <x>0</x>
      <y>0</y>
      <width>901</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuview">
