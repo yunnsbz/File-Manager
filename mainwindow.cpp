@@ -104,6 +104,12 @@ void MainWindow::UpdateLabel_(const QString& path)
     ui->label->setMinimumSize(ui->label->sizeHint());
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+        if (event->key() == Qt::Key_C) {
+            ui->lineEdit->setFocus();
+        }
+    }
+
 void MainWindow::on_actionExit_triggered()
 {
     close();

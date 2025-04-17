@@ -203,7 +203,17 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="lineEdit">
+         <property name="inputMask">
+          <string/>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>press 'C' to focus</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
