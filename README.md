@@ -10,12 +10,14 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
 ## Goals
 
 - File and folder browsing
-- Dual-pane interface 
+- highly customizable interface
+  - Dual-pane interface
+  - Column interface
 - All File operations (copy, move, delete, rename)
 - Tab support
+- command line suppport
 - File preview
 - Bookmarks and history
-
 ---
 
 ## Built With
