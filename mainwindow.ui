@@ -274,7 +274,7 @@
        <enum>QFrame::Shape::NoFrame</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_2">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -325,7 +325,11 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QColumnView" name="columnView"/>
+             <widget class="QColumnView" name="columnView">
+              <property name="alternatingRowColors">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>

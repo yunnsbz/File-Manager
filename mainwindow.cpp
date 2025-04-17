@@ -41,6 +41,9 @@ MainWindow::MainWindow(QWidget *parent)
         &MainWindow::onTreeSelectionChanged
     );
 
+    auto* fileModel = FileModelOperations::GetFileModel();
+    ui->columnView->setModel(fileModel);
+
     // tree view daha küçük olmalı
     ui->splitter->setSizes({100,400});
     ui->splitter_2->setSizes({100,400});
