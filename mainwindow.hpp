@@ -76,6 +76,8 @@ private slots:
 // virtual methods
 void on_toolCmdButton_pressed();
 
+void on_actionDual_Pane_View_triggered();
+
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 
@@ -100,6 +102,7 @@ private:
 
     // treeView is collapsed or not:
     bool treeActive = true;
+    bool dualPaneActive = true;
 
     // tree view expanded Indexes
     QList<QList<QModelIndex>> tabsExpandedIndexes;

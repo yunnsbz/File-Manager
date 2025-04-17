@@ -41,7 +41,16 @@ MainWindow::MainWindow(QWidget *parent)
         &MainWindow::onTreeSelectionChanged
     );
 
+    // tree view daha küçük olmalı
     ui->splitter->setSizes({100,400});
+    ui->splitter_2->setSizes({100,400});
+
+    // spliterlar ekranda sadece tree view olacak şekilde sürüklenmemeli
+    ui->splitter->setCollapsible(1,false);
+    ui->splitter_2->setCollapsible(1,false);
+
+    // close dual pane by default:
+    on_actionDual_Pane_View_triggered();
 
     setWindowTitle("File Manager");
     show();
@@ -328,5 +337,45 @@ void MainWindow::on_lineEdit_returnPressed()
 void MainWindow::on_toolCmdButton_pressed()
 {
     on_lineEdit_returnPressed();
+}
+
+
+void MainWindow::on_actionDual_Pane_View_triggered()
+{
+    if (dualPaneActive)
+    {
+        dualPaneActive = false;
+        ui->splitter_dualPane->setChildrenCollapsible(true);
+        ui->splitter_dualPane->setSizes({1,0});
+        ui->splitter_dualPane->setChildrenCollapsible(false);
+        // sürüklemeyi devre dışı bırakma:
+        for (int i = 0; i < 2; ++i)
+        {
+            QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+            if (handle != nullptr)
+            {
+                handle->setEnabled(false);
+            }
+        }
+        ui->splitter_dualPane->setHandleWidth(0);
+    }
+    else
+    {
+        dualPaneActive = true;
+        ui->splitter_dualPane->setChildrenCollapsible(true);
+        ui->splitter_dualPane->setSizes({1,1});
+        ui->splitter_dualPane->setChildrenCollapsible(false);
+        //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
+        for (int i = 0; i < 2; ++i)
+        {
+            QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+            if (handle != nullptr)
+            {
+                handle->setEnabled(true);
+            }
+        }
+
+        ui->splitter_dualPane->setHandleWidth(5);
+    }
 }
 

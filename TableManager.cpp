@@ -3,6 +3,7 @@
 
 #include <QUrl>
 #include <QDesktopServices>
+#include <QHeaderView>
 
 
 TableManager::TableManager(QTableView *tableView, QObject *parent)
@@ -12,7 +13,8 @@ TableManager::TableManager(QTableView *tableView, QObject *parent)
 {
     auto* fileModel = FileModelOperations::GetFileModel();
     tableView->setModel(fileModel);
-    tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableView->resizeColumnsToContents(); // Başlangıçta içeriklere göre yerleştir
+    tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 void TableManager::SetTableToDefault()
