@@ -21,10 +21,6 @@ void TabManager::Setup_()
 {
     // yeni sekme ekleme butonunun eklenmesi, işlevi ve ilk açılıştaki sekmeleri ayarlama
 
-
-    // default olarak gelen ikinci sekmeyi kaldır:
-    tabWidget->removeTab(1);
-
     connect(tabWidget->tabBar(), &QTabBar::tabMoved, this, &TabManager::onTabMoved);
 
     auto* addTabButton = new QToolButton();
