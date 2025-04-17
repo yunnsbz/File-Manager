@@ -8,7 +8,7 @@
 #include <QBoxLayout>
 #include <QFileSystemModel>
 
-TabManager::TabManager(QTabWidget* tabWidget,  QObject* parent)
+TabManager::TabManager(QTabWidget* tabWidget, QObject* parent)
     :
     QObject(parent),
     mainWindow(static_cast<MainWindow*>(parent)),
@@ -91,7 +91,6 @@ void TabManager::addNewTab()
 
     if (currentSplitter != nullptr)
     {
-
         auto* newTabWidget = new QWidget();
         auto* layout = new QVBoxLayout(newTabWidget);
         layout->addWidget(currentSplitter);
@@ -105,6 +104,24 @@ void TabManager::addNewTab()
         mainWindow->SetTabContent(tabWidget->currentIndex());
     }
 }
+
+// void TabManager::addTab(const QString& title)
+// {
+//     TabData newTab;
+//
+//     newTab.tabWidget = new QWidget;
+//     newTab.treeView = new QTreeView(newTab.tabWidget);
+//     newTab.tableView = new QTableView(newTab.tabWidget);
+//
+//     QVBoxLayout* layout = new QVBoxLayout(newTab.tabWidget);
+//     layout->addWidget(newTab.treeView);
+//     layout->addWidget(newTab.tableView);
+//     newTab.tabWidget->setLayout(layout);
+//
+//     tabWidget->addTab(newTab.tabWidget, title);
+//     m_tabs_.append(newTab);
+// }
+
 
 void TabManager::moveTabWidget(int index)
 {

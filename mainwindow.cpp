@@ -27,9 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui(new Ui::MainWindow),
     m_ui_mgr_(ui, this),
     fileOperations(new FileModelOperations()),
-    toolBarManager(new ToolBarManager(ui->toolBar ,this)),
+    toolBarManager(new ToolBarManager(ui->toolBar, this)),
     tabManager(new TabManager(ui->tabWidget, this)),
-    tableManager(new TableManager(ui->tableView,this)),
+    tableManager(new TableManager(ui->tableView, this)),
     treeManager(new TreeManager(ui->FileTreeView, this))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
@@ -78,7 +78,6 @@ auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
 void MainWindow::SetTabContent(int tabIndex)
 {
     tableManager->SetTableContent(tabIndex);
-
     treeManager->SetTreeContent(tabIndex);
 }
 
@@ -100,6 +99,7 @@ void MainWindow::OnTabMoved(int toIndex, int fromIndex)
 void MainWindow::UpdateLabel_(const QString& path)
 {
     ui->label->setText(path);
+
     // label default size (in the ui editor) should be bigger than needed
     ui->label->setMinimumSize(ui->label->sizeHint());
 }
