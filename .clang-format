@@ -56,8 +56,8 @@ AlignEscapedNewlines: Left
 AlignOperands: Align
 
 AlignTrailingComments:
-  Kind:            Always
-  OverEmptyLines:  1
+    Kind:            Always
+    OverEmptyLines:  1
 
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
