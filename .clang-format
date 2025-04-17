@@ -130,19 +130,18 @@ Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat: false
 
-EmptyLineAfterAccessModifier: Always
-EmptyLineBeforeAccessModifier: Always
+EmptyLineAfterAccessModifier: Leave
+EmptyLineBeforeAccessModifier: Leave
 # EnumTrailingComma: Remove    ## clang-format 21 ##
 
 FixNamespaceComments: false
 
 ForEachMacros:    # for Qt
-[
-    forever,
-    foreach,
-    Q_FOREACH,
-    BOOST_FOREACH
-]
+  - forever,
+  - foreach,
+  - Q_FOREACH,
+  - BOOST_FOREACH
+
 IfMacros: [ KJ_IF_MAYBE ]    # for Qt
 
 IncludeBlocks: Preserve
@@ -191,7 +190,7 @@ MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
 NamespaceMacros: []
 
-PPIndentWidth: -1
+PPIndentWidth: 0
 
 PackConstructorInitializers: NextLineOnly
 
