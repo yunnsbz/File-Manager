@@ -379,3 +379,16 @@ void MainWindow::on_actionDual_Pane_View_triggered()
     }
 }
 
+
+void MainWindow::on_actionColumn_View_triggered()
+{
+    if(ColumnViewActive){
+        ColumnViewActive = false;
+        ui->stackedWidget->setCurrentIndex(0);
+    }
+    else{
+        ColumnViewActive = true;
+        ui->stackedWidget->setCurrentIndex(1);
+    }
+}
+
