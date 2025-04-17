@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "ui_mainwindow.h"
 #include <QMainWindow>
 #include <QObject>
 #include <QFileSystemModel>
@@ -9,6 +10,7 @@
 #include <QEvent>
 #include <QString>
 #include <QList>
+#include <qevent.h>
 
 class TabManager;
 class ToolBarManager;
@@ -78,6 +80,8 @@ private:
 private:
     void UpdateLabel_(const QString& path);
 
+    // şimdilik mainWİdget'da bazı ögelere focus için kullanılıyor:
+    void keyPressEvent(QKeyEvent* event) override;
 
 // member variables
 private:
