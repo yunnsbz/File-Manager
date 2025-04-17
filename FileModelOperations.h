@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QMap>
 #include <QList>
+#include <QDir>
 
 class FileModelOperations : public QObject
 {
@@ -30,6 +31,10 @@ public:
 
     static void OnBackButtonClicked(int tabIndex);
     static void OnForwardButtonClicked(int tabIndex);
+
+
+protected:
+
 
 private:
     static inline QFileSystemModel* fileModel;

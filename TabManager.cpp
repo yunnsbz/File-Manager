@@ -8,7 +8,7 @@
 #include <QBoxLayout>
 #include <QFileSystemModel>
 
-TabManager::TabManager(QTabWidget* tabWidget,  QObject* parent)
+TabManager::TabManager(QTabWidget* tabWidget, QObject* parent)
     :
     QObject(parent),
     mainWindow(static_cast<MainWindow*>(parent)),
@@ -91,7 +91,6 @@ void TabManager::addNewTab()
 
     if (currentSplitter != nullptr)
     {
-
         auto* newTabWidget = new QWidget();
         auto* layout = new QVBoxLayout(newTabWidget);
         layout->addWidget(currentSplitter);

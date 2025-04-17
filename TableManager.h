@@ -12,15 +12,18 @@ class TableManager : public QObject
 public:
     explicit TableManager(QTableView* tableView, QObject* parent);
 
+
+public:
     void SetTableToDefault();
     void SetTableContent(int tabIndex);
-
     void navigateToFolder(int tabIndex, QModelIndex firstColumnIndex);
+
+
+protected:
+
 
 private:
     QTableView* tableView;
-
-
 };
 
 #endif // TABLEMANAGER_H
