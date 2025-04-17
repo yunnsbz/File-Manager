@@ -36,7 +36,6 @@ TreeManager::TreeManager(QTreeView *treeView, QObject *parent)
         const QString& path = FileOperations::GetFilePath(index);
         const int currentTab = mainWindow->GetCurrentTabIndex();
         ExpandedPathsMap[currentTab].removeOne(path);
-
     });
 
 }
@@ -50,6 +49,14 @@ void TreeManager::setTreeToDefault()
     treeView->collapseAll();
 }
 
+void TreeManager::CollapseAll_noSig()
+{
+    // collapse all dediğimde collapse sinyallerinin çalışmasını engellemek için
+    treeView->blockSignals(true);   // Tüm sinyalleri kapat
+    treeView->collapseAll();
+    treeView->blockSignals(false); // Tüm sinyalleri aç
+}
+
 void TreeManager::SetTreeContent(int tabIndex)
 {
     // set tree view content:
@@ -59,8 +66,7 @@ void TreeManager::SetTreeContent(int tabIndex)
         return;
     }
 
-    // expanded paths is not empty:
-    treeView->collapseAll();
+    CollapseAll_noSig();
 
     for (const auto &path : ExpandedPathsMap[tabIndex])
     {

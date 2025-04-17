@@ -29,6 +29,11 @@ public:
 
 
 private:
+    // sinyal oluşturmadan ağacın tüm dallarını kapat
+    void CollapseAll_noSig();
+
+
+private:
     MainWindow* mainWindow;
 
     QTreeView* treeView;
@@ -41,6 +46,7 @@ private:
     using PathHistory = QList<Path>;
     QMap<int, PathHistory> BackHistoryExpandedPaths;
     QMap<int, PathHistory> ForwardHistoryExpandedPaths;
+
 
 };
 

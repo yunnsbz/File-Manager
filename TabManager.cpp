@@ -50,38 +50,47 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
     mainWindow->OnTabMoved(toIndex, fromIndex);
 
 
-    // lastLeftTabIndex is the one moved it should register
-    if (fromIndex == lastLeftTabIndex)
+    // if lastLeftTabIndex is the one moved it should register
+    if (fromIndex == _previousLeftTabIndex)
     {
-        lastLeftTabIndex = toIndex;
+        _previousLeftTabIndex = toIndex;
+        persistentPreviousLeftTabIndex = toIndex;
     }
     else if (toIndex == lastRightTabIndex)
     {
-        lastLeftTabIndex = fromIndex;
+        _previousLeftTabIndex = fromIndex;
+        persistentPreviousLeftTabIndex = fromIndex;
     }
 }
 
-auto TabManager::GetSplitter()
+auto TabManager::GetPreviousSplitter()
 {
-    return tabWidget->widget(lastLeftTabIndex)->findChild<QSplitter*>();
+    return tabWidget->widget(_previousLeftTabIndex)->findChild<QSplitter*>();
 }
 
-auto TabManager::getLastLeftTabIndex() const -> int
+auto TabManager::_getPreviousLeftTabIndex() const -> int
 {
-    return lastLeftTabIndex;
+    return _previousLeftTabIndex;
 }
 
-void TabManager::setLastLeftTabIndex(int value)
+int TabManager::getPersistentPreviousLeftTabIndex() const
 {
-    lastLeftTabIndex = value;
+    return persistentPreviousLeftTabIndex;
+}
+
+void TabManager::setPreviousLeftTabIndex(int value)
+{
+    persistentPreviousLeftTabIndex = _previousLeftTabIndex;
+    _previousLeftTabIndex = value;
 }
 
 void TabManager::addNewTab()
 {
-    auto* currentSplitter = GetSplitter();
+    auto* currentSplitter = GetPreviousSplitter();
 
     if (currentSplitter != nullptr)
     {
+
         auto* newTabWidget = new QWidget();
         auto* layout = new QVBoxLayout(newTabWidget);
         layout->addWidget(currentSplitter);
@@ -89,7 +98,8 @@ void TabManager::addNewTab()
 
         tabWidget->addTab(newTabWidget, "new tab");
         tabWidget->setCurrentIndex(tabWidget->count() - 1);
-        lastLeftTabIndex = tabWidget->count() - 1;
+
+        setPreviousLeftTabIndex(tabWidget->count() - 1);
 
         mainWindow->SetTabContent(tabWidget->currentIndex());
     }
@@ -99,7 +109,7 @@ void TabManager::moveTabWidget(int index)
 {
     // sekme içerisini kopyalamak yerine taşıyarak sekmeler arasında geçiş yaparız
 
-    auto* currentSplitter = GetSplitter();
+    auto* currentSplitter = GetPreviousSplitter();
 
     if (currentSplitter != nullptr)
     {
@@ -117,6 +127,6 @@ void TabManager::moveTabWidget(int index)
         tabWidget->removeTab(index + 1); // eski widget'ı kaldır
         tabWidget->setCurrentIndex(index);
 
-        lastLeftTabIndex = index;
+        setPreviousLeftTabIndex(index);
     }
 }

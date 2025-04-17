@@ -87,6 +87,11 @@ auto MainWindow::GetCurrentTabIndex() -> int
     return ui->tabWidget->currentIndex();
 }
 
+auto MainWindow::GetPreviousTabIndex() -> int
+{
+    return tabManager->getPersistentPreviousLeftTabIndex();
+}
+
 void MainWindow::OnTabMoved(int toIndex, int fromIndex)
 {
     treeManager->swapExpandedPathsMap(toIndex, fromIndex);
@@ -198,7 +203,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
         treeManager->removeTabExpandedPaths(index);
         FileOperations::RemoveTabModelIndex(index);
 
-        tabManager->setLastLeftTabIndex(ui->tabWidget->currentIndex());
+        tabManager->setPreviousLeftTabIndex(ui->tabWidget->currentIndex());
         SetTabContent(ui->tabWidget->currentIndex());
     }
     else
@@ -211,7 +216,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 void MainWindow::on_tabWidget_tabBarClicked(int index)
 {
     // Aynı sekmeye tıklanmadıysa
-    if (index != tabManager->getLastLeftTabIndex()
+    if (index != tabManager->_getPreviousLeftTabIndex()
         &&
         index != -1)
     {
@@ -307,4 +312,5 @@ void MainWindow::on_lineEdit_returnPressed()
 
     QProcess::startDetached("cmd", QStringList() << str);
 }
+
 

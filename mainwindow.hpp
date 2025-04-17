@@ -43,9 +43,11 @@ public:
     void SetTabContent(int tabIndex);
 
     auto GetCurrentTabIndex() -> int;
+    auto GetPreviousTabIndex() -> int;
     void OnTabMoved(int toIndex, int fromIndex);
 
     auto getUI() -> Ui::MainWindow*;
+
 
 
 protected:
