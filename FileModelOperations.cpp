@@ -1,10 +1,10 @@
-#include "FileOperations.h"
+#include "FileModelOperations.h"
 
 #include <QtLogging>
 
 #include <algorithm>
 
-FileOperations::FileOperations()
+FileModelOperations::FileModelOperations()
 {
     // set model:
     fileModel = new QFileSystemModel(this);
@@ -13,12 +13,12 @@ FileOperations::FileOperations()
     fileModel->setRootPath("");
 }
 
-auto FileOperations::GetFileModel() -> QFileSystemModel*
+auto FileModelOperations::GetFileModel() -> QFileSystemModel*
 {
     return fileModel;
 }
 
-void FileOperations::SetTabModelIndex(int tabIndex, QModelIndex modelIndex)
+void FileModelOperations::SetTabModelIndex(int tabIndex, QModelIndex modelIndex)
 {
     TabBackHistoryModelIndex[tabIndex].push_back(TabModelIndexMap[tabIndex]);
 
@@ -28,28 +28,28 @@ void FileOperations::SetTabModelIndex(int tabIndex, QModelIndex modelIndex)
     TabModelIndexMap[tabIndex] = modelIndex;
 }
 
-auto FileOperations::GetFilePath(QModelIndex modelIndex) -> QString
+auto FileModelOperations::GetFilePath(QModelIndex modelIndex) -> QString
 {
     return fileModel->filePath(modelIndex);
 }
 
-auto FileOperations::GetFileIndex(const QString& path) -> QModelIndex
+auto FileModelOperations::GetFileIndex(const QString& path) -> QModelIndex
 {
     if (!QFileInfo::exists(path)) return QModelIndex(); // path erişilemiyorsa
     return fileModel->index(path);
 }
 
-auto FileOperations::IsBackHistoryEmpty(int tabIndex) -> bool
+auto FileModelOperations::IsBackHistoryEmpty(int tabIndex) -> bool
 {
     return TabBackHistoryModelIndex[tabIndex].isEmpty();
 }
 
-auto FileOperations::IsForwardHistoryEmpty(int tabIndex) -> bool
+auto FileModelOperations::IsForwardHistoryEmpty(int tabIndex) -> bool
 {
     return TabForwardHistoryModelIndex[tabIndex].isEmpty();
 }
 
-void FileOperations::RemoveTabModelIndex(int tabIndex)
+void FileModelOperations::RemoveTabModelIndex(int tabIndex)
 {
     TabModelIndexMap.remove(tabIndex);
 
@@ -67,14 +67,14 @@ void FileOperations::RemoveTabModelIndex(int tabIndex)
     }
 }
 
-void FileOperations::swapTabModelIndexMap(int toIndex, int fromIndex)
+void FileModelOperations::swapTabModelIndexMap(int toIndex, int fromIndex)
 {
     const auto temp = TabModelIndexMap.value(fromIndex);
     TabModelIndexMap[fromIndex] = TabModelIndexMap.value(toIndex);
     TabModelIndexMap[toIndex] = temp;
 }
 
-void FileOperations::swapTabHistoryModelIndex(int toIndex, int fromIndex)
+void FileModelOperations::swapTabHistoryModelIndex(int toIndex, int fromIndex)
 {
     const auto tempBack = TabBackHistoryModelIndex.value(fromIndex);
     TabBackHistoryModelIndex[fromIndex] = TabBackHistoryModelIndex.value(toIndex);
@@ -84,7 +84,7 @@ void FileOperations::swapTabHistoryModelIndex(int toIndex, int fromIndex)
     TabForwardHistoryModelIndex[toIndex] = tempBack;
 }
 
-void FileOperations::OnBackButtonClicked(int tabIndex)
+void FileModelOperations::OnBackButtonClicked(int tabIndex)
 {
     if (!TabBackHistoryModelIndex[tabIndex].isEmpty()) {
         TabForwardHistoryModelIndex[tabIndex].append(TabModelIndexMap[tabIndex]);
@@ -93,7 +93,7 @@ void FileOperations::OnBackButtonClicked(int tabIndex)
     }
 }
 
-void FileOperations::OnForwardButtonClicked(int tabIndex)
+void FileModelOperations::OnForwardButtonClicked(int tabIndex)
 {
     if (!TabForwardHistoryModelIndex[tabIndex].isEmpty()) {
         TabBackHistoryModelIndex[tabIndex].append(TabModelIndexMap[tabIndex]);
@@ -102,7 +102,7 @@ void FileOperations::OnForwardButtonClicked(int tabIndex)
     }
 }
 
-auto FileOperations::GetTabModelIndex(int tabIndex) -> QModelIndex
+auto FileModelOperations::GetTabModelIndex(int tabIndex) -> QModelIndex
 {
     if(TabModelIndexMap.contains(tabIndex))
     {

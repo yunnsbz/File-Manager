@@ -36,8 +36,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         TreeManager.h
         TableManager.cpp
         TreeManager.cpp
-        FileOperations.h
-        FileOperations.cpp
+        FileModelOperations.h
+        FileModelOperations.cpp
         .clang-format
 
 

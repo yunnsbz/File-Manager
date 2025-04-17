@@ -1,5 +1,5 @@
 #include "TableManager.h"
-#include "FileOperations.h"
+#include "FileModelOperations.h"
 
 #include <QUrl>
 #include <QDesktopServices>
@@ -10,14 +10,14 @@ TableManager::TableManager(QTableView *tableView, QObject *parent)
     QObject(parent),
     tableView(tableView)
 {
-    auto* fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileModelOperations::GetFileModel();
     tableView->setModel(fileModel);
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 
 void TableManager::SetTableToDefault()
 {
-    auto* fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileModelOperations::GetFileModel();
     fileModel->setRootPath("");
     const QModelIndex index = fileModel->index(fileModel->rootPath());
     tableView->setRootIndex(index);
@@ -26,7 +26,7 @@ void TableManager::SetTableToDefault()
 void TableManager::SetTableContent(int tabIndex)
 {
     // set table view content:
-    auto index = FileOperations::GetTabModelIndex(tabIndex);
+    auto index = FileModelOperations::GetTabModelIndex(tabIndex);
 
     if (!index.isValid())
     {
@@ -39,7 +39,7 @@ void TableManager::SetTableContent(int tabIndex)
 
 void TableManager::navigateToFolder(int tabIndex, QModelIndex firstColumnIndex)
 {
-    auto* fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileModelOperations::GetFileModel();
     if (!fileModel->hasChildren(firstColumnIndex))
     {
         const QString filePath = fileModel->filePath(firstColumnIndex);
@@ -48,7 +48,7 @@ void TableManager::navigateToFolder(int tabIndex, QModelIndex firstColumnIndex)
     else
     {
         tableView->setRootIndex(firstColumnIndex);
-        FileOperations::SetTabModelIndex(tabIndex,firstColumnIndex);
+        FileModelOperations::SetTabModelIndex(tabIndex,firstColumnIndex);
     }
 }
 

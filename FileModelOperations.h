@@ -1,17 +1,17 @@
-#ifndef FILEOPERATIONS_H
-#define FILEOPERATIONS_H
+#ifndef FILEMODELOPERATIONS_H
+#define FILEMODELOPERATIONS_H
 
 #include <QFileSystemModel>
 #include <QObject>
 #include <QMap>
 #include <QList>
 
-class FileOperations : public QObject
+class FileModelOperations : public QObject
 {
     Q_OBJECT
 
 public:
-    FileOperations();
+    FileModelOperations();
 
 
 public:
@@ -41,4 +41,4 @@ private:
     static inline QMap<int, QList<QModelIndex>> TabForwardHistoryModelIndex;
     // NOLINTEND(fuchsia-statically-constructed-objects)
 };
-#endif // FILEOPERATIONS_H
+#endif // FILEMODELOPERATIONS_H

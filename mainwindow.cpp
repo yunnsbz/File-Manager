@@ -3,7 +3,7 @@
 #include "./ui_mainwindow.h"
 #include "TableManager.h"
 #include "ToolBarManager.h"
-#include "FileOperations.h"
+#include "FileModelOperations.h"
 #include "TreeManager.h"
 
 #include <QFileSystemModel>
@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_ui_mgr_(ui, this),
-    fileOperations(new FileOperations()),
+    fileOperations(new FileModelOperations()),
     toolBarManager(new ToolBarManager(ui->toolBar ,this)),
     tabManager(new TabManager(ui->tabWidget, this)),
     tableManager(new TableManager(ui->tableView,this)),
@@ -201,7 +201,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
         ui->tabWidget->removeTab(index);
 
         treeManager->removeTabExpandedPaths(index);
-        FileOperations::RemoveTabModelIndex(index);
+        FileModelOperations::RemoveTabModelIndex(index);
 
         tabManager->setPreviousLeftTabIndex(ui->tabWidget->currentIndex());
         SetTabContent(ui->tabWidget->currentIndex());
@@ -229,8 +229,8 @@ void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
 
 void MainWindow::updateHistoryButtons(int const tabIndex)
 {
-    toolBarManager->SetBackButtonEnabled(!FileOperations::IsBackHistoryEmpty(tabIndex));
-    toolBarManager->SetForwardButtonEnabled(!FileOperations::IsForwardHistoryEmpty(tabIndex));
+    toolBarManager->SetBackButtonEnabled(!FileModelOperations::IsBackHistoryEmpty(tabIndex));
+    toolBarManager->SetForwardButtonEnabled(!FileModelOperations::IsForwardHistoryEmpty(tabIndex));
 }
 
 void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
@@ -238,7 +238,7 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
     int const tabIndex = ui->tabWidget->currentIndex();
     treeManager->navigateToFolder(modelIndex, tabIndex);
 
-    auto* fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileModelOperations::GetFileModel();
     // girilen yer klasör ise table view set edilir:
     if (fileModel->hasChildren(modelIndex))
     {
@@ -253,7 +253,7 @@ void MainWindow::on_toolBackButton_clicked()
 {
     const auto tabIndex = ui->tabWidget->currentIndex();
 
-    FileOperations::OnBackButtonClicked(tabIndex);
+    FileModelOperations::OnBackButtonClicked(tabIndex);
     //tree back onClick missing
 
     tableManager->SetTableContent(tabIndex);
@@ -267,7 +267,7 @@ void MainWindow::on_toolForwardButton_clicked()
 {
     const auto tabIndex = ui->tabWidget->currentIndex();
 
-    FileOperations::OnForwardButtonClicked(tabIndex);
+    FileModelOperations::OnForwardButtonClicked(tabIndex);
     //tree back onClick missing
 
     tableManager->SetTableContent(tabIndex);
@@ -300,7 +300,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_lineEdit_returnPressed()
 {
-    auto path = FileOperations::GetFilePath(FileOperations::GetTabModelIndex(ui->tabWidget->currentIndex()));
+    auto path = FileModelOperations::GetFilePath(FileModelOperations::GetTabModelIndex(ui->tabWidget->currentIndex()));
 
     if (path.isEmpty())
     {

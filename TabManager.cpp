@@ -1,7 +1,7 @@
 #include "TabManager.h"
 #include "mainwindow.hpp"
 #include "ToolBarManager.h"
-#include "FileOperations.h"
+#include "FileModelOperations.h"
 
 #include <QToolButton>
 #include <QTabBar>
@@ -46,8 +46,8 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
         return;
     }
 
-    FileOperations::swapTabModelIndexMap(toIndex, fromIndex);
-    FileOperations::swapTabHistoryModelIndex(toIndex, fromIndex);
+    FileModelOperations::swapTabModelIndexMap(toIndex, fromIndex);
+    FileModelOperations::swapTabHistoryModelIndex(toIndex, fromIndex);
     mainWindow->OnTabMoved(toIndex, fromIndex);
 
 

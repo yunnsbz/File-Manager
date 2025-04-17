@@ -1,6 +1,6 @@
 
 #include "TreeManager.h"
-#include "FileOperations.h"
+#include "FileModelOperations.h"
 #include "mainwindow.hpp"
 
 #include <QTableView>
@@ -13,7 +13,7 @@ TreeManager::TreeManager(QTreeView *treeView, QObject *parent)
     mainWindow(static_cast<MainWindow*>(parent)),
     treeView(treeView)
 {
-    auto* fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileModelOperations::GetFileModel();
     treeView->setModel(fileModel);
     treeView->setRootIndex(fileModel->index(fileModel->rootPath()));
 
@@ -24,7 +24,7 @@ TreeManager::TreeManager(QTreeView *treeView, QObject *parent)
 
     // tree view açılma ve kapanma durumlarında değişiklikleri tabContents içine kaydetmeliyiz:
     connect(treeView, &QTreeView::expanded, this, [this](const QModelIndex &index) {
-        const QString& path = FileOperations::GetFilePath(index);
+        const QString& path = FileModelOperations::GetFilePath(index);
         const int currentTab = mainWindow->GetCurrentTabIndex();
         if(!ExpandedPathsMap[currentTab].contains(path))
         {
@@ -33,7 +33,7 @@ TreeManager::TreeManager(QTreeView *treeView, QObject *parent)
     });
 
     connect(treeView, &QTreeView::collapsed, this, [this](const QModelIndex &index) {
-        const QString& path = FileOperations::GetFilePath(index);
+        const QString& path = FileModelOperations::GetFilePath(index);
         const int currentTab = mainWindow->GetCurrentTabIndex();
         ExpandedPathsMap[currentTab].removeOne(path);
     });
@@ -42,7 +42,7 @@ TreeManager::TreeManager(QTreeView *treeView, QObject *parent)
 
 void TreeManager::setTreeToDefault()
 {
-    auto* fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileModelOperations::GetFileModel();
     fileModel->setRootPath("");
     const QModelIndex index = fileModel->index(fileModel->rootPath());
     treeView->setRootIndex(index);
@@ -70,7 +70,7 @@ void TreeManager::SetTreeContent(int tabIndex)
 
     for (const auto &path : ExpandedPathsMap[tabIndex])
     {
-        const QModelIndex index = FileOperations::GetFileIndex(path);
+        const QModelIndex index = FileModelOperations::GetFileIndex(path);
         if (index.isValid() && index.model() != nullptr)
         {
             treeView->expand(index);
@@ -80,10 +80,10 @@ void TreeManager::SetTreeContent(int tabIndex)
 
 void TreeManager::navigateToFolder(const QModelIndex &modelIndex, int tabIndex)
 {
-    auto *fileModel = FileOperations::GetFileModel();
+    auto *fileModel = FileModelOperations::GetFileModel();
     if (fileModel->hasChildren(modelIndex))
     {
-        FileOperations::SetTabModelIndex(tabIndex, modelIndex);
+        FileModelOperations::SetTabModelIndex(tabIndex, modelIndex);
     }
 
     // single click tree expanding and collapsing:
@@ -124,7 +124,7 @@ void TreeManager::swapExpandedPathsMap(int toIndex, int fromIndex)
 
 void TreeManager::ExpandTreeView(const QModelIndex &modelIndex)
 {
-    auto* fileModel = FileOperations::GetFileModel();
+    auto* fileModel = FileModelOperations::GetFileModel();
     if(fileModel->hasChildren(modelIndex)){
         treeView->expand(modelIndex);
     }

@@ -12,7 +12,7 @@
 
 class TabManager;
 class ToolBarManager;
-class FileOperations;
+class FileModelOperations;
 class TableManager;
 class TreeManager;
 
@@ -84,7 +84,7 @@ private:
     Ui::MainWindow *ui;
     UIManager m_ui_mgr_;
 
-    FileOperations* fileOperations;
+    FileModelOperations* fileOperations;
     ToolBarManager* toolBarManager;
     TabManager* tabManager;
     TableManager* tableManager;
