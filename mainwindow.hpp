@@ -50,6 +50,8 @@ public:
 
 
 
+    void updateHistoryButtons(int const tabIndex);
+
 protected:
 
 

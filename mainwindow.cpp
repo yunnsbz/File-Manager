@@ -126,8 +126,8 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
     const auto tabIndex = ui->tabWidget->currentIndex();
 
-    toolBarManager->SetBackButtonEnabled(!FileOperations::IsBackHistoryEmpty(tabIndex));
-    toolBarManager->SetForwardButtonEnabled(!FileOperations::IsForwardHistoryEmpty(tabIndex));
+    // buton kontrolü:
+    updateHistoryButtons(tabIndex);
 
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(firstColumnIndex);
     UpdateLabel_(path);
@@ -222,9 +222,15 @@ void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
     {
         tabManager->moveTabWidget(tabIndex);
         SetTabContent(tabIndex);
-        toolBarManager->SetBackButtonEnabled(!FileOperations::IsBackHistoryEmpty(tabIndex));
-        toolBarManager->SetForwardButtonEnabled(!FileOperations::IsForwardHistoryEmpty(tabIndex));
+        // buton kontrolü:
+        updateHistoryButtons(tabIndex);
     }
+}
+
+void MainWindow::updateHistoryButtons(int const tabIndex)
+{
+    toolBarManager->SetBackButtonEnabled(!FileOperations::IsBackHistoryEmpty(tabIndex));
+    toolBarManager->SetForwardButtonEnabled(!FileOperations::IsForwardHistoryEmpty(tabIndex));
 }
 
 void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
@@ -238,8 +244,9 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
     {
         ui->tableView->setRootIndex(modelIndex);
     }
-    toolBarManager->SetBackButtonEnabled(!treeManager->IsBackHistoryEmpty(tabIndex));
-    toolBarManager->SetForwardButtonEnabled(!treeManager->IsForwardHistoryEmpty(tabIndex));
+
+    // buton kontrolü:
+    updateHistoryButtons(tabIndex);
 }
 
 void MainWindow::on_toolBackButton_clicked()
@@ -251,10 +258,9 @@ void MainWindow::on_toolBackButton_clicked()
 
     tableManager->SetTableContent(tabIndex);
     treeManager->SetTreeContent(tabIndex);
-    // buton kontrolü:
 
-    toolBarManager->SetBackButtonEnabled(!FileOperations::IsBackHistoryEmpty(tabIndex));
-    toolBarManager->SetForwardButtonEnabled(!FileOperations::IsForwardHistoryEmpty(tabIndex));
+    // buton kontrolü:
+    updateHistoryButtons(tabIndex);
 }
 
 void MainWindow::on_toolForwardButton_clicked()
@@ -268,8 +274,7 @@ void MainWindow::on_toolForwardButton_clicked()
     treeManager->SetTreeContent(tabIndex);
 
     // buton kontrolü:
-    toolBarManager->SetBackButtonEnabled(!FileOperations::IsBackHistoryEmpty(tabIndex));
-    toolBarManager->SetForwardButtonEnabled(!FileOperations::IsForwardHistoryEmpty(tabIndex));
+    updateHistoryButtons(tabIndex);
 }
 
 void MainWindow::on_actionAbout_triggered()

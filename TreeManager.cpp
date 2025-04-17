@@ -129,13 +129,3 @@ void TreeManager::ExpandTreeView(const QModelIndex &modelIndex)
         treeView->expand(modelIndex);
     }
 }
-
-auto TreeManager::IsBackHistoryEmpty(int tabIndex) -> bool
-{
-    return BackHistoryExpandedPaths[tabIndex].isEmpty();
-}
-
-auto TreeManager::IsForwardHistoryEmpty(int tabIndex) -> bool
-{
-    return ForwardHistoryExpandedPaths[tabIndex].isEmpty();
-}

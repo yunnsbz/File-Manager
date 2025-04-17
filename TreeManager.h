@@ -24,10 +24,6 @@ public:
 
     void ExpandTreeView(const QModelIndex &index);
 
-    auto IsBackHistoryEmpty(int tabIndex) -> bool;
-    auto IsForwardHistoryEmpty(int tabIndex) -> bool;
-
-
 private:
     // sinyal oluşturmadan ağacın tüm dallarını kapat
     void CollapseAll_noSig();
@@ -40,12 +36,6 @@ private:
 
     // treeView için her sekmede açılmış yolları tutar:
     QMap<int, QList<QString>> ExpandedPathsMap;
-
-    // her sekmeye özel history:
-    using Path = QList<QString>;
-    using PathHistory = QList<Path>;
-    QMap<int, PathHistory> BackHistoryExpandedPaths;
-    QMap<int, PathHistory> ForwardHistoryExpandedPaths;
 
 
 };
