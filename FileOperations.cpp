@@ -36,6 +36,7 @@ auto FileOperations::GetFilePath(QModelIndex modelIndex) -> QString
 
 auto FileOperations::GetFileIndex(const QString& path) -> QModelIndex
 {
+    if (!QFileInfo::exists(path)) return QModelIndex(); // path erişilemiyorsa
     return fileModel->index(path);
 }
 
