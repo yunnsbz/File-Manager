@@ -1,4 +1,9 @@
----
+#[[ fatpound ]]#
+
+##*******************************************##
+## clang-format config file for standard C++ ##
+##-------------------------------------------##
+
 Language: Cpp
 Standard: Latest
 
@@ -35,21 +40,20 @@ AlignConsecutiveShortCaseStatements:
     Enabled:                   true
     AcrossEmptyLines:          true
     AcrossComments:            true
-    AlignCaseArrows:           false    ## non-standard ##
+    AlignCaseArrows:           false    ## non-standard C++ ##
     AlignCaseColons:           false
 
 AlignConsecutiveTableGenBreakingDAGArgColons:
-    Enabled:                   false    ## non-standard ##
+    Enabled:                   false    ## non-standard C++ ##
 
 AlignConsecutiveTableGenCondOperatorColons:
-    Enabled:                   false    ## non-standard ##
+    Enabled:                   false    ## non-standard C++ ##
 
 AlignConsecutiveTableGenDefinitionColons:
-    Enabled:                   false    ## non-standard ##
+    Enabled:                   false    ## non-standard C++ ##
 
 AlignEscapedNewlines: Left
 AlignOperands: Align
-
 
 AlignTrailingComments:
   Kind:            Always
@@ -57,7 +61,7 @@ AlignTrailingComments:
 
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
-AllowBreakBeforeNoexceptSpecifier: OnlyWithParen
+AllowBreakBeforeNoexceptSpecifier: Never
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortCompoundRequirementOnASingleLine: true
@@ -114,7 +118,7 @@ BreakBeforeConceptDeclarations: Allowed
 # BreakBeforeTemplateCloser: true    ## clang-format 21 ##
 BreakBeforeTernaryOperators: true
 # BreakBinaryOperations: RespectPrecedence    ## clang-format 20 ##
-BreakConstructorInitializers: BeforeColon
+BreakConstructorInitializers: AfterColon
 BreakFunctionDefinitionParameters: false
 BreakInheritanceList: AfterComma
 BreakStringLiterals: false
@@ -128,7 +132,7 @@ ContinuationIndentWidth: 4
 Cpp11BracedListStyle: false
 
 DerivePointerAlignment: false
-DisableFormat: false
+DisableFormat: true
 
 EmptyLineAfterAccessModifier: Leave
 EmptyLineBeforeAccessModifier: Leave
@@ -137,11 +141,12 @@ EmptyLineBeforeAccessModifier: Leave
 FixNamespaceComments: false
 
 ForEachMacros:    # for Qt
-  - forever,
-  - foreach,
-  - Q_FOREACH,
-  - BOOST_FOREACH
-
+[
+    forever,
+    foreach,
+    Q_FOREACH,
+    BOOST_FOREACH
+]
 IfMacros: [ KJ_IF_MAYBE ]    # for Qt
 
 IncludeBlocks: Preserve
@@ -163,12 +168,12 @@ InsertNewlineAtEOF: true
 InsertTrailingCommas: None
 
 IntegerLiteralSeparator:
-    Binary: 4
-    BinaryMinDigits: 5
-    Decimal: 3
-    DecimalMinDigits: 4
+    Binary: 0
+    BinaryMinDigits: 0
+    Decimal: 0
+    DecimalMinDigits: 0
     Hex: 0
-    HexMinDigits: 4
+    HexMinDigits: 0
 
 KeepEmptyLines:
     AtEndOfFile: false
@@ -188,14 +193,24 @@ MainIncludeChar: Any
 MaxEmptyLinesToKeep: 2
 
 NamespaceIndentation: All
-NamespaceMacros: []
+NamespaceMacros:
 
 PPIndentWidth: 0
 
 PackConstructorInitializers: NextLineOnly
 
-# ... PenaltyBreakAssignment: 1000
-# ...
+# PenaltyBreakAssignment: ?
+# PenaltyBreakBeforeFirstCallParameter: ?
+# PenaltyBreakBeforeMemberAccess: ?    ## clang-format 20 ##
+# PenaltyBreakComment: ?
+# PenaltyBreakFirstLessLess: ?
+# PenaltyBreakOpenParenthesis: ?
+# PenaltyBreakScopeResolution: ?
+# PenaltyBreakString: ?
+# PenaltyBreakTemplateDeclaration: ?
+# PenaltyExcessCharacter: ?
+# PenaltyIndentedWhitespace: ?
+# PenaltyReturnTypeOnItsOwnLine: ?
 
 PointerAlignment: Left
 QualifierAlignment: Custom
@@ -208,7 +223,7 @@ RemoveBracesLLVM: false
 RemoveParentheses: Leave
 RemoveSemicolon: false
 
-# RequiresClausePosition: OwnLine
+RequiresClausePosition: WithPreceding
 RequiresExpressionIndentation: OuterScope
 
 SeparateDefinitionBlocks: Never
@@ -298,8 +313,10 @@ StatementMacros:
 
 
 TabWidth: 4
-TypeNames: []
+# TemplateNames:    ## clang-format 20 ##
+TypeNames:
 UseTab: Never
+# VariableTemplates:    ## clang-format 20 ##
 
 WhitespaceSensitiveMacros:
   - BOOST_PP_STRINGIZE
@@ -308,4 +325,4 @@ WhitespaceSensitiveMacros:
   - PP_STRINGIZE
   - STRINGIZE
 
-...
+# WrapNamespaceBodyWithEmptyLines: Never    ## clang-format 20 ##
