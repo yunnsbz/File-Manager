@@ -26,13 +26,17 @@ TreeManager::TreeManager(QTreeView *treeView, QObject *parent)
     connect(treeView, &QTreeView::expanded, this, [this](const QModelIndex &index) {
         const QString& path = FileOperations::GetFilePath(index);
         const int currentTab = mainWindow->GetCurrentTabIndex();
-        ExpandedPathsMap[currentTab].append(path);
+        if(!ExpandedPathsMap[currentTab].contains(path))
+        {
+            ExpandedPathsMap[currentTab].append(path);
+        }
     });
 
     connect(treeView, &QTreeView::collapsed, this, [this](const QModelIndex &index) {
         const QString& path = FileOperations::GetFilePath(index);
         const int currentTab = mainWindow->GetCurrentTabIndex();
         ExpandedPathsMap[currentTab].removeOne(path);
+
     });
 
 }
@@ -55,22 +59,16 @@ void TreeManager::SetTreeContent(int tabIndex)
         return;
     }
 
+    // expanded paths is not empty:
     treeView->collapseAll();
 
-    if(!ExpandedPathsMap[tabIndex].isEmpty())
+    for (const auto &path : ExpandedPathsMap[tabIndex])
     {
-        for (auto &path : ExpandedPathsMap[tabIndex])
+        const QModelIndex index = FileOperations::GetFileIndex(path);
+        if (index.isValid() && index.model() != nullptr)
         {
-            const QModelIndex index = FileOperations::GetFileIndex(path);
-            if (index.isValid())
-            {
-                treeView->expand(index);
-            }
+            treeView->expand(index);
         }
-    }
-    else
-    {
-        setTreeToDefault();
     }
 }
 
