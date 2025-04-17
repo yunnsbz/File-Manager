@@ -38,6 +38,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         TreeManager.cpp
         FileOperations.h
         FileOperations.cpp
+        .clang-format
 
 
     )
