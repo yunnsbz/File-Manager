@@ -345,47 +345,59 @@ void MainWindow::on_toolCmdButton_pressed()
 
 void MainWindow::on_actionDual_Pane_View_triggered()
 {
-    if (dualPaneActive)
-    {
-        dualPaneActive = false;
-        ui->splitter_dualPane->setChildrenCollapsible(true);
-        ui->splitter_dualPane->setSizes({1,0});
-        ui->splitter_dualPane->setChildrenCollapsible(false);
-        // sürüklemeyi devre dışı bırakma:
-        for (int i = 0; i < 2; ++i)
+    if(ui->stackedWidget->currentIndex() == 0){
+        if (dualPaneActive)
         {
-            QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
-            if (handle != nullptr)
+            dualPaneActive = false;
+            ui->splitter_dualPane->setChildrenCollapsible(true);
+            ui->splitter_dualPane->setSizes({1,0});
+            ui->splitter_dualPane->setChildrenCollapsible(false);
+            // sürüklemeyi devre dışı bırakma:
+            for (int i = 0; i < 2; ++i)
             {
-                handle->setEnabled(false);
+                QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+                if (handle != nullptr)
+                {
+                    handle->setEnabled(false);
+                }
             }
+            ui->splitter_dualPane->setHandleWidth(0);
         }
-        ui->splitter_dualPane->setHandleWidth(0);
-    }
-    else
-    {
-        dualPaneActive = true;
-        ui->splitter_dualPane->setChildrenCollapsible(true);
-        ui->splitter_dualPane->setSizes({1,1});
-        ui->splitter_dualPane->setChildrenCollapsible(false);
-        //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
-        for (int i = 0; i < 2; ++i)
+        else
         {
-            QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
-            if (handle != nullptr)
+            dualPaneActive = true;
+            ui->splitter_dualPane->setChildrenCollapsible(true);
+            ui->splitter_dualPane->setSizes({1,1});
+            ui->splitter_dualPane->setChildrenCollapsible(false);
+            //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
+            for (int i = 0; i < 2; ++i)
             {
-                handle->setEnabled(true);
+                QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+                if (handle != nullptr)
+                {
+                    handle->setEnabled(true);
+                }
             }
-        }
 
-        ui->splitter_dualPane->setHandleWidth(5);
+            ui->splitter_dualPane->setHandleWidth(5);
+        }
+    }
+    else{
+        // column view açıksa onu kapatıp bu fonksiyonu tekrar çağırarak dual pane'i açar
+        ColumnViewActive = false;
+        ui->stackedWidget->setCurrentIndex(0);
+
+        // column dan çıktıktan sonra her halukarda dual pane açılsın diye:
+        dualPaneActive = false;
+
+        on_actionDual_Pane_View_triggered();
     }
 }
 
 
 void MainWindow::on_actionColumn_View_triggered()
 {
-    if(ColumnViewActive){
+    if(ui->stackedWidget->currentIndex() == 1){
         ColumnViewActive = false;
         ui->stackedWidget->setCurrentIndex(0);
     }
