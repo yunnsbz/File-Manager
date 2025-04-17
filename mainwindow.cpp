@@ -213,15 +213,17 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     }
 }
 
-void MainWindow::on_tabWidget_tabBarClicked(int index)
+void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
 {
     // Aynı sekmeye tıklanmadıysa
-    if (index != tabManager->_getPreviousLeftTabIndex()
+    if (tabIndex != tabManager->_getPreviousLeftTabIndex()
         &&
-        index != -1)
+        tabIndex != -1)
     {
-        tabManager->moveTabWidget(index);
-        SetTabContent(index);
+        tabManager->moveTabWidget(tabIndex);
+        SetTabContent(tabIndex);
+        toolBarManager->SetBackButtonEnabled(!FileOperations::IsBackHistoryEmpty(tabIndex));
+        toolBarManager->SetForwardButtonEnabled(!FileOperations::IsForwardHistoryEmpty(tabIndex));
     }
 }
 

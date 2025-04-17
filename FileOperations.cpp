@@ -74,6 +74,16 @@ void FileOperations::swapTabModelIndexMap(int toIndex, int fromIndex)
     TabModelIndexMap[toIndex] = temp;
 }
 
+void FileOperations::swapTabHistoryModelIndex(int toIndex, int fromIndex)
+{
+    const auto tempBack = TabBackHistoryModelIndex.value(fromIndex);
+    TabBackHistoryModelIndex[fromIndex] = TabBackHistoryModelIndex.value(toIndex);
+    TabBackHistoryModelIndex[toIndex] = tempBack;
+    const auto tempForward = TabForwardHistoryModelIndex.value(fromIndex);
+    TabForwardHistoryModelIndex[fromIndex] = TabForwardHistoryModelIndex.value(toIndex);
+    TabForwardHistoryModelIndex[toIndex] = tempBack;
+}
+
 void FileOperations::OnBackButtonClicked(int tabIndex)
 {
     if (!TabBackHistoryModelIndex[tabIndex].isEmpty()) {

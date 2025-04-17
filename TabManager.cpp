@@ -47,6 +47,7 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
     }
 
     FileOperations::swapTabModelIndexMap(toIndex, fromIndex);
+    FileOperations::swapTabHistoryModelIndex(toIndex, fromIndex);
     mainWindow->OnTabMoved(toIndex, fromIndex);
 
 

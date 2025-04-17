@@ -26,6 +26,7 @@ public:
 
     static void RemoveTabModelIndex(int tabIndex);
     static void swapTabModelIndexMap(int toIndex, int fromIndex);
+    static void swapTabHistoryModelIndex(int toIndex, int fromIndex);
 
     static void OnBackButtonClicked(int tabIndex);
     static void OnForwardButtonClicked(int tabIndex);
