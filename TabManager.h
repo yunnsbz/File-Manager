@@ -11,7 +11,13 @@
 
 class QFileSystemModel;
 class MainWindow;
-class ToolBarManager;
+
+struct TabData
+{
+    QWidget* tabWidget;
+    QTreeView* treeView;
+    QTableView* tableView;
+};
 
 class TabManager : public QObject
 {
@@ -32,8 +38,12 @@ public:
     // yeni sekmeye geçiş tamamlandıktan sonra önceki sekmeyi gösterir:
     [[nodiscard]] auto getPersistentPreviousLeftTabIndex() const -> int;
 
+    // auto tabCount() const -> int;
+
     // setters:
     void setPreviousLeftTabIndex(int value);
+    // void addTab(const QString& title);
+    // void removeTab(int index);
 
 
 public slots:

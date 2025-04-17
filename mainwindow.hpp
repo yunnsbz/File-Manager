@@ -43,15 +43,17 @@ public:
     auto operator = (MainWindow&&) noexcept -> MainWindow& = delete;
     ~MainWindow();
 
-    void SetTabContent(int tabIndex);
 
+public:
     auto GetCurrentTabIndex() -> int;
     auto GetPreviousTabIndex() -> int;
-    void OnTabMoved(int toIndex, int fromIndex);
 
     auto getUI() -> Ui::MainWindow*;
 
+    void SetTabContent(int tabIndex);
+    void OnTabMoved(int toIndex, int fromIndex);
     void updateHistoryButtons(int const tabIndex);
+
 
 protected:
 
@@ -65,18 +67,18 @@ private slots:
     void on_tabWidget_tabCloseRequested(int index);
     void on_tabWidget_tabBarClicked(int index);
     void on_FileTreeView_clicked(const QModelIndex &index);
-
     void on_toolBackButton_clicked();
-
     void on_toolForwardButton_clicked();
-
     void on_actionAbout_triggered();
-
     void on_lineEdit_returnPressed();
 
-private:
-    auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 
+// virtual methods
+private:
+    virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
+
+
+private:
     void UpdateLabel_(const QString& path);
 
     // şimdilik mainWİdget'da bazı ögelere focus için kullanılıyor:

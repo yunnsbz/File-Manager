@@ -15,14 +15,16 @@ class TreeManager : public QObject
 public:
     explicit TreeManager(QTreeView* treeView, QObject* parent);
 
+
+public:
     void setTreeToDefault();
     void SetTreeContent(int tabIndex);
 
     void navigateToFolder(const QModelIndex &modelIndex, int tabIndex);
     void removeTabExpandedPaths(int tabIndex);
     void swapExpandedPathsMap(int toIndex, int fromIndex);
-
     void ExpandTreeView(const QModelIndex &index);
+
 
 private:
     // sinyal oluşturmadan ağacın tüm dallarını kapat
@@ -36,8 +38,6 @@ private:
 
     // treeView için her sekmede açılmış yolları tutar:
     QMap<int, QList<QString>> ExpandedPathsMap;
-
-
 };
 
 #endif // TREEMANAGER_H
