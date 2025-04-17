@@ -45,8 +45,6 @@ protected:
 
 
 private:
-    auto createTabFromSplitter(QSplitter* splitter) -> QWidget*;
-
     void Setup_();
 
 
