@@ -286,7 +286,7 @@
     </item>
     <item row="4" column="0">
      <widget class="QWidget" name="commandWidget" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,7">
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,7,0">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -334,6 +334,16 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QToolButton" name="toolCmdButton">
+         <property name="toolTip">
+          <string>open cmd</string>
+         </property>
+         <property name="text">
+          <string>cmd</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -345,7 +355,7 @@
      </widget>
     </item>
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,0,0,0,1,0,40,0,0,0">
+     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,0,0,0,1,0,40,0,0">
       <property name="spacing">
        <number>2</number>
       </property>
@@ -533,16 +543,6 @@
         </property>
         <property name="icon">
          <iconset theme="QIcon::ThemeIcon::DocumentPageSetup"/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="toolCmdButton">
-        <property name="toolTip">
-         <string>open cmd</string>
-        </property>
-        <property name="text">
-         <string>cmd</string>
         </property>
        </widget>
       </item>

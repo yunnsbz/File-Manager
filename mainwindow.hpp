@@ -74,6 +74,8 @@ private slots:
 
 
 // virtual methods
+void on_toolCmdButton_pressed();
+
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 

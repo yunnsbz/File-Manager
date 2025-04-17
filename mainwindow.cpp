@@ -325,4 +325,8 @@ void MainWindow::on_lineEdit_returnPressed()
     QProcess::startDetached("cmd", QStringList() << str);
 }
 
+void MainWindow::on_toolCmdButton_pressed()
+{
+    on_lineEdit_returnPressed();
+}
 
