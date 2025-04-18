@@ -11,5 +11,10 @@
         <file>img/two_pager_white.svg</file>
         <file>img/view_column_black.svg</file>
         <file>img/view_column_white.svg</file>
+        <file>img/terminal_black.svg</file>
+        <file>img/terminal_white.svg</file>
+        <file>img/share_black.svg</file>
+        <file>img/share_gray.svg</file>
+        <file>img/share_white.svg</file>
     </qresource>
 </RCC>

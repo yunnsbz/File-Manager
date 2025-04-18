@@ -39,8 +39,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         FileModelOperations.h
         FileModelOperations.cpp
         .clang-format
-        MenuManager.h
-        MenuManager.cpp
+        ThemeManager.h
+        ThemeManager.cpp
 
 
     )

@@ -17,7 +17,7 @@ class ToolBarManager;
 class TableManager;
 class TreeManager;
 class FileModelOperations;
-class MenuManger;
+class ThemeManger;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -52,7 +52,7 @@ public:
     void OnTabMoved2(int toIndex, int fromIndex);
     void updateHistoryButtons(int const tabIndex, bool forRightPane);
 
-    bool isDarkTheme();
+
 
 protected:
 
@@ -99,7 +99,7 @@ private:
     FileModelOperations* fileModelOp2;
 
     ToolBarManager* toolBarManager;
-    MenuManger* menuManager;
+    ThemeManger* menuManager;
 
     TabManager* tabManager;
     TabManager* tabManager2;
