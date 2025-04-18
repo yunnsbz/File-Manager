@@ -346,6 +346,9 @@ void MainWindow::on_actionDual_Pane_View_triggered()
             ui->splitter_dualPane->setHandleWidth(0);
 
             tableManager->SetColumnResize();
+
+            tabManager->EnableNavWidget(false);
+            tabManager2->EnableNavWidget(false);
         }
         else
         {
@@ -367,6 +370,9 @@ void MainWindow::on_actionDual_Pane_View_triggered()
 
             // dual pane geldiğinde tablo sütun genişliklerini uygun hale getir
             tableManager->SetColumnResize();
+
+            tabManager->EnableNavWidget(true);
+            tabManager2->EnableNavWidget(true);
         }
     }
     else{

@@ -12,11 +12,12 @@ QTabWidget QToolButton {
 
 /* tab üzerindeki sağ corner buttonları */
 #cornerNavButtons QToolButton {
-    padding: 2px 0px 0px 2px;
+    padding: 1px 0px 0px 1px;
 }
 
 #cornerNavButtons QToolButton::hover {
     border-radius: 9px;
+    background-color: #666;
 }
 
 

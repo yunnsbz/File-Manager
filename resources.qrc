@@ -16,5 +16,11 @@
         <file>img/share_black.svg</file>
         <file>img/share_gray.svg</file>
         <file>img/share_white.svg</file>
+        <file>img/arrow_circle_left_black.svg</file>
+        <file>img/arrow_circle_left_white.svg</file>
+        <file>img/arrow_circle_right_black.svg</file>
+        <file>img/arrow_circle_right_white.svg</file>
+        <file>img/arrow_circle_up_black.svg</file>
+        <file>img/arrow_circle_up_white.svg</file>
     </qresource>
 </RCC>

@@ -1,6 +1,7 @@
 #include "TabManager.h"
 #include "mainwindow.hpp"
 #include "ToolBarManager.h"
+#include "ThemeManager.h"
 
 #include <QToolButton>
 #include <QTabBar>
@@ -17,15 +18,58 @@ TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent
     Setup_();
 }
 
+void TabManager::EnableNavWidget(bool enable)
+{
+    if(enable){
+        cornerNavButtons->show();
+        tabWidget->setCornerWidget(cornerNavButtons, Qt::TopRightCorner);
+    }
+    else{
+        tabWidget->setCornerWidget(nullptr, Qt::TopRightCorner);
+    }
+}
+
 void TabManager::Setup_()
 {
     // yeni sekme ekleme butonunun eklenmesi, işlevi ve ilk açılıştaki sekmeleri ayarlama
 
     connect(tabWidget->tabBar(), &QTabBar::tabMoved, this, &TabManager::onTabMoved);
 
+    cornerNavButtons = new QWidget;
+    cornerNavButtons->setObjectName("cornerNavButtons");
+    auto *layout = new QHBoxLayout(cornerNavButtons);
+    layout->setContentsMargins(0, 0, 0, 0); // sıkı olsun
+
+    auto* backTabButton = new QToolButton();
+    auto* forwTabButton = new QToolButton();
+    auto* upTabButton = new QToolButton();
+
+    bool isDarkTheme = ThemeManger::isDarkTheme();
+    if(isDarkTheme){
+        const QIcon backIcon(":/resources/img/arrow_circle_left_white.svg");
+        backTabButton->setIcon(backIcon);
+        const QIcon forwardIcon(":/resources/img/arrow_circle_right_white.svg");
+        forwTabButton->setIcon(forwardIcon);
+        const QIcon upIcon(":/resources/img/arrow_circle_up_white.svg");
+        upTabButton->setIcon(upIcon);
+    }
+    else{
+        const QIcon backIcon(":/resources/img/arrow_circle_left_black.svg");
+        backTabButton->setIcon(backIcon);
+        const QIcon forwardIcon(":/resources/img/arrow_circle_right_black.svg");
+        forwTabButton->setIcon(forwardIcon);
+        const QIcon upIcon(":/resources/img/arrow_circle_up_black.svg");
+        upTabButton->setIcon(upIcon);
+    }
+
+    layout->addWidget(upTabButton);
+    layout->addWidget(backTabButton);
+    layout->addWidget(forwTabButton);
+
     auto* addTabButton = new QToolButton();
     addTabButton->setText("+");
     tabWidget->setCornerWidget(addTabButton, Qt::TopLeftCorner);
+    EnableNavWidget(true);
 
     // add button onClick:
     connect(addTabButton, &QToolButton::clicked, this, &TabManager::addNewTab);

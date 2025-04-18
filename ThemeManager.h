@@ -11,7 +11,7 @@ class ThemeManger : public QObject
 
 public:
     explicit ThemeManger(QObject *parent);
-    bool isDarkTheme();
+    static bool isDarkTheme();
 
 private:
     MainWindow* mainWindow;

@@ -38,6 +38,7 @@ public:
     // void addTab(const QString& title);
     // void removeTab(int index);
 
+    void EnableNavWidget(bool enable);
 
 public slots:
     void onTabMoved(int toIndex, int fromIndex);
@@ -54,6 +55,8 @@ private:
 private:
     MainWindow* mainWindow;
     QTabWidget* tabWidget;
+
+    QWidget* cornerNavButtons;
 
     bool forRightPane_;
 
