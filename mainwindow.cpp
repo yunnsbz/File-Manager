@@ -26,10 +26,11 @@ MainWindow::MainWindow(QWidget *parent)
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_ui_mgr_(ui, this),
+    fileModelOp1(new FileModelOperations()),
     toolBarManager(new ToolBarManager(ui->toolBar ,this)),
     tabManager(new TabManager(ui->tabWidget, this)),
-    tableManager(new TableManager(ui->tableView, this)),
-    treeManager(new TreeManager(ui->FileTreeView, this))
+    tableManager(new TableManager(ui->tableView, fileModelOp1, this)),
+    treeManager(new TreeManager(ui->FileTreeView, fileModelOp1, this))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
@@ -41,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
         &MainWindow::onTreeSelectionChanged
     );
 
-    auto* fileModel = FileModelOperations::GetFileModel();
+    auto* fileModel = fileModelOp1->GetFileModel();
     ui->columnView->setModel(fileModel);
 
     // tree view daha küçük olmalı
@@ -105,6 +106,8 @@ auto MainWindow::GetPreviousTabIndex() -> int
 void MainWindow::OnTabMoved(int toIndex, int fromIndex)
 {
     treeManager->swapExpandedPathsMap(toIndex, fromIndex);
+    fileModelOp1->swapTabModelIndexMap(toIndex, fromIndex);
+    fileModelOp1->swapTabHistoryModelIndex(toIndex, fromIndex);
 }
 
 void MainWindow::UpdateLabel_(const QString& path)
@@ -218,7 +221,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
         ui->tabWidget->removeTab(index);
 
         treeManager->removeTabExpandedPaths(index);
-        FileModelOperations::RemoveTabModelIndex(index);
+        fileModelOp1->RemoveTabModelIndex(index);
 
         tabManager->setPreviousLeftTabIndex(ui->tabWidget->currentIndex());
         SetTabContent(ui->tabWidget->currentIndex());
@@ -246,8 +249,8 @@ void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
 
 void MainWindow::updateHistoryButtons(int const tabIndex)
 {
-    toolBarManager->SetBackButtonEnabled(!FileModelOperations::IsBackHistoryEmpty(tabIndex));
-    toolBarManager->SetForwardButtonEnabled(!FileModelOperations::IsForwardHistoryEmpty(tabIndex));
+    toolBarManager->SetBackButtonEnabled(!fileModelOp1->IsBackHistoryEmpty(tabIndex));
+    toolBarManager->SetForwardButtonEnabled(!fileModelOp1->IsForwardHistoryEmpty(tabIndex));
 }
 
 void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
@@ -255,7 +258,7 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
     int const tabIndex = ui->tabWidget->currentIndex();
     treeManager->navigateToFolder(modelIndex, tabIndex);
 
-    auto* fileModel = FileModelOperations::GetFileModel();
+    auto* fileModel = fileModelOp1->GetFileModel();
     // girilen yer klasör ise table view set edilir:
     if (fileModel->hasChildren(modelIndex))
     {
@@ -270,7 +273,7 @@ void MainWindow::on_toolBackButton_clicked()
 {
     const auto tabIndex = ui->tabWidget->currentIndex();
 
-    FileModelOperations::OnBackButtonClicked(tabIndex);
+    fileModelOp1->OnBackButtonClicked(tabIndex);
     //tree back onClick missing
 
     tableManager->SetTableContent(tabIndex);
@@ -284,7 +287,7 @@ void MainWindow::on_toolForwardButton_clicked()
 {
     const auto tabIndex = ui->tabWidget->currentIndex();
 
-    FileModelOperations::OnForwardButtonClicked(tabIndex);
+    fileModelOp1->OnForwardButtonClicked(tabIndex);
     //tree back onClick missing
 
     tableManager->SetTableContent(tabIndex);
@@ -317,7 +320,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_lineEdit_returnPressed()
 {
-    auto path = FileModelOperations::GetFilePath(FileModelOperations::GetTabModelIndex(ui->tabWidget->currentIndex()));
+    auto path = fileModelOp1->GetFilePath(fileModelOp1->GetTabModelIndex(ui->tabWidget->currentIndex()));
 
     if (path.isEmpty())
     {

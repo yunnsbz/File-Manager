@@ -95,7 +95,8 @@ private:
     Ui::MainWindow *ui;
 
     UIManager m_ui_mgr_;
-    FileModelOperations fileOperations;
+    FileModelOperations* fileModelOp1;
+    FileModelOperations* fileModelOp2;
 
     ToolBarManager* toolBarManager;
     TabManager* tabManager;

@@ -42,10 +42,7 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
         return;
     }
 
-    FileModelOperations::swapTabModelIndexMap(toIndex, fromIndex);
-    FileModelOperations::swapTabHistoryModelIndex(toIndex, fromIndex);
     mainWindow->OnTabMoved(toIndex, fromIndex);
-
 
     // if lastLeftTabIndex is the one moved it should register
     if (fromIndex == _previousLeftTabIndex)

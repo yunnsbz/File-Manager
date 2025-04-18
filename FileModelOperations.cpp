@@ -5,10 +5,9 @@
 #include <algorithm>
 
 FileModelOperations::FileModelOperations()
+:
+fileModel(new QFileSystemModel(this))
 {
-    // set model:
-    fileModel = new QFileSystemModel(this);
-
     // set to disk directory
     fileModel->setRootPath("");
 }

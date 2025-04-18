@@ -7,13 +7,14 @@
 #include <QList>
 
 class MainWindow;
+class FileModelOperations;
 
 class TreeManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit TreeManager(QTreeView* treeView, QObject* parent);
+    explicit TreeManager(QTreeView* treeView, FileModelOperations* fileModelOp1, QObject* parent);
 
 
 public:
@@ -33,8 +34,9 @@ private:
 
 private:
     MainWindow* mainWindow;
-
+    FileModelOperations* fileModelOp1;
     QTreeView* treeView;
+
 
     // treeView için her sekmede açılmış yolları tutar:
     QMap<int, QList<QString>> ExpandedPathsMap;
