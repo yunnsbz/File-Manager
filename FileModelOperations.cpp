@@ -32,6 +32,11 @@ auto FileModelOperations::GetFilePath(QModelIndex modelIndex) -> QString
     return fileModel->filePath(modelIndex);
 }
 
+auto FileModelOperations::GetCurrentPath(int tabIndex) -> QString
+{
+    return GetFilePath(GetTabModelIndex(tabIndex));
+}
+
 auto FileModelOperations::GetFileIndex(const QString& path) -> QModelIndex
 {
     if (!QFileInfo::exists(path)) return QModelIndex(); // path erişilemiyorsa

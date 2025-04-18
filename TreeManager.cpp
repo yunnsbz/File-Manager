@@ -7,11 +7,11 @@
 
 #include <algorithm>
 
-TreeManager::TreeManager(QTreeView *treeView, FileModelOperations *fileModelOp, QObject *parent)
+TreeManager::TreeManager(QTreeView *treeView, FileModelOperations *fileModelOp, QTabWidget* tabWidget, QObject *parent)
     :
     QObject(parent),
-    mainWindow(static_cast<MainWindow*>(parent)),
     fileModelOp(fileModelOp),
+    tabWidget_(tabWidget),
     treeView(treeView)
 {
     auto* fileModel = fileModelOp->GetFileModel();
@@ -26,7 +26,7 @@ TreeManager::TreeManager(QTreeView *treeView, FileModelOperations *fileModelOp, 
     // tree view açılma ve kapanma durumlarında değişiklikleri tabContents içine kaydetmeliyiz:
     connect(treeView, &QTreeView::expanded, this, [=, this](const QModelIndex &index) {
         const QString& path = fileModelOp->GetFilePath(index);
-        const int currentTab = mainWindow->GetCurrentTabIndex();
+        const int currentTab = tabWidget_->currentIndex();
         if(!ExpandedPathsMap[currentTab].contains(path))
         {
             ExpandedPathsMap[currentTab].append(path);
@@ -35,10 +35,9 @@ TreeManager::TreeManager(QTreeView *treeView, FileModelOperations *fileModelOp, 
 
     connect(treeView, &QTreeView::collapsed, this, [=, this](const QModelIndex &index) {
         const QString& path = fileModelOp->GetFilePath(index);
-        const int currentTab = mainWindow->GetCurrentTabIndex();
+        const int currentTab = tabWidget_->currentIndex();
         ExpandedPathsMap[currentTab].removeOne(path);
     });
-
 }
 
 void TreeManager::setTreeToDefault()

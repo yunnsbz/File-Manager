@@ -35,22 +35,20 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-
     explicit MainWindow(const MainWindow&)                 = delete;
     explicit MainWindow(MainWindow&&) noexcept             = delete;
+
     auto operator = (const MainWindow&)     -> MainWindow& = delete;
     auto operator = (MainWindow&&) noexcept -> MainWindow& = delete;
     ~MainWindow();
 
 
 public:
-    auto GetCurrentTabIndex() -> int;
-    auto GetPreviousTabIndex() -> int;
-
     auto getUI() -> Ui::MainWindow*;
 
     void SetTabContent(int tabIndex, bool rightPane);
     void OnTabMoved(int toIndex, int fromIndex);
+    void OnTabMoved2(int toIndex, int fromIndex);
     void updateHistoryButtons(int const tabIndex);
 
 
@@ -88,7 +86,7 @@ private:
 
 
 private:
-    void UpdateLabel_(const QString& path);
+    void SetLabelText_(const QString& path);
 
 
 private:
@@ -106,6 +104,9 @@ private:
     TableManager* tableManager2;
     TreeManager* treeManager;
     TreeManager* treeManager2;
+
+    bool leftTabIsReset_  = true;
+    bool rightTabIsReset_ = true;
 
     bool treeViewActive = true;
     bool dualPaneActive = true;

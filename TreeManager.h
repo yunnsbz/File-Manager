@@ -6,7 +6,6 @@
 #include <QMap>
 #include <QList>
 
-class MainWindow;
 class FileModelOperations;
 
 class TreeManager : public QObject
@@ -14,7 +13,7 @@ class TreeManager : public QObject
     Q_OBJECT
 
 public:
-    explicit TreeManager(QTreeView* treeView, FileModelOperations* fileModelOp, QObject* parent);
+    explicit TreeManager(QTreeView* treeView, FileModelOperations* fileModelOp, QTabWidget* tabWidget, QObject* parent);
 
 
 public:
@@ -33,8 +32,8 @@ private:
 
 
 private:
-    MainWindow* mainWindow;
     FileModelOperations* fileModelOp;
+    QTabWidget* tabWidget_;
     QTreeView* treeView;
 
 

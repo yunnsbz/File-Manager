@@ -20,6 +20,7 @@ public:
     auto GetTabModelIndex(int tabIndex) -> QModelIndex;
     void SetTabModelIndex(int tabIndex, QModelIndex modelIndex);
     auto GetFilePath(QModelIndex modelIndex) -> QString;
+    auto GetCurrentPath(int tabIndex) -> QString;
     auto GetFileIndex(const QString& path) -> QModelIndex;
 
     auto IsBackHistoryEmpty(int tabIndex) -> bool;

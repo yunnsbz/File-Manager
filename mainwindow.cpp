@@ -33,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent)
     tabManager2(new TabManager(ui->tabWidget_2, true, this)),
     tableManager(new TableManager(ui->tableView, fileModelOp, this)),
     tableManager2(new TableManager(ui->tableView_2, fileModelOp2, this)),
-    treeManager(new TreeManager(ui->FileTreeView, fileModelOp, this)),
-    treeManager2(new TreeManager(ui->FileTreeView_2, fileModelOp2, this))
+    treeManager(new TreeManager(ui->FileTreeView, fileModelOp, ui->tabWidget, this)),
+    treeManager2(new TreeManager(ui->FileTreeView_2, fileModelOp2, ui->tabWidget_2, this))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
@@ -102,16 +102,6 @@ void MainWindow::SetTabContent(int tabIndex, bool rightPane)
     }
 }
 
-auto MainWindow::GetCurrentTabIndex() -> int
-{
-    return ui->tabWidget->currentIndex();
-}
-
-auto MainWindow::GetPreviousTabIndex() -> int
-{
-    return tabManager->getPersistentPreviousLeftTabIndex();
-}
-
 void MainWindow::OnTabMoved(int toIndex, int fromIndex)
 {
     treeManager->swapExpandedPathsMap(toIndex, fromIndex);
@@ -119,7 +109,7 @@ void MainWindow::OnTabMoved(int toIndex, int fromIndex)
     fileModelOp->swapTabHistoryModelIndex(toIndex, fromIndex);
 }
 
-void MainWindow::UpdateLabel_(const QString& path)
+void MainWindow::SetLabelText_(const QString& path)
 {
     ui->label->setText(path);
 
@@ -127,11 +117,12 @@ void MainWindow::UpdateLabel_(const QString& path)
     ui->label->setMinimumSize(ui->label->sizeHint());
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event) {
-        if (event->key() == Qt::Key_C) {
-            ui->lineEdit->setFocus();
-        }
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_C) {
+        ui->lineEdit->setFocus();
     }
+}
 
 void MainWindow::on_actionExit_triggered()
 {
@@ -142,7 +133,7 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
 {
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(current);
 
-    UpdateLabel_(path);
+    SetLabelText_(path);
 }
 
 void MainWindow::on_splitter_splitterMoved(int pos, int )
@@ -278,7 +269,8 @@ void MainWindow::on_toolCmdButton_pressed()
 
 void MainWindow::on_actionDual_Pane_View_triggered()
 {
-    if(ui->stackedWidget->currentIndex() == 0){
+    if (ui->stackedWidget->currentIndex() == 0)
+    {
         if (dualPaneActive)
         {
             dualPaneActive = false;
@@ -357,6 +349,8 @@ void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
         // buton kontrolü:
         updateHistoryButtons(tabIndex);
     }
+
+    SetLabelText_(fileModelOp->GetCurrentPath(tabIndex));
 }
 
 void MainWindow::on_tabWidget_2_tabBarClicked(int tabIndex)
@@ -371,6 +365,8 @@ void MainWindow::on_tabWidget_2_tabBarClicked(int tabIndex)
         // buton kontrolü:
         updateHistoryButtons(tabIndex);
     }
+
+    SetLabelText_(fileModelOp2->GetCurrentPath(tabIndex));
 }
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
@@ -402,6 +398,17 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     {
         treeManager->setTreeToDefault();
         tableManager->SetTableToDefault();
+
+        leftTabIsReset_ = true;
+
+        if (rightTabIsReset_)
+        {
+            SetLabelText_("\\\\");
+        }
+        else
+        {
+            SetLabelText_(fileModelOp2->GetFilePath(fileModelOp2->GetTabModelIndex(ui->tabWidget_2->currentIndex())));
+        }
     }
 }
 
@@ -434,6 +441,17 @@ void MainWindow::on_tabWidget_2_tabCloseRequested(int index)
     {
         treeManager2->setTreeToDefault();
         tableManager2->SetTableToDefault();
+
+        rightTabIsReset_ = true;
+
+        if (leftTabIsReset_)
+        {
+            SetLabelText_("\\\\");
+        }
+        else
+        {
+            SetLabelText_(fileModelOp->GetFilePath(fileModelOp->GetTabModelIndex(ui->tabWidget->currentIndex())));
+        }
     }
 }
 
@@ -452,6 +470,8 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
 
     // buton kontrolü:
     updateHistoryButtons(tabIndex);
+
+    leftTabIsReset_ = false;
 }
 
 void MainWindow::on_FileTreeView_2_clicked(const QModelIndex &modelIndex)
@@ -468,6 +488,8 @@ void MainWindow::on_FileTreeView_2_clicked(const QModelIndex &modelIndex)
 
     // buton kontrolü:
     updateHistoryButtons(tabIndex);
+
+    rightTabIsReset_ = false;
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
@@ -484,7 +506,9 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
     updateHistoryButtons(tabIndex);
 
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(firstColumnIndex);
-    UpdateLabel_(path);
+    SetLabelText_(path);
+
+    leftTabIsReset_ = false;
 }
 
 void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
@@ -501,5 +525,7 @@ void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
     updateHistoryButtons(tabIndex);
 
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView_2->model())->filePath(firstColumnIndex);
-    UpdateLabel_(path);
+    SetLabelText_(path);
+
+    rightTabIsReset_ = false;
 }
