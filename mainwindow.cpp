@@ -15,6 +15,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QProcess>
+#include <QPropertyAnimation>
 
 UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
 {
@@ -57,6 +58,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->splitter->setCollapsible(1,false);
     ui->splitter_2->setCollapsible(1,false);
 
+    //remove search line edit for now
+    ui->lineEdit_2->setMaximumWidth(0);
+
     setWindowTitle("File Manager");
     show();
 }
@@ -86,6 +90,7 @@ auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
 
     return QMainWindow::eventFilter(obj, event);
 }
+
 
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
 void MainWindow::SetTabContent(int tabIndex, bool rightPane)
@@ -599,3 +604,30 @@ void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
     isWorkingOnRightPane = true;
 
 }
+
+void MainWindow::on_toolSearchButton_clicked()
+{
+    if(searchOn){
+        if (ui->lineEdit_2) {
+            searchOn = false;
+            QPropertyAnimation *animation = new QPropertyAnimation(ui->lineEdit_2, "maximumWidth");
+            animation->setDuration(300);
+            animation->setStartValue(ui->lineEdit_2->width());
+            animation->setEndValue(0); // önceki boyut
+            animation->start(QAbstractAnimation::DeleteWhenStopped);
+        }
+    }
+    else{
+        if (ui->lineEdit_2) {
+            searchOn = true;
+            QPropertyAnimation *animation = new QPropertyAnimation(ui->lineEdit_2, "maximumWidth");
+            animation->setDuration(300);
+            animation->setStartValue(ui->lineEdit_2->width());
+            animation->setEndValue(250); // hedef genişlik
+            animation->start(QAbstractAnimation::DeleteWhenStopped);
+
+            ui->lineEdit_2->setFocus();
+        }
+    }
+}
+

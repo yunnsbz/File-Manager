@@ -55,7 +55,7 @@
      <number>0</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,0,0,0,1,0,40,0,0">
+     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,0,0,0,1,0,40,0,0,0">
       <property name="spacing">
        <number>2</number>
       </property>
@@ -245,6 +245,9 @@
          <iconset theme="QIcon::ThemeIcon::DocumentPageSetup"/>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_2"/>
       </item>
       <item>
        <widget class="QToolButton" name="toolSearchButton">

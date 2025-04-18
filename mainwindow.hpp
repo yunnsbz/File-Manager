@@ -77,7 +77,7 @@ private slots:
     void on_FileTreeView_2_clicked(const QModelIndex &index);
     void on_tableView_doubleClicked(const QModelIndex &index);
     void on_tableView_2_doubleClicked(const QModelIndex &index);
-
+    void on_toolSearchButton_clicked();
 
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
@@ -114,5 +114,7 @@ private:
     bool treeViewActive = true;
     bool dualPaneActive = true;
     bool ColumnViewActive = true;
+
+    bool searchOn = false;
 };
 #endif // MAINWINDOW_H
