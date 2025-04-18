@@ -1,5 +1,15 @@
 <RCC>
     <qresource prefix="/resources">
         <file>styles/style.qss</file>
+        <file>img/table_rows_black.svg</file>
+        <file>img/table_rows_white.svg</file>
+        <file>img/tiles_view_black.svg</file>
+        <file>img/tiles_view_white.svg</file>
+        <file>img/tree_view_black.svg</file>
+        <file>img/tree_view_white.svg</file>
+        <file>img/two_pager_black.svg</file>
+        <file>img/two_pager_white.svg</file>
+        <file>img/view_column_black.svg</file>
+        <file>img/view_column_white.svg</file>
     </qresource>
 </RCC>

@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "MenuManager.h"
 #include "TabManager.h"
 #include "./ui_mainwindow.h"
 #include "TableManager.h"
@@ -30,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     fileModelOp(new FileModelOperations()),
     fileModelOp2(new FileModelOperations()),
     toolBarManager(new ToolBarManager(ui->toolBar, this)),
+    menuManager(new MenuManger(this)),
     tabManager(new TabManager(ui->tabWidget, false, this)),
     tabManager2(new TabManager(ui->tabWidget_2, true, this)),
     tableManager(new TableManager(ui->tableView, fileModelOp, this)),
@@ -73,6 +75,16 @@ MainWindow::~MainWindow()
 auto MainWindow::getUI() -> Ui::MainWindow*
 {
     return ui;
+}
+
+bool MainWindow::isDarkTheme() {
+    QPalette palette = qApp->palette(); // qApp yerine QApplication::palette() de olur
+    QColor bg = palette.color(QPalette::Window); // pencere arka planı
+
+    // Parlaklık hesaplaması: İnsan gözünün algıladığı parlaklık değeri
+    int brightness = (bg.red() * 299 + bg.green() * 587 + bg.blue() * 114) / 1000;
+
+    return brightness < 128; // 0-255; 128'den düşükse koyu temadır
 }
 
 auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
@@ -160,7 +172,7 @@ void MainWindow::on_splitter_splitterMoved(int pos, int )
     }
 }
 
-void MainWindow::on_actionList_View_triggered()
+void MainWindow::on_actionTree_View_triggered()
 {
     if (treeViewActive)
     {

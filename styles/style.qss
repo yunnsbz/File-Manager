@@ -10,11 +10,22 @@ QTabWidget QToolButton {
     height: 100%;
 }
 
+/* tab üzerindeki sağ corner buttonları */
+#cornerNavButtons QToolButton {
+    padding: 2px 0px 0px 2px;
+}
+
+#cornerNavButtons QToolButton::hover {
+    border-radius: 9px;
+}
+
+
 QTabBar::tab {
     background-color: #22222255;
     padding: 3px 20px;
     border: none;
-    border-radius: 5px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     margin-left: 2px;
 }
 QTabBar::tab:selected {

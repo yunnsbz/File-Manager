@@ -17,6 +17,7 @@ class ToolBarManager;
 class TableManager;
 class TreeManager;
 class FileModelOperations;
+class MenuManger;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -51,6 +52,7 @@ public:
     void OnTabMoved2(int toIndex, int fromIndex);
     void updateHistoryButtons(int const tabIndex, bool forRightPane);
 
+    bool isDarkTheme();
 
 protected:
 
@@ -59,7 +61,7 @@ private slots:
     void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void on_actionExit_triggered();
     void on_splitter_splitterMoved(int pos, int index);
-    void on_actionList_View_triggered();
+    void on_actionTree_View_triggered();
 
     void on_toolBackButton_clicked();
     void on_toolForwardButton_clicked();
@@ -97,6 +99,7 @@ private:
     FileModelOperations* fileModelOp2;
 
     ToolBarManager* toolBarManager;
+    MenuManger* menuManager;
 
     TabManager* tabManager;
     TabManager* tabManager2;
