@@ -7,11 +7,12 @@
 #include <QBoxLayout>
 #include <QFileSystemModel>
 
-TabManager::TabManager(QTabWidget* tabWidget, QObject* parent)
+TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent)
     :
     QObject(parent),
     mainWindow(static_cast<MainWindow*>(parent)),
-    tabWidget(tabWidget)
+    tabWidget(tabWidget),
+    forRightPane_(forRightPane)
 {
     Setup_();
 }
@@ -96,7 +97,7 @@ void TabManager::addNewTab()
 
     setPreviousLeftTabIndex(tabWidget->count() - 1);
 
-    mainWindow->SetTabContent(tabWidget->currentIndex());
+    mainWindow->SetTabContent(tabWidget->currentIndex(), forRightPane_);
 }
 
 void TabManager::moveTabWidget(int index)

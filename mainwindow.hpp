@@ -12,12 +12,11 @@
 #include <QList>
 #include <qevent.h>
 
-#include "FileModelOperations.h"
-
 class TabManager;
 class ToolBarManager;
 class TableManager;
 class TreeManager;
+class FileModelOperations;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -50,7 +49,7 @@ public:
 
     auto getUI() -> Ui::MainWindow*;
 
-    void SetTabContent(int tabIndex);
+    void SetTabContent(int tabIndex, bool rightPane);
     void OnTabMoved(int toIndex, int fromIndex);
     void updateHistoryButtons(int const tabIndex);
 
@@ -61,12 +60,9 @@ protected:
 private slots:
     void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void on_actionExit_triggered();
-    void on_tableView_doubleClicked(const QModelIndex &index);
     void on_splitter_splitterMoved(int pos, int index);
     void on_actionList_View_triggered();
-    void on_tabWidget_tabCloseRequested(int index);
-    void on_tabWidget_tabBarClicked(int index);
-    void on_FileTreeView_clicked(const QModelIndex &index);
+
     void on_toolBackButton_clicked();
     void on_toolForwardButton_clicked();
     void on_actionAbout_triggered();
@@ -74,6 +70,15 @@ private slots:
     void on_toolCmdButton_pressed();
     void on_actionDual_Pane_View_triggered();
     void on_actionColumn_View_triggered();
+
+    void on_tabWidget_tabBarClicked(int index);
+    void on_tabWidget_2_tabBarClicked(int index);
+    void on_tabWidget_tabCloseRequested(int index);
+    void on_tabWidget_2_tabCloseRequested(int index);
+    void on_FileTreeView_clicked(const QModelIndex &index);
+    void on_FileTreeView_2_clicked(const QModelIndex &index);
+    void on_tableView_doubleClicked(const QModelIndex &index);
+    void on_tableView_2_doubleClicked(const QModelIndex &index);
 
 
 private:
@@ -90,7 +95,7 @@ private:
     Ui::MainWindow *ui;
 
     UIManager m_ui_mgr_;
-    FileModelOperations* fileModelOp1;
+    FileModelOperations* fileModelOp;
     FileModelOperations* fileModelOp2;
 
     ToolBarManager* toolBarManager;
