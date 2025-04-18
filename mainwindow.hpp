@@ -49,7 +49,7 @@ public:
     void SetTabContent(int tabIndex, bool rightPane);
     void OnTabMoved(int toIndex, int fromIndex);
     void OnTabMoved2(int toIndex, int fromIndex);
-    void updateHistoryButtons(int const tabIndex);
+    void updateHistoryButtons(int const tabIndex, bool forRightPane);
 
 
 protected:
@@ -104,6 +104,9 @@ private:
     TableManager* tableManager2;
     TreeManager* treeManager;
     TreeManager* treeManager2;
+
+    // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
+    bool isWorkingOnRightPane = false;
 
     bool leftTabIsReset_  = true;
     bool rightTabIsReset_ = true;

@@ -200,38 +200,72 @@ void MainWindow::on_actionList_View_triggered()
     }
 }
 
-void MainWindow::updateHistoryButtons(int const tabIndex)
+void MainWindow::updateHistoryButtons(int const tabIndex, bool forRightPane)
 {
-    toolBarManager->SetBackButtonEnabled(!fileModelOp->IsBackHistoryEmpty(tabIndex));
-    toolBarManager->SetForwardButtonEnabled(!fileModelOp->IsForwardHistoryEmpty(tabIndex));
+    if(forRightPane){
+        toolBarManager->SetBackButtonEnabled(!fileModelOp2->IsBackHistoryEmpty(tabIndex));
+        toolBarManager->SetForwardButtonEnabled(!fileModelOp2->IsForwardHistoryEmpty(tabIndex));
+    }
+    else{
+        toolBarManager->SetBackButtonEnabled(!fileModelOp->IsBackHistoryEmpty(tabIndex));
+        toolBarManager->SetForwardButtonEnabled(!fileModelOp->IsForwardHistoryEmpty(tabIndex));
+    }
 }
 
 void MainWindow::on_toolBackButton_clicked()
 {
-    const auto tabIndex = ui->tabWidget->currentIndex();
+    if(isWorkingOnRightPane){
+        const auto tabIndex = ui->tabWidget_2->currentIndex();
 
-    fileModelOp->OnBackButtonClicked(tabIndex);
-    //tree back onClick missing
+        fileModelOp2->OnBackButtonClicked(tabIndex);
+        //tree back onClick missing
 
-    tableManager->SetTableContent(tabIndex);
-    treeManager->SetTreeContent(tabIndex);
+        tableManager2->SetTableContent(tabIndex);
+        treeManager2->SetTreeContent(tabIndex);
 
-    // buton kontrolü:
-    updateHistoryButtons(tabIndex);
+        // buton kontrolü:
+        updateHistoryButtons(tabIndex, true);
+    }
+    else{
+        const auto tabIndex = ui->tabWidget->currentIndex();
+
+        fileModelOp->OnBackButtonClicked(tabIndex);
+        //tree back onClick missing
+
+        tableManager->SetTableContent(tabIndex);
+        treeManager->SetTreeContent(tabIndex);
+
+        // buton kontrolü:
+        updateHistoryButtons(tabIndex, false);
+    }
 }
 
 void MainWindow::on_toolForwardButton_clicked()
 {
-    const auto tabIndex = ui->tabWidget->currentIndex();
+    if(isWorkingOnRightPane){
+        const auto tabIndex = ui->tabWidget_2->currentIndex();
 
-    fileModelOp->OnForwardButtonClicked(tabIndex);
-    //tree back onClick missing
+        fileModelOp2->OnForwardButtonClicked(tabIndex);
+        //tree back onClick missing
 
-    tableManager->SetTableContent(tabIndex);
-    treeManager->SetTreeContent(tabIndex);
+        tableManager2->SetTableContent(tabIndex);
+        treeManager2->SetTreeContent(tabIndex);
 
-    // buton kontrolü:
-    updateHistoryButtons(tabIndex);
+        // buton kontrolü:
+        updateHistoryButtons(tabIndex, true);
+    }
+    else{
+        const auto tabIndex = ui->tabWidget->currentIndex();
+
+        fileModelOp->OnForwardButtonClicked(tabIndex);
+        //tree back onClick missing
+
+        tableManager->SetTableContent(tabIndex);
+        treeManager->SetTreeContent(tabIndex);
+
+        // buton kontrolü:
+        updateHistoryButtons(tabIndex, false);
+    }
 }
 
 void MainWindow::on_actionAbout_triggered()
@@ -363,10 +397,12 @@ void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
         tabManager->moveTabWidget(tabIndex);
         SetTabContent(tabIndex, false);
         // buton kontrolü:
-        updateHistoryButtons(tabIndex);
+        updateHistoryButtons(tabIndex, false);
     }
 
     SetLabelText_(fileModelOp->GetCurrentPath(tabIndex));
+
+    isWorkingOnRightPane = false;
 }
 
 void MainWindow::on_tabWidget_2_tabBarClicked(int tabIndex)
@@ -379,10 +415,12 @@ void MainWindow::on_tabWidget_2_tabBarClicked(int tabIndex)
         tabManager2->moveTabWidget(tabIndex);
         SetTabContent(tabIndex, true);
         // buton kontrolü:
-        updateHistoryButtons(tabIndex);
+        updateHistoryButtons(tabIndex, true);
     }
 
     SetLabelText_(fileModelOp2->GetCurrentPath(tabIndex));
+
+    isWorkingOnRightPane = true;
 }
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
@@ -426,6 +464,8 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
             SetLabelText_(fileModelOp2->GetFilePath(fileModelOp2->GetTabModelIndex(ui->tabWidget_2->currentIndex())));
         }
     }
+    isWorkingOnRightPane = false;
+
 }
 
 void MainWindow::on_tabWidget_2_tabCloseRequested(int index)
@@ -469,6 +509,8 @@ void MainWindow::on_tabWidget_2_tabCloseRequested(int index)
             SetLabelText_(fileModelOp->GetFilePath(fileModelOp->GetTabModelIndex(ui->tabWidget->currentIndex())));
         }
     }
+    isWorkingOnRightPane = true;
+
 }
 
 
@@ -485,9 +527,12 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
     }
 
     // buton kontrolü:
-    updateHistoryButtons(tabIndex);
+    updateHistoryButtons(tabIndex, false);
 
     leftTabIsReset_ = false;
+
+    isWorkingOnRightPane = false;
+
 }
 
 void MainWindow::on_FileTreeView_2_clicked(const QModelIndex &modelIndex)
@@ -503,9 +548,11 @@ void MainWindow::on_FileTreeView_2_clicked(const QModelIndex &modelIndex)
     }
 
     // buton kontrolü:
-    updateHistoryButtons(tabIndex);
+    updateHistoryButtons(tabIndex, true);
 
     rightTabIsReset_ = false;
+
+    isWorkingOnRightPane = true;
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
@@ -519,12 +566,15 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
     const auto tabIndex = ui->tabWidget->currentIndex();
 
     // buton kontrolü:
-    updateHistoryButtons(tabIndex);
+    updateHistoryButtons(tabIndex, false);
 
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
 
     leftTabIsReset_ = false;
+
+    isWorkingOnRightPane = false;
+
 }
 
 void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
@@ -538,10 +588,13 @@ void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
     const auto tabIndex = ui->tabWidget_2->currentIndex();
 
     // buton kontrolü:
-    updateHistoryButtons(tabIndex);
+    updateHistoryButtons(tabIndex, true);
 
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView_2->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
 
     rightTabIsReset_ = false;
+
+    isWorkingOnRightPane = true;
+
 }

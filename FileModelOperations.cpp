@@ -85,7 +85,7 @@ void FileModelOperations::swapTabHistoryModelIndex(int toIndex, int fromIndex)
     TabBackHistoryModelIndex[toIndex] = tempBack;
     const auto tempForward = TabForwardHistoryModelIndex.value(fromIndex);
     TabForwardHistoryModelIndex[fromIndex] = TabForwardHistoryModelIndex.value(toIndex);
-    TabForwardHistoryModelIndex[toIndex] = tempBack;
+    TabForwardHistoryModelIndex[toIndex] = tempForward;
 }
 
 void FileModelOperations::OnBackButtonClicked(int tabIndex)
