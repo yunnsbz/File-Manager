@@ -26,10 +26,15 @@ MainWindow::MainWindow(QWidget *parent)
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_ui_mgr_(ui, this),
-    toolBarManager(new ToolBarManager(ui->toolBar ,this)),
-    tabManager(new TabManager(ui->tabWidget, this)),
-    tableManager(new TableManager(ui->tableView, this)),
-    treeManager(new TreeManager(ui->FileTreeView, this))
+    fileModelOp(new FileModelOperations()),
+    fileModelOp2(new FileModelOperations()),
+    toolBarManager(new ToolBarManager(ui->toolBar, this)),
+    tabManager(new TabManager(ui->tabWidget, false, this)),
+    tabManager2(new TabManager(ui->tabWidget_2, true, this)),
+    tableManager(new TableManager(ui->tableView, fileModelOp, this)),
+    tableManager2(new TableManager(ui->tableView_2, fileModelOp2, this)),
+    treeManager(new TreeManager(ui->FileTreeView, fileModelOp, ui->tabWidget, this)),
+    treeManager2(new TreeManager(ui->FileTreeView_2, fileModelOp2, ui->tabWidget_2, this))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
@@ -41,7 +46,16 @@ MainWindow::MainWindow(QWidget *parent)
         &MainWindow::onTreeSelectionChanged
     );
 
+    auto* fileModel = fileModelOp->GetFileModel();
+    ui->columnView->setModel(fileModel);
+
+    // tree view daha küçük olmalı
     ui->splitter->setSizes({100,400});
+    ui->splitter_2->setSizes({100,400});
+
+    // spliterlar ekranda sadece tree view olacak şekilde sürüklenmemeli
+    ui->splitter->setCollapsible(1,false);
+    ui->splitter_2->setCollapsible(1,false);
 
     setWindowTitle("File Manager");
     show();
@@ -74,28 +88,35 @@ auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
 }
 
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
-void MainWindow::SetTabContent(int tabIndex)
+void MainWindow::SetTabContent(int tabIndex, bool rightPane)
 {
-    tableManager->SetTableContent(tabIndex);
-    treeManager->SetTreeContent(tabIndex);
-}
-
-auto MainWindow::GetCurrentTabIndex() -> int
-{
-    return ui->tabWidget->currentIndex();
-}
-
-auto MainWindow::GetPreviousTabIndex() -> int
-{
-    return tabManager->getPersistentPreviousLeftTabIndex();
+    if (rightPane)
+    {
+        tableManager2->SetTableContent(tabIndex);
+        treeManager2->SetTreeContent(tabIndex);
+    }
+    else
+    {
+        tableManager->SetTableContent(tabIndex);
+        treeManager->SetTreeContent(tabIndex);
+    }
 }
 
 void MainWindow::OnTabMoved(int toIndex, int fromIndex)
 {
     treeManager->swapExpandedPathsMap(toIndex, fromIndex);
+    fileModelOp->swapTabModelIndexMap(toIndex, fromIndex);
+    fileModelOp->swapTabHistoryModelIndex(toIndex, fromIndex);
 }
 
-void MainWindow::UpdateLabel_(const QString& path)
+void MainWindow::OnTabMoved2(int toIndex, int fromIndex)
+{
+    treeManager2->swapExpandedPathsMap(toIndex, fromIndex);
+    fileModelOp2->swapTabModelIndexMap(toIndex, fromIndex);
+    fileModelOp2->swapTabHistoryModelIndex(toIndex, fromIndex);
+}
+
+void MainWindow::SetLabelText_(const QString& path)
 {
     ui->label->setText(path);
 
@@ -103,11 +124,12 @@ void MainWindow::UpdateLabel_(const QString& path)
     ui->label->setMinimumSize(ui->label->sizeHint());
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event) {
-        if (event->key() == Qt::Key_C) {
-            ui->lineEdit->setFocus();
-        }
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_C) {
+        ui->lineEdit->setFocus();
     }
+}
 
 void MainWindow::on_actionExit_triggered()
 {
@@ -118,43 +140,26 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
 {
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(current);
 
-    UpdateLabel_(path);
-}
-
-void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
-{
-    const QModelIndex firstColumnIndex = index.siblingAtColumn(0); // her zaman ilk sütunu al
-
-    tableManager->navigateToFolder(ui->tabWidget->currentIndex(), firstColumnIndex);
-
-    treeManager->ExpandTreeView(firstColumnIndex);
-
-    const auto tabIndex = ui->tabWidget->currentIndex();
-
-    // buton kontrolü:
-    updateHistoryButtons(tabIndex);
-
-    const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(firstColumnIndex);
-    UpdateLabel_(path);
+    SetLabelText_(path);
 }
 
 void MainWindow::on_splitter_splitterMoved(int pos, int )
 {
-    if (pos < 10 && treeActive )
+    if (pos < 10 && treeViewActive )
     {
-        treeActive = false;
+        treeViewActive = false;
     }
-    else if (pos > 10 && !treeActive)
+    else if (pos > 10 && ! treeViewActive)
     {
-        treeActive = true;
+        treeViewActive = true;
     }
 }
 
 void MainWindow::on_actionList_View_triggered()
 {
-    if (treeActive)
+    if (treeViewActive)
     {
-        treeActive = false;
+        treeViewActive = false;
         ui->splitter->setSizes({0,400});
 
         // sürüklemeyi devre dışı bırakma:
@@ -170,7 +175,7 @@ void MainWindow::on_actionList_View_triggered()
     }
     else
     {
-        treeActive = true;
+        treeViewActive = true;
         ui->splitter->setSizes({100,400});
         //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
         for (int i = 0; i < 2; ++i)
@@ -186,79 +191,17 @@ void MainWindow::on_actionList_View_triggered()
     }
 }
 
-void MainWindow::on_tabWidget_tabCloseRequested(int index)
-{
-    if (ui->tabWidget->count() > 1)
-    {
-        // move widget before closing current tab:
-        if (ui->tabWidget->currentIndex() == index)
-        {
-            if (index >= 1)
-            {
-                tabManager->moveTabWidget(index - 1);
-            }
-            else
-            {
-                tabManager->moveTabWidget(index + 1);
-            }
-        }
-
-        ui->tabWidget->removeTab(index);
-
-        treeManager->removeTabExpandedPaths(index);
-        FileModelOperations::RemoveTabModelIndex(index);
-
-        tabManager->setPreviousLeftTabIndex(ui->tabWidget->currentIndex());
-        SetTabContent(ui->tabWidget->currentIndex());
-    }
-    else
-    {
-        treeManager->setTreeToDefault();
-        tableManager->SetTableToDefault();
-    }
-}
-
-void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
-{
-    // Aynı sekmeye tıklanmadıysa
-    if (tabIndex != tabManager->_getPreviousLeftTabIndex()
-        &&
-        tabIndex != -1)
-    {
-        tabManager->moveTabWidget(tabIndex);
-        SetTabContent(tabIndex);
-        // buton kontrolü:
-        updateHistoryButtons(tabIndex);
-    }
-}
-
 void MainWindow::updateHistoryButtons(int const tabIndex)
 {
-    toolBarManager->SetBackButtonEnabled(!FileModelOperations::IsBackHistoryEmpty(tabIndex));
-    toolBarManager->SetForwardButtonEnabled(!FileModelOperations::IsForwardHistoryEmpty(tabIndex));
-}
-
-void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
-{
-    int const tabIndex = ui->tabWidget->currentIndex();
-    treeManager->navigateToFolder(modelIndex, tabIndex);
-
-    auto* fileModel = FileModelOperations::GetFileModel();
-    // girilen yer klasör ise table view set edilir:
-    if (fileModel->hasChildren(modelIndex))
-    {
-        ui->tableView->setRootIndex(modelIndex);
-    }
-
-    // buton kontrolü:
-    updateHistoryButtons(tabIndex);
+    toolBarManager->SetBackButtonEnabled(!fileModelOp->IsBackHistoryEmpty(tabIndex));
+    toolBarManager->SetForwardButtonEnabled(!fileModelOp->IsForwardHistoryEmpty(tabIndex));
 }
 
 void MainWindow::on_toolBackButton_clicked()
 {
     const auto tabIndex = ui->tabWidget->currentIndex();
 
-    FileModelOperations::OnBackButtonClicked(tabIndex);
+    fileModelOp->OnBackButtonClicked(tabIndex);
     //tree back onClick missing
 
     tableManager->SetTableContent(tabIndex);
@@ -272,7 +215,7 @@ void MainWindow::on_toolForwardButton_clicked()
 {
     const auto tabIndex = ui->tabWidget->currentIndex();
 
-    FileModelOperations::OnForwardButtonClicked(tabIndex);
+    fileModelOp->OnForwardButtonClicked(tabIndex);
     //tree back onClick missing
 
     tableManager->SetTableContent(tabIndex);
@@ -305,7 +248,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_lineEdit_returnPressed()
 {
-    auto path = FileModelOperations::GetFilePath(FileModelOperations::GetTabModelIndex(ui->tabWidget->currentIndex()));
+    auto path = fileModelOp->GetFilePath(fileModelOp->GetTabModelIndex(ui->tabWidget->currentIndex()));
 
     if (path.isEmpty())
     {
@@ -330,3 +273,266 @@ void MainWindow::on_toolCmdButton_pressed()
     on_lineEdit_returnPressed();
 }
 
+
+void MainWindow::on_actionDual_Pane_View_triggered()
+{
+    if (ui->stackedWidget->currentIndex() == 0)
+    {
+        if (dualPaneActive)
+        {
+            dualPaneActive = false;
+            ui->splitter_dualPane->setChildrenCollapsible(true);
+            ui->splitter_dualPane->setSizes({1,0});
+            ui->splitter_dualPane->setChildrenCollapsible(false);
+            // sürüklemeyi devre dışı bırakma:
+            for (int i = 0; i < 2; ++i)
+            {
+                QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+                if (handle != nullptr)
+                {
+                    handle->setEnabled(false);
+                }
+            }
+            ui->splitter_dualPane->setHandleWidth(0);
+
+            tableManager->SetColumnResize();
+        }
+        else
+        {
+            dualPaneActive = true;
+            ui->splitter_dualPane->setChildrenCollapsible(true);
+            ui->splitter_dualPane->setSizes({1,1});
+            ui->splitter_dualPane->setChildrenCollapsible(false);
+            //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
+            for (int i = 0; i < 2; ++i)
+            {
+                QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+                if (handle != nullptr)
+                {
+                    handle->setEnabled(true);
+                }
+            }
+
+            ui->splitter_dualPane->setHandleWidth(5);
+
+            // dual pane geldiğinde tablo sütun genişliklerini uygun hale getir
+            tableManager->SetColumnResize();
+        }
+    }
+    else{
+        // column view açıksa onu kapatıp bu fonksiyonu tekrar çağırarak dual pane'i açar
+        ColumnViewActive = false;
+        ui->stackedWidget->setCurrentIndex(0);
+
+        // column dan çıktıktan sonra her halukarda dual pane açılsın diye:
+        dualPaneActive = false;
+
+        on_actionDual_Pane_View_triggered();
+    }
+}
+
+
+void MainWindow::on_actionColumn_View_triggered()
+{
+    if(ui->stackedWidget->currentIndex() == 1){
+        ColumnViewActive = false;
+        ui->stackedWidget->setCurrentIndex(0);
+    }
+    else{
+        ColumnViewActive = true;
+        ui->stackedWidget->setCurrentIndex(1);
+    }
+}
+
+void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
+{
+    // Aynı sekmeye tıklanmadıysa
+    if (tabIndex != tabManager->_getPreviousLeftTabIndex()
+        &&
+        tabIndex != -1)
+    {
+        tabManager->moveTabWidget(tabIndex);
+        SetTabContent(tabIndex, false);
+        // buton kontrolü:
+        updateHistoryButtons(tabIndex);
+    }
+
+    SetLabelText_(fileModelOp->GetCurrentPath(tabIndex));
+}
+
+void MainWindow::on_tabWidget_2_tabBarClicked(int tabIndex)
+{
+    // Aynı sekmeye tıklanmadıysa
+    if (tabIndex != tabManager2->_getPreviousLeftTabIndex()
+        &&
+        tabIndex != -1)
+    {
+        tabManager2->moveTabWidget(tabIndex);
+        SetTabContent(tabIndex, true);
+        // buton kontrolü:
+        updateHistoryButtons(tabIndex);
+    }
+
+    SetLabelText_(fileModelOp2->GetCurrentPath(tabIndex));
+}
+
+void MainWindow::on_tabWidget_tabCloseRequested(int index)
+{
+    if (ui->tabWidget->count() > 1)
+    {
+        // move widget before closing current tab:
+        if (ui->tabWidget->currentIndex() == index)
+        {
+            if (index >= 1)
+            {
+                tabManager->moveTabWidget(index - 1);
+            }
+            else
+            {
+                tabManager->moveTabWidget(index + 1);
+            }
+        }
+
+        ui->tabWidget->removeTab(index);
+
+        treeManager->removeTabExpandedPaths(index);
+        fileModelOp->RemoveTabModelIndex(index);
+
+        tabManager->setPreviousLeftTabIndex(ui->tabWidget->currentIndex());
+        SetTabContent(ui->tabWidget->currentIndex(), false);
+    }
+    else
+    {
+        treeManager->setTreeToDefault();
+        tableManager->SetTableToDefault();
+
+        leftTabIsReset_ = true;
+
+        if (rightTabIsReset_)
+        {
+            SetLabelText_("\\\\");
+        }
+        else
+        {
+            SetLabelText_(fileModelOp2->GetFilePath(fileModelOp2->GetTabModelIndex(ui->tabWidget_2->currentIndex())));
+        }
+    }
+}
+
+void MainWindow::on_tabWidget_2_tabCloseRequested(int index)
+{
+    if (ui->tabWidget_2->count() > 1)
+    {
+        // move widget before closing current tab:
+        if (ui->tabWidget_2->currentIndex() == index)
+        {
+            if (index >= 1)
+            {
+                tabManager2->moveTabWidget(index - 1);
+            }
+            else
+            {
+                tabManager2->moveTabWidget(index + 1);
+            }
+        }
+
+        ui->tabWidget_2->removeTab(index);
+
+        treeManager2->removeTabExpandedPaths(index);
+        fileModelOp2->RemoveTabModelIndex(index);
+
+        tabManager2->setPreviousLeftTabIndex(ui->tabWidget_2->currentIndex());
+        SetTabContent(ui->tabWidget_2->currentIndex(), true);
+    }
+    else
+    {
+        treeManager2->setTreeToDefault();
+        tableManager2->SetTableToDefault();
+
+        rightTabIsReset_ = true;
+
+        if (leftTabIsReset_)
+        {
+            SetLabelText_("\\\\");
+        }
+        else
+        {
+            SetLabelText_(fileModelOp->GetFilePath(fileModelOp->GetTabModelIndex(ui->tabWidget->currentIndex())));
+        }
+    }
+}
+
+
+void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
+{
+    int const tabIndex = ui->tabWidget->currentIndex();
+    treeManager->navigateToFolder(modelIndex, tabIndex);
+
+    auto* fileModel = fileModelOp->GetFileModel();
+    // girilen yer klasör ise table view set edilir:
+    if (fileModel->hasChildren(modelIndex))
+    {
+        ui->tableView->setRootIndex(modelIndex);
+    }
+
+    // buton kontrolü:
+    updateHistoryButtons(tabIndex);
+
+    leftTabIsReset_ = false;
+}
+
+void MainWindow::on_FileTreeView_2_clicked(const QModelIndex &modelIndex)
+{
+    int const tabIndex = ui->tabWidget_2->currentIndex();
+    treeManager2->navigateToFolder(modelIndex, tabIndex);
+
+    auto* fileModel = fileModelOp2->GetFileModel();
+    // girilen yer klasör ise table view set edilir:
+    if (fileModel->hasChildren(modelIndex))
+    {
+        ui->tableView_2->setRootIndex(modelIndex);
+    }
+
+    // buton kontrolü:
+    updateHistoryButtons(tabIndex);
+
+    rightTabIsReset_ = false;
+}
+
+void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
+{
+    const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
+
+    tableManager->navigateToFolder(ui->tabWidget->currentIndex(), firstColumnIndex);
+
+    treeManager->ExpandTreeView(firstColumnIndex);
+
+    const auto tabIndex = ui->tabWidget->currentIndex();
+
+    // buton kontrolü:
+    updateHistoryButtons(tabIndex);
+
+    const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(firstColumnIndex);
+    SetLabelText_(path);
+
+    leftTabIsReset_ = false;
+}
+
+void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
+{
+    const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
+
+    tableManager2->navigateToFolder(ui->tabWidget_2->currentIndex(), firstColumnIndex);
+
+    treeManager2->ExpandTreeView(firstColumnIndex);
+
+    const auto tabIndex = ui->tabWidget_2->currentIndex();
+
+    // buton kontrolü:
+    updateHistoryButtons(tabIndex);
+
+    const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView_2->model())->filePath(firstColumnIndex);
+    SetLabelText_(path);
+
+    rightTabIsReset_ = false;
+}

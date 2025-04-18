@@ -24,7 +24,7 @@ class TabManager : public QObject
     Q_OBJECT
 
 public:
-    explicit TabManager(QTabWidget* tabWidget, QObject* parent);
+    explicit TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent);
 
     void moveTabWidget(int index);
     void onTabCloseRequested(int index);
@@ -61,6 +61,8 @@ private:
 private:
     MainWindow* mainWindow;
     QTabWidget* tabWidget;
+
+    bool forRightPane_;
 
     // last opened tabs (when moving to another tab system should know the last one)
     int lastRightTabIndex = 0;

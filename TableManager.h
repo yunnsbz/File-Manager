@@ -5,24 +5,29 @@
 #include <QTableView>
 #include <QFileSystemModel>
 
+class FileModelOperations;
+
 class TableManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit TableManager(QTableView* tableView, QObject* parent);
+    explicit TableManager(QTableView *tableView, FileModelOperations* fileModelOp1, QObject *parent);
 
 
 public:
     void SetTableToDefault();
     void SetTableContent(int tabIndex);
     void navigateToFolder(int tabIndex, QModelIndex firstColumnIndex);
-
+    void SetColumnResize();
 
 protected:
 
 
 private:
+    FileModelOperations* fileModelOp1;
+    FileModelOperations* fileModelOp2;
+
     QTableView* tableView;
 };
 

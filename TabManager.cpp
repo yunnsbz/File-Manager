@@ -1,18 +1,18 @@
 #include "TabManager.h"
 #include "mainwindow.hpp"
 #include "ToolBarManager.h"
-#include "FileModelOperations.h"
 
 #include <QToolButton>
 #include <QTabBar>
 #include <QBoxLayout>
 #include <QFileSystemModel>
 
-TabManager::TabManager(QTabWidget* tabWidget, QObject* parent)
+TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent)
     :
     QObject(parent),
     mainWindow(static_cast<MainWindow*>(parent)),
-    tabWidget(tabWidget)
+    tabWidget(tabWidget),
+    forRightPane_(forRightPane)
 {
     Setup_();
 }
@@ -42,10 +42,14 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
         return;
     }
 
-    FileModelOperations::swapTabModelIndexMap(toIndex, fromIndex);
-    FileModelOperations::swapTabHistoryModelIndex(toIndex, fromIndex);
-    mainWindow->OnTabMoved(toIndex, fromIndex);
-
+    if (forRightPane_)
+    {
+        mainWindow->OnTabMoved2(toIndex, fromIndex);
+    }
+    else
+    {
+        mainWindow->OnTabMoved(toIndex, fromIndex);
+    }
 
     // if lastLeftTabIndex is the one moved it should register
     if (fromIndex == _previousLeftTabIndex)
@@ -100,26 +104,8 @@ void TabManager::addNewTab()
 
     setPreviousLeftTabIndex(tabWidget->count() - 1);
 
-    mainWindow->SetTabContent(tabWidget->currentIndex());
+    mainWindow->SetTabContent(tabWidget->currentIndex(), forRightPane_);
 }
-
-// void TabManager::addTab(const QString& title)
-// {
-//     TabData newTab;
-//
-//     newTab.tabWidget = new QWidget;
-//     newTab.treeView = new QTreeView(newTab.tabWidget);
-//     newTab.tableView = new QTableView(newTab.tabWidget);
-//
-//     QVBoxLayout* layout = new QVBoxLayout(newTab.tabWidget);
-//     layout->addWidget(newTab.treeView);
-//     layout->addWidget(newTab.tableView);
-//     newTab.tabWidget->setLayout(layout);
-//
-//     tabWidget->addTab(newTab.tabWidget, title);
-//     m_tabs_.append(newTab);
-// }
-
 
 void TabManager::moveTabWidget(int index)
 {

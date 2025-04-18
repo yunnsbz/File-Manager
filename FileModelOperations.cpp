@@ -5,10 +5,9 @@
 #include <algorithm>
 
 FileModelOperations::FileModelOperations()
+:
+fileModel(new QFileSystemModel(this))
 {
-    // set model:
-    fileModel = new QFileSystemModel(this);
-
     // set to disk directory
     fileModel->setRootPath("");
 }
@@ -31,6 +30,11 @@ void FileModelOperations::SetTabModelIndex(int tabIndex, QModelIndex modelIndex)
 auto FileModelOperations::GetFilePath(QModelIndex modelIndex) -> QString
 {
     return fileModel->filePath(modelIndex);
+}
+
+auto FileModelOperations::GetCurrentPath(int tabIndex) -> QString
+{
+    return GetFilePath(GetTabModelIndex(tabIndex));
 }
 
 auto FileModelOperations::GetFileIndex(const QString& path) -> QModelIndex

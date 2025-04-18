@@ -16,34 +16,35 @@ public:
 
 
 public:
-    static auto GetFileModel() -> QFileSystemModel*;
-    static auto GetTabModelIndex(int tabIndex) -> QModelIndex;
-    static void SetTabModelIndex(int tabIndex, QModelIndex modelIndex);
-    static auto GetFilePath(QModelIndex modelIndex) -> QString;
-    static auto GetFileIndex(const QString& path) -> QModelIndex;
+    auto GetFileModel() -> QFileSystemModel*;
+    auto GetTabModelIndex(int tabIndex) -> QModelIndex;
+    void SetTabModelIndex(int tabIndex, QModelIndex modelIndex);
+    auto GetFilePath(QModelIndex modelIndex) -> QString;
+    auto GetCurrentPath(int tabIndex) -> QString;
+    auto GetFileIndex(const QString& path) -> QModelIndex;
 
-    static auto IsBackHistoryEmpty(int tabIndex) -> bool;
-    static auto IsForwardHistoryEmpty(int tabIndex) -> bool;
+    auto IsBackHistoryEmpty(int tabIndex) -> bool;
+    auto IsForwardHistoryEmpty(int tabIndex) -> bool;
 
-    static void RemoveTabModelIndex(int tabIndex);
-    static void swapTabModelIndexMap(int toIndex, int fromIndex);
-    static void swapTabHistoryModelIndex(int toIndex, int fromIndex);
+    void RemoveTabModelIndex(int tabIndex);
+    void swapTabModelIndexMap(int toIndex, int fromIndex);
+    void swapTabHistoryModelIndex(int toIndex, int fromIndex);
 
-    static void OnBackButtonClicked(int tabIndex);
-    static void OnForwardButtonClicked(int tabIndex);
+    void OnBackButtonClicked(int tabIndex);
+    void OnForwardButtonClicked(int tabIndex);
 
 
 protected:
 
 
 private:
-    static inline QFileSystemModel* fileModel;
-    // NOLINTBEGIN(fuchsia-statically-constructed-objects)
-    static inline QMap<int, QModelIndex> TabModelIndexMap;
+    QFileSystemModel* fileModel;
+
+    QMap<int, QModelIndex> TabModelIndexMap;
 
     // her sekmeye özel olarak ileri ve geri butonları için file modelin index değerlerini turar
-    static inline QMap<int, QList<QModelIndex>> TabBackHistoryModelIndex;
-    static inline QMap<int, QList<QModelIndex>> TabForwardHistoryModelIndex;
-    // NOLINTEND(fuchsia-statically-constructed-objects)
+    QMap<int, QList<QModelIndex>> TabBackHistoryModelIndex;
+    QMap<int, QList<QModelIndex>> TabForwardHistoryModelIndex;
+
 };
 #endif // FILEMODELOPERATIONS_H
