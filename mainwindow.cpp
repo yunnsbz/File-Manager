@@ -155,21 +155,21 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
 void MainWindow::on_splitter_splitterMoved(int pos, int )
 {
-    if (pos < 10 && treeActive )
+    if (pos < 10 && treeViewActive )
     {
-        treeActive = false;
+        treeViewActive = false;
     }
-    else if (pos > 10 && !treeActive)
+    else if (pos > 10 && ! treeViewActive)
     {
-        treeActive = true;
+        treeViewActive = true;
     }
 }
 
 void MainWindow::on_actionList_View_triggered()
 {
-    if (treeActive)
+    if (treeViewActive)
     {
-        treeActive = false;
+        treeViewActive = false;
         ui->splitter->setSizes({0,400});
 
         // sürüklemeyi devre dışı bırakma:
@@ -185,7 +185,7 @@ void MainWindow::on_actionList_View_triggered()
     }
     else
     {
-        treeActive = true;
+        treeViewActive = true;
         ui->splitter->setSizes({100,400});
         //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
         for (int i = 0; i < 2; ++i)

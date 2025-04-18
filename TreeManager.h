@@ -14,7 +14,7 @@ class TreeManager : public QObject
     Q_OBJECT
 
 public:
-    explicit TreeManager(QTreeView* treeView, FileModelOperations* fileModelOp1, QObject* parent);
+    explicit TreeManager(QTreeView* treeView, FileModelOperations* fileModelOp, QObject* parent);
 
 
 public:
@@ -34,7 +34,7 @@ private:
 
 private:
     MainWindow* mainWindow;
-    FileModelOperations* fileModelOp1;
+    FileModelOperations* fileModelOp;
     QTreeView* treeView;
 
 

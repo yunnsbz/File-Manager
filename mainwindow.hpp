@@ -71,26 +71,21 @@ private slots:
     void on_toolForwardButton_clicked();
     void on_actionAbout_triggered();
     void on_lineEdit_returnPressed();
+    void on_toolCmdButton_pressed();
+    void on_actionDual_Pane_View_triggered();
+    void on_actionColumn_View_triggered();
 
-
-// virtual methods
-void on_toolCmdButton_pressed();
-
-void on_actionDual_Pane_View_triggered();
-
-void on_actionColumn_View_triggered();
 
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
+
+    virtual void keyPressEvent(QKeyEvent* event) override; // şimdilik mainWİdget'da bazı ögelere focus için kullanılıyor
 
 
 private:
     void UpdateLabel_(const QString& path);
 
-    // şimdilik mainWİdget'da bazı ögelere focus için kullanılıyor:
-    void keyPressEvent(QKeyEvent* event) override;
 
-// member variables
 private:
     Ui::MainWindow *ui;
 
@@ -99,16 +94,16 @@ private:
     FileModelOperations* fileModelOp2;
 
     ToolBarManager* toolBarManager;
-    TabManager* tabManager;
-    TableManager* tableManager;
-    TreeManager* treeManager;
 
-    // treeView is collapsed or not:
-    bool treeActive = true;
+    TabManager* tabManager;
+    TabManager* tabManager2;
+    TableManager* tableManager;
+    TableManager* tableManager2;
+    TreeManager* treeManager;
+    TreeManager* treeManager2;
+
+    bool treeViewActive = true;
     bool dualPaneActive = true;
     bool ColumnViewActive = true;
-
-    // tree view expanded Indexes
-    QList<QList<QModelIndex>> tabsExpandedIndexes;
 };
 #endif // MAINWINDOW_H
