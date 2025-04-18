@@ -17,7 +17,7 @@ public:
     void SetTableToDefault();
     void SetTableContent(int tabIndex);
     void navigateToFolder(int tabIndex, QModelIndex firstColumnIndex);
-
+    void SetColumnResize();
 
 protected:
 

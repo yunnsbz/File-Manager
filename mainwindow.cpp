@@ -362,6 +362,8 @@ void MainWindow::on_actionDual_Pane_View_triggered()
                 }
             }
             ui->splitter_dualPane->setHandleWidth(0);
+
+            tableManager->SetColumnResize();
         }
         else
         {
@@ -380,6 +382,9 @@ void MainWindow::on_actionDual_Pane_View_triggered()
             }
 
             ui->splitter_dualPane->setHandleWidth(5);
+
+            // dual pane geldiğinde tablo sütun genişliklerini uygun hale getir
+            tableManager->SetColumnResize();
         }
     }
     else{

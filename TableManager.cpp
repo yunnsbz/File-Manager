@@ -4,6 +4,7 @@
 #include <QUrl>
 #include <QDesktopServices>
 #include <QHeaderView>
+#include <QTimer>
 
 
 TableManager::TableManager(QTableView *tableView, QObject *parent)
@@ -13,8 +14,7 @@ TableManager::TableManager(QTableView *tableView, QObject *parent)
 {
     auto* fileModel = FileModelOperations::GetFileModel();
     tableView->setModel(fileModel);
-    tableView->resizeColumnsToContents(); // Başlangıçta içeriklere göre yerleştir
-    tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+    SetColumnResize();
 }
 
 void TableManager::SetTableToDefault()
@@ -52,6 +52,38 @@ void TableManager::navigateToFolder(int tabIndex, QModelIndex firstColumnIndex)
         tableView->setRootIndex(firstColumnIndex);
         FileModelOperations::SetTabModelIndex(tabIndex,firstColumnIndex);
     }
+}
+
+void TableManager::SetColumnResize()
+{
+QHeaderView* header = tableView->horizontalHeader();
+
+    // Stretch ile başlangıç yerleşimi (bu işlem interactive modu kapatır. aşağıda tekrar açarız)
+    header->setSectionResizeMode(QHeaderView::Stretch);
+    tableView->resizeColumnsToContents();
+
+    // Tablonun güncellenmesini bekle
+    QTimer::singleShot(0, this, [this]() {
+        QHeaderView* header = tableView->horizontalHeader();
+        const int columnCount = tableView->model()->columnCount();
+
+        // stretch değerlerini kaydet:
+        QVector<int> widths;
+        for (int i = 0; i < columnCount; ++i)
+        {
+            widths.append(tableView->columnWidth(i));
+        }
+        // Kullanıcının sütun genişliklerini değiştirebilmesi için Interactive moda geç (stretch değerlerini değiştirir)
+        for (int i = 0; i < columnCount; ++i)
+        {
+            header->setSectionResizeMode(i, QHeaderView::Interactive);
+        }
+        // Stretch'te belirlenmiş genişlikleri geri uygula:
+        for (int i = 0; i < columnCount; ++i)
+        {
+            tableView->setColumnWidth(i, widths[i]);
+        }
+    });
 }
 
 

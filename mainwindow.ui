@@ -378,14 +378,17 @@
                 <property name="dragEnabled">
                  <bool>true</bool>
                 </property>
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+                </property>
                 <property name="showGrid">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="gridStyle">
                  <enum>Qt::PenStyle::SolidLine</enum>
                 </property>
                 <property name="wordWrap">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="cornerButtonEnabled">
                  <bool>true</bool>
@@ -467,7 +470,7 @@
                <property name="handleWidth">
                 <number>4</number>
                </property>
-               <widget class="QTreeView" name="FileTreeView_3">
+               <widget class="QTreeView" name="FileTreeView_2">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -487,21 +490,24 @@
                  <bool>false</bool>
                 </attribute>
                </widget>
-               <widget class="QTableView" name="tableView_3">
+               <widget class="QTableView" name="tableView_2">
                 <property name="tabKeyNavigation">
                  <bool>false</bool>
                 </property>
                 <property name="dragEnabled">
                  <bool>true</bool>
                 </property>
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+                </property>
                 <property name="showGrid">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="gridStyle">
                  <enum>Qt::PenStyle::SolidLine</enum>
                 </property>
                 <property name="wordWrap">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="cornerButtonEnabled">
                  <bool>true</bool>
