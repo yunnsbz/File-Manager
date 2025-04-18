@@ -370,6 +370,7 @@ void MainWindow::on_actionDual_Pane_View_triggered()
         // column dan çıktıktan sonra her halukarda dual pane açılsın diye:
         dualPaneActive = false;
 
+        // curent index sıfırlandığından recursive sadece bir kere çalışır
         on_actionDual_Pane_View_triggered();
     }
 }

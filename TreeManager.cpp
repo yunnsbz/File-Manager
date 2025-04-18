@@ -24,7 +24,7 @@ TreeManager::TreeManager(QTreeView *treeView, FileModelOperations *fileModelOp, 
     treeView->hideColumn(3);
 
     // tree view açılma ve kapanma durumlarında değişiklikleri tabContents içine kaydetmeliyiz:
-    connect(treeView, &QTreeView::expanded, this, [=, this](const QModelIndex &index) {
+    connect(treeView, &QTreeView::expanded, fileModelOp, [=, this](const QModelIndex &index) {
         const QString& path = fileModelOp->GetFilePath(index);
         const int currentTab = tabWidget_->currentIndex();
         if(!ExpandedPathsMap[currentTab].contains(path))
@@ -33,7 +33,7 @@ TreeManager::TreeManager(QTreeView *treeView, FileModelOperations *fileModelOp, 
         }
     });
 
-    connect(treeView, &QTreeView::collapsed, this, [=, this](const QModelIndex &index) {
+    connect(treeView, &QTreeView::collapsed, fileModelOp, [=, this](const QModelIndex &index) {
         const QString& path = fileModelOp->GetFilePath(index);
         const int currentTab = tabWidget_->currentIndex();
         ExpandedPathsMap[currentTab].removeOne(path);

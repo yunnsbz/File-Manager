@@ -26,7 +26,6 @@ protected:
 
 private:
     FileModelOperations* fileModelOp1;
-    FileModelOperations* fileModelOp2;
 
     QTableView* tableView;
 };

@@ -12,13 +12,6 @@
 class QFileSystemModel;
 class MainWindow;
 
-struct TabData
-{
-    QWidget* tabWidget;
-    QTreeView* treeView;
-    QTableView* tableView;
-};
-
 class TabManager : public QObject
 {
     Q_OBJECT

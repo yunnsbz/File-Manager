@@ -74,7 +74,7 @@ auto TabManager::_getPreviousLeftTabIndex() const -> int
     return _previousLeftTabIndex;
 }
 
-int TabManager::getPersistentPreviousLeftTabIndex() const
+auto TabManager::getPersistentPreviousLeftTabIndex() const ->int
 {
     return persistentPreviousLeftTabIndex;
 }
