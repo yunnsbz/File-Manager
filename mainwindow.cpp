@@ -109,6 +109,13 @@ void MainWindow::OnTabMoved(int toIndex, int fromIndex)
     fileModelOp->swapTabHistoryModelIndex(toIndex, fromIndex);
 }
 
+void MainWindow::OnTabMoved2(int toIndex, int fromIndex)
+{
+    treeManager2->swapExpandedPathsMap(toIndex, fromIndex);
+    fileModelOp2->swapTabModelIndexMap(toIndex, fromIndex);
+    fileModelOp2->swapTabHistoryModelIndex(toIndex, fromIndex);
+}
+
 void MainWindow::SetLabelText_(const QString& path)
 {
     ui->label->setText(path);

@@ -42,7 +42,14 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
         return;
     }
 
-    mainWindow->OnTabMoved(toIndex, fromIndex);
+    if (forRightPane_)
+    {
+        mainWindow->OnTabMoved2(toIndex, fromIndex);
+    }
+    else
+    {
+        mainWindow->OnTabMoved(toIndex, fromIndex);
+    }
 
     // if lastLeftTabIndex is the one moved it should register
     if (fromIndex == _previousLeftTabIndex)
