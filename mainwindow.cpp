@@ -161,33 +161,42 @@ void MainWindow::on_actionList_View_triggered()
     {
         treeViewActive = false;
         ui->splitter->setSizes({0,400});
+        ui->splitter_2->setSizes({0,400});
 
         // sürüklemeyi devre dışı bırakma:
         for (int i = 0; i < 2; ++i)
         {
             QSplitterHandle* handle = ui->splitter->handle(i);
-            if (handle != nullptr)
+            QSplitterHandle* handle2 = ui->splitter_2->handle(i);
+            if (handle != nullptr && handle2 != nullptr)
             {
                 handle->setEnabled(false);
+                handle2->setEnabled(false);
             }
         }
+
         ui->splitter->setHandleWidth(0);
+        ui->splitter_2->setHandleWidth(0);
     }
     else
     {
         treeViewActive = true;
         ui->splitter->setSizes({100,400});
+        ui->splitter_2->setSizes({100,400});
         //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
         for (int i = 0; i < 2; ++i)
         {
             QSplitterHandle* handle = ui->splitter->handle(i);
-            if (handle != nullptr)
+            QSplitterHandle* handle2 = ui->splitter_2->handle(i);
+            if (handle != nullptr && handle2 != nullptr)
             {
                 handle->setEnabled(true);
+                handle2->setEnabled(true);
             }
         }
 
         ui->splitter->setHandleWidth(5);
+        ui->splitter_2->setHandleWidth(5);
     }
 }
 
