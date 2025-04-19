@@ -53,7 +53,7 @@ QTableView::item {
 
 
 QTableView::selection{
-    border-bottom: 1px solid #1c1c1c;
+    border-bottom: 1px solid #1c1c1cbb;
     padding: 2px 5px 2px 5px;
 }
 
@@ -63,7 +63,7 @@ QTableView::item:focus {
 }
 
 QTableView::item:selected {
-    background-color: #a0a0a0;
+    background-color: #a0a0a0bb;
     color: black;
     border: none;
     outline: none;
