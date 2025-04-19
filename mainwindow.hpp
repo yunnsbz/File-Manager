@@ -81,6 +81,8 @@ private slots:
     void on_tableView_2_doubleClicked(const QModelIndex &index);
     void on_toolSearchButton_clicked();
 
+void on_toolUpButton_clicked();
+
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 

@@ -26,19 +26,20 @@ ThemeManger::ThemeManger(QObject *parent)
         ui->actionTree_View->setIcon(QIcon(":/resources/img/tree_view_black.svg"));
         ui->toolCmdButton->setIcon(QIcon(":/resources/img/terminal_black.svg"));
     }
-
+/*
     // tool button disable olma durumunda otomatik renk değişikliği için
     if (DarkTheme) {
         QIcon icon;
         icon.addPixmap(QPixmap(":/resources/img/share_white.svg"), QIcon::Normal, QIcon::Off);
         icon.addPixmap(QPixmap(":/resources/img/share_gray.svg"), QIcon::Disabled, QIcon::Off);
-        ui->toolShareButton->setIcon(icon);
+        //ui->toolShareButton->setIcon(icon);
     } else {
         QIcon icon;
         icon.addPixmap(QPixmap(":/resources/img/share_black.svg"), QIcon::Normal, QIcon::Off);
         icon.addPixmap(QPixmap(":/resources/img/share_gray.svg"), QIcon::Disabled, QIcon::Off);
         ui->toolShareButton->setIcon(icon);
     }
+*/
 }
 
 bool ThemeManger::isDarkTheme() {

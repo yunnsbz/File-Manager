@@ -55,7 +55,7 @@
      <number>0</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,40,0,0,0">
+     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,40,0,0,0">
       <property name="spacing">
        <number>2</number>
       </property>
@@ -211,13 +211,6 @@
         </property>
         <property name="icon">
          <iconset theme="QIcon::ThemeIcon::MailMessageNew"/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="toolShareButton">
-        <property name="text">
-         <string>share</string>
         </property>
        </widget>
       </item>

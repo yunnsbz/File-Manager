@@ -639,3 +639,38 @@ void MainWindow::on_toolSearchButton_clicked()
     }
 }
 
+
+void MainWindow::on_toolUpButton_clicked()
+{
+    if(isWorkingOnRightPane)
+    {
+        const auto tabIndex = ui->tabWidget_2->currentIndex();
+
+        auto parentIndex = fileModelOp2->GetFileModel()->parent(fileModelOp2->GetTabModelIndex(tabIndex));
+
+        fileModelOp2->SetTabModelIndex(tabIndex, parentIndex);
+        //tree back onClick missing
+
+        tableManager2->SetTableContent(tabIndex);
+        treeManager2->SetTreeContent(tabIndex);
+
+        // buton kontrolü:
+        updateHistoryButtons(tabIndex, true);
+    }
+    else
+    {
+        const auto tabIndex = ui->tabWidget->currentIndex();
+
+        auto parentIndex = fileModelOp->GetFileModel()->parent(fileModelOp->GetTabModelIndex(tabIndex));
+
+        fileModelOp->SetTabModelIndex(tabIndex, parentIndex);
+        //tree back onClick missing
+
+        tableManager->SetTableContent(tabIndex);
+        treeManager->SetTreeContent(tabIndex);
+
+        // buton kontrolü:
+        updateHistoryButtons(tabIndex, false);
+    }
+}
+
