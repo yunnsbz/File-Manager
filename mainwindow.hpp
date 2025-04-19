@@ -86,6 +86,8 @@ private slots:
 
 void on_toolUpButton_clicked();
 
+void on_actionOptions_triggered();
+
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 
@@ -124,5 +126,7 @@ private:
     bool ColumnViewActive = true;
 
     bool searchOn = false;
+    bool tabCloseButtonOld = false;
+
 };
 #endif // MAINWINDOW_H

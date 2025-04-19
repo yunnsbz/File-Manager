@@ -716,3 +716,35 @@ void MainWindow::on_toolSearchButton_clicked()
 
 
 
+
+void MainWindow::on_actionOptions_triggered()
+{
+    if(tabCloseButtonOld){
+        // style:
+        QString qss;
+        QFile file1(":/resources/styles/style.qss");
+        QFile file2(":/resources/styles/button-style-new.qss");
+
+        file1.open(QFile::ReadOnly);
+        file2.open(QFile::ReadOnly);
+
+        qss += file1.readAll();
+        qss += file2.readAll();
+
+        qApp->setStyleSheet(qss);
+        tabCloseButtonOld = false;
+    }
+    else{
+        // style:
+        QString qss;
+        QFile file1(":/resources/styles/style.qss");
+
+        file1.open(QFile::ReadOnly);
+
+        qss += file1.readAll();
+
+        qApp->setStyleSheet(qss);
+        tabCloseButtonOld = true;
+    }
+}
+

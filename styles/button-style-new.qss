@@ -1,0 +1,12 @@
+QTabBar::close-button {
+        image: url(:/resources/img/cancel_white.svg);
+        subcontrol-position: right;
+    }
+
+QTabBar::close-button:hover {
+    image: url(:/resources/img/cancel_red.svg);
+}
+
+QTabBar::close-button:pressed {
+    image: url(:/resources/img/cancel_gray.svg);
+}

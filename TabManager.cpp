@@ -31,6 +31,7 @@ TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent
 void TabManager::SetAddTabButton()
 {
     auto* addTabButton = new QToolButton();
+    addTabButton->setObjectName("add-tab-button");
     addTabButton->setText("+");
     tabWidget->setCornerWidget(addTabButton, Qt::TopLeftCorner);
     EnableNavWidget(true);

@@ -42,6 +42,9 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
+    <property name="spacing">
+     <number>4</number>
+    </property>
     <property name="leftMargin">
      <number>5</number>
     </property>
@@ -786,6 +789,7 @@
      <string>File</string>
     </property>
     <addaction name="actionExit"/>
+    <addaction name="actionOptions"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuview"/>
@@ -840,6 +844,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="text">
+    <string>change tab close button</string>
    </property>
   </action>
  </widget>

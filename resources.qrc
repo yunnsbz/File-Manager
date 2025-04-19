@@ -25,5 +25,9 @@
         <file>img/arrow_circle_left_gray.svg</file>
         <file>img/arrow_circle_right_gray.svg</file>
         <file>img/arrow_circle_up_gray.svg</file>
+        <file>img/cancel_white.svg</file>
+        <file>img/cancel_gray.svg</file>
+        <file>img/cancel_red.svg</file>
+        <file>styles/button-style-new.qss</file>
     </qresource>
 </RCC>

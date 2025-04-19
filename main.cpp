@@ -13,15 +13,17 @@ int main(int argc, char **argv)
 
     const MainWindow wnd{};
 
-    // style:
     QString qss;
     QFile file1(":/resources/styles/style.qss");
+    QFile file2(":/resources/styles/button-style-new.qss");
 
     file1.open(QFile::ReadOnly);
+    file2.open(QFile::ReadOnly);
 
     qss += file1.readAll();
-    qApp->setStyleSheet(qss);
+    qss += file2.readAll();
 
+    qApp->setStyleSheet(qss);
     return app.exec();
 
 }

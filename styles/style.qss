@@ -6,8 +6,11 @@ QToolButton {
 }
 
 QTabWidget QToolButton {
+    padding: 0;
+}
+
+#add-tab-button{
     padding: 5px 5px 8px 5px;
-    height: 100%;
 }
 
 /* tab üzerindeki sağ corner buttonları */
