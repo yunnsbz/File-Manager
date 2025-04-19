@@ -16,6 +16,7 @@ TableManager::TableManager(QTableView *tableView, FileModelOperations* fileModel
     auto* fileModel = fileModelOp1->GetFileModel();
     tableView->setModel(fileModel);
     SetColumnResize();
+    tableView->verticalHeader()->setDefaultSectionSize(10);
 }
 
 void TableManager::SetTableToDefault()

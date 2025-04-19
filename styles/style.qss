@@ -39,3 +39,33 @@ QToolButton:hover {
 QToolButton:pressed {
     background-color: #555;
 }
+
+QTableView {
+    gridline-color: transparent;
+    selection-background-color: #a8d5ff;
+    selection-color: black;
+    outline: none;
+}
+
+QTableView::item {
+    border: none;
+}
+
+
+QTableView::selection{
+    border-bottom: 1px solid #1c1c1c;
+    padding: 2px 5px 2px 5px;
+}
+
+QTableView::item:focus {
+    outline: none;
+    background-color: transparent;
+}
+
+QTableView::item:selected {
+    background-color: #a0a0a0;
+    color: black;
+    border: none;
+    outline: none;
+}
+
