@@ -10,6 +10,7 @@ fileModel(new QFileSystemModel(this))
 {
     // set to disk directory
     fileModel->setRootPath("");
+    fileModel->setReadOnly(false);
 }
 
 auto FileModelOperations::GetFileModel() -> QFileSystemModel*
