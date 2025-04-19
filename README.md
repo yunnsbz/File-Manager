@@ -3,27 +3,31 @@
 A cross-platform file manager application built with **Qt** and **C++**.  
 This project aims to deliver a lightweight, modern, and extensible file manager for both **Windows** and **Linux** platforms.
 
-> ⚠️ This project is currently in its early development stage.
+⚠️ This project is currently in its early development stage.
 
 ---
 
-## Goals
+## Features and todos:
 
-- File and folder browsing
-- highly customizable interface
-  - Dual-pane interface
-  - Column interface
-- All File operations (copy, move, delete, rename)
-- Tab support
-- command line suppport
-- File preview
-- Bookmarks and history
+- [x] File and folder browsing
+- [ ] highly customizable interface
+- [x] Dual-pane interface
+- [x] Column interface
+- [x] Tab support
+- [ ] Standart file operations (copy, move, delete, rename)
+- [ ] Multiple selection file operations (copy, move, delete, rename)
+- [ ] Search Support
+- [ ] command line suppport
+- [ ] File preview panel
+- [ ] File details panel
+- [ ] Bookmarks and history
+- [ ] Dark and Light theme support
 ---
 
 ## Built With
 
 - [Qt 6](https://www.qt.io/)
-- [C++20 or higher](https://en.cppreference.com/)
+- [C++20](https://en.cppreference.com/)
 - [CMake](https://cmake.org/) - Build system
 
 ---
