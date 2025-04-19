@@ -45,21 +45,33 @@ void TabManager::Setup_()
     auto* upTabButton = new QToolButton();
 
     bool isDarkTheme = ThemeManger::isDarkTheme();
-    if(isDarkTheme){
-        const QIcon backIcon(":/resources/img/arrow_circle_left_white.svg");
-        backTabButton->setIcon(backIcon);
-        const QIcon forwardIcon(":/resources/img/arrow_circle_right_white.svg");
-        forwTabButton->setIcon(forwardIcon);
-        const QIcon upIcon(":/resources/img/arrow_circle_up_white.svg");
-        upTabButton->setIcon(upIcon);
-    }
-    else{
-        const QIcon backIcon(":/resources/img/arrow_circle_left_black.svg");
-        backTabButton->setIcon(backIcon);
-        const QIcon forwardIcon(":/resources/img/arrow_circle_right_black.svg");
-        forwTabButton->setIcon(forwardIcon);
-        const QIcon upIcon(":/resources/img/arrow_circle_up_black.svg");
-        upTabButton->setIcon(upIcon);
+    // tool button disable olma durumunda otomatik renk değişikliği için
+    if (isDarkTheme) {
+        QIcon icon;
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_left_white.svg"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_left_gray.svg"), QIcon::Disabled, QIcon::Off);
+        backTabButton->setIcon(icon);
+
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_right_white.svg"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_right_gray.svg"), QIcon::Disabled, QIcon::Off);
+        forwTabButton->setIcon(icon);
+
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_up_white.svg"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_up_gray.svg"), QIcon::Disabled, QIcon::Off);
+        upTabButton->setIcon(icon);
+    } else {
+        QIcon icon;
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_left_black.svg"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_left_gray.svg"), QIcon::Disabled, QIcon::Off);
+        backTabButton->setIcon(icon);
+
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_right_black.svg"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_right_gray.svg"), QIcon::Disabled, QIcon::Off);
+        forwTabButton->setIcon(icon);
+
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_up_black.svg"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/resources/img/arrow_circle_up_gray.svg"), QIcon::Disabled, QIcon::Off);
+        upTabButton->setIcon(icon);
     }
 
     layout->addWidget(upTabButton);
@@ -73,6 +85,10 @@ void TabManager::Setup_()
 
     // add button onClick:
     connect(addTabButton, &QToolButton::clicked, this, &TabManager::addNewTab);
+
+    connect(upTabButton, &QToolButton::clicked, this, [this]{mainWindow->upperFolderOnClick(forRightPane_);});
+    connect(forwTabButton, &QToolButton::clicked, this, [this]{mainWindow->ForwardButtonOnClick(forRightPane_);});
+    connect(backTabButton, &QToolButton::clicked, this, [this]{mainWindow->BackButtonOnClick(forRightPane_);});
 
     tabWidget->installEventFilter(this);
 }

@@ -22,5 +22,8 @@
         <file>img/arrow_circle_right_white.svg</file>
         <file>img/arrow_circle_up_black.svg</file>
         <file>img/arrow_circle_up_white.svg</file>
+        <file>img/arrow_circle_left_gray.svg</file>
+        <file>img/arrow_circle_right_gray.svg</file>
+        <file>img/arrow_circle_up_gray.svg</file>
     </qresource>
 </RCC>
