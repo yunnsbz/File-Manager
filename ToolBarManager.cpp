@@ -13,6 +13,7 @@ ToolBarManager::ToolBarManager(QHBoxLayout *toolBar, QObject *parent)
     // uygulama ilk açıldığında back ve forward history boş olur bu yüzden butonlar disable edilir.
     mainWindow->getUI()->toolBackButton->setDisabled(true);
     mainWindow->getUI()->toolForwardButton->setDisabled(true);
+    mainWindow->getUI()->toolUpButton->setDisabled(true);
 }
 
 void ToolBarManager::SetBackButtonEnabled(bool enabled)
@@ -23,4 +24,9 @@ void ToolBarManager::SetBackButtonEnabled(bool enabled)
 void ToolBarManager::SetForwardButtonEnabled(bool enabled)
 {
     mainWindow->getUI()->toolForwardButton->setEnabled(enabled);
+}
+
+void ToolBarManager::SetUpButtonEnabled(bool enabled)
+{
+    mainWindow->getUI()->toolUpButton->setEnabled(enabled);
 }

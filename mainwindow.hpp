@@ -50,9 +50,12 @@ public:
     void SetTabContent(int tabIndex, bool rightPane);
     void OnTabMoved(int toIndex, int fromIndex);
     void OnTabMoved2(int toIndex, int fromIndex);
-    void updateHistoryButtons(int const tabIndex, bool forRightPane);
+    void updateNavButtons(int const tabIndex, bool forRightPane);
 
-
+    // nav buttons:
+    void upperFolderOnClick(bool OnRightPane);
+    void BackButtonOnClick(bool OnRightPane);
+    void ForwardButtonOnClick(bool OnRightPane);
 
 protected:
 

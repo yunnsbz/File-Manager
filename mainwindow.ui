@@ -66,6 +66,32 @@
        <number>0</number>
       </property>
       <item>
+       <widget class="QToolButton" name="toolBackButton">
+        <property name="toolTip">
+         <string>backward</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::GoPrevious"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolForwardButton">
+        <property name="toolTip">
+         <string>forward</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::GoNext"/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QToolButton" name="toolUpButton">
         <property name="toolTip">
          <string>upper folder</string>
@@ -100,32 +126,6 @@
         </property>
         <property name="popupMode">
          <enum>QToolButton::ToolButtonPopupMode::InstantPopup</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="toolBackButton">
-        <property name="toolTip">
-         <string>backward</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="QIcon::ThemeIcon::GoPrevious"/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="toolForwardButton">
-        <property name="toolTip">
-         <string>forward</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="QIcon::ThemeIcon::GoNext"/>
         </property>
        </widget>
       </item>

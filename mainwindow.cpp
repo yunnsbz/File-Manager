@@ -207,21 +207,71 @@ void MainWindow::on_actionTree_View_triggered()
     }
 }
 
-void MainWindow::updateHistoryButtons(int const tabIndex, bool forRightPane)
+void MainWindow::updateNavButtons(int const tabIndex, bool forRightPane)
 {
     if(forRightPane){
         toolBarManager->SetBackButtonEnabled(!fileModelOp2->IsBackHistoryEmpty(tabIndex));
         toolBarManager->SetForwardButtonEnabled(!fileModelOp2->IsForwardHistoryEmpty(tabIndex));
+
+        const QModelIndex currentIndex = fileModelOp->GetTabModelIndex(tabIndex);
+        const QString currentPath = fileModelOp2->GetFilePath(currentIndex);
+
+        // Eğer current path boş ise daha yukarı çıkılamıyordur.
+        const bool isAtRoot = (currentPath == "");
+
+        toolBarManager->SetUpButtonEnabled(!isAtRoot);
     }
     else{
         toolBarManager->SetBackButtonEnabled(!fileModelOp->IsBackHistoryEmpty(tabIndex));
         toolBarManager->SetForwardButtonEnabled(!fileModelOp->IsForwardHistoryEmpty(tabIndex));
+
+        const QModelIndex currentIndex = fileModelOp->GetTabModelIndex(tabIndex);
+        const QString currentPath = fileModelOp->GetFilePath(currentIndex);
+
+        // Eğer current path boş ise daha yukarı çıkılamıyordur.
+        const bool isAtRoot = (currentPath == "");
+
+        toolBarManager->SetUpButtonEnabled(!isAtRoot);
     }
 }
 
-void MainWindow::on_toolBackButton_clicked()
+void MainWindow::upperFolderOnClick(bool OnRightPane)
 {
-    if(isWorkingOnRightPane){
+    if(OnRightPane)
+    {
+        const auto tabIndex = ui->tabWidget_2->currentIndex();
+
+        auto parentIndex = fileModelOp2->GetFileModel()->parent(fileModelOp2->GetTabModelIndex(tabIndex));
+
+        fileModelOp2->SetTabModelIndex(tabIndex, parentIndex);
+        //tree back onClick missing
+
+        tableManager2->SetTableContent(tabIndex);
+        treeManager2->SetTreeContent(tabIndex);
+
+        // buton kontrolü:
+        updateNavButtons(tabIndex, true);
+    }
+    else
+    {
+        const auto tabIndex = ui->tabWidget->currentIndex();
+
+        auto parentIndex = fileModelOp->GetFileModel()->parent(fileModelOp->GetTabModelIndex(tabIndex));
+
+        fileModelOp->SetTabModelIndex(tabIndex, parentIndex);
+        //tree back onClick missing
+
+        tableManager->SetTableContent(tabIndex);
+        treeManager->SetTreeContent(tabIndex);
+
+        // buton kontrolü:
+        updateNavButtons(tabIndex, false);
+    }
+}
+
+void MainWindow::BackButtonOnClick(bool OnRightPane)
+{
+    if(OnRightPane){
         const auto tabIndex = ui->tabWidget_2->currentIndex();
 
         fileModelOp2->OnBackButtonClicked(tabIndex);
@@ -231,7 +281,7 @@ void MainWindow::on_toolBackButton_clicked()
         treeManager2->SetTreeContent(tabIndex);
 
         // buton kontrolü:
-        updateHistoryButtons(tabIndex, true);
+        updateNavButtons(tabIndex, true);
     }
     else{
         const auto tabIndex = ui->tabWidget->currentIndex();
@@ -243,13 +293,13 @@ void MainWindow::on_toolBackButton_clicked()
         treeManager->SetTreeContent(tabIndex);
 
         // buton kontrolü:
-        updateHistoryButtons(tabIndex, false);
+        updateNavButtons(tabIndex, false);
     }
 }
 
-void MainWindow::on_toolForwardButton_clicked()
+void MainWindow::ForwardButtonOnClick(bool OnRightPane)
 {
-    if(isWorkingOnRightPane){
+    if(OnRightPane){
         const auto tabIndex = ui->tabWidget_2->currentIndex();
 
         fileModelOp2->OnForwardButtonClicked(tabIndex);
@@ -259,7 +309,7 @@ void MainWindow::on_toolForwardButton_clicked()
         treeManager2->SetTreeContent(tabIndex);
 
         // buton kontrolü:
-        updateHistoryButtons(tabIndex, true);
+        updateNavButtons(tabIndex, true);
     }
     else{
         const auto tabIndex = ui->tabWidget->currentIndex();
@@ -271,8 +321,21 @@ void MainWindow::on_toolForwardButton_clicked()
         treeManager->SetTreeContent(tabIndex);
 
         // buton kontrolü:
-        updateHistoryButtons(tabIndex, false);
+        updateNavButtons(tabIndex, false);
     }
+}
+
+void MainWindow::on_toolUpButton_clicked()
+{
+    upperFolderOnClick(isWorkingOnRightPane);
+}
+void MainWindow::on_toolBackButton_clicked()
+{
+    BackButtonOnClick(isWorkingOnRightPane);
+}
+void MainWindow::on_toolForwardButton_clicked()
+{
+    ForwardButtonOnClick(isWorkingOnRightPane);
 }
 
 void MainWindow::on_actionAbout_triggered()
@@ -411,7 +474,7 @@ void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
         tabManager->moveTabWidget(tabIndex);
         SetTabContent(tabIndex, false);
         // buton kontrolü:
-        updateHistoryButtons(tabIndex, false);
+        updateNavButtons(tabIndex, false);
     }
 
     SetLabelText_(fileModelOp->GetCurrentPath(tabIndex));
@@ -429,7 +492,7 @@ void MainWindow::on_tabWidget_2_tabBarClicked(int tabIndex)
         tabManager2->moveTabWidget(tabIndex);
         SetTabContent(tabIndex, true);
         // buton kontrolü:
-        updateHistoryButtons(tabIndex, true);
+        updateNavButtons(tabIndex, true);
     }
 
     SetLabelText_(fileModelOp2->GetCurrentPath(tabIndex));
@@ -541,7 +604,7 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
     }
 
     // buton kontrolü:
-    updateHistoryButtons(tabIndex, false);
+    updateNavButtons(tabIndex, false);
 
     leftTabIsReset_ = false;
 
@@ -562,7 +625,7 @@ void MainWindow::on_FileTreeView_2_clicked(const QModelIndex &modelIndex)
     }
 
     // buton kontrolü:
-    updateHistoryButtons(tabIndex, true);
+    updateNavButtons(tabIndex, true);
 
     rightTabIsReset_ = false;
 
@@ -580,7 +643,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
     const auto tabIndex = ui->tabWidget->currentIndex();
 
     // buton kontrolü:
-    updateHistoryButtons(tabIndex, false);
+    updateNavButtons(tabIndex, false);
 
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
@@ -602,7 +665,7 @@ void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
     const auto tabIndex = ui->tabWidget_2->currentIndex();
 
     // buton kontrolü:
-    updateHistoryButtons(tabIndex, true);
+    updateNavButtons(tabIndex, true);
 
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView_2->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
@@ -640,37 +703,4 @@ void MainWindow::on_toolSearchButton_clicked()
 }
 
 
-void MainWindow::on_toolUpButton_clicked()
-{
-    if(isWorkingOnRightPane)
-    {
-        const auto tabIndex = ui->tabWidget_2->currentIndex();
-
-        auto parentIndex = fileModelOp2->GetFileModel()->parent(fileModelOp2->GetTabModelIndex(tabIndex));
-
-        fileModelOp2->SetTabModelIndex(tabIndex, parentIndex);
-        //tree back onClick missing
-
-        tableManager2->SetTableContent(tabIndex);
-        treeManager2->SetTreeContent(tabIndex);
-
-        // buton kontrolü:
-        updateHistoryButtons(tabIndex, true);
-    }
-    else
-    {
-        const auto tabIndex = ui->tabWidget->currentIndex();
-
-        auto parentIndex = fileModelOp->GetFileModel()->parent(fileModelOp->GetTabModelIndex(tabIndex));
-
-        fileModelOp->SetTabModelIndex(tabIndex, parentIndex);
-        //tree back onClick missing
-
-        tableManager->SetTableContent(tabIndex);
-        treeManager->SetTreeContent(tabIndex);
-
-        // buton kontrolü:
-        updateHistoryButtons(tabIndex, false);
-    }
-}
 

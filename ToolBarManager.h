@@ -15,6 +15,7 @@ public:
 
     void SetBackButtonEnabled(bool enabled);
     void SetForwardButtonEnabled(bool enabled);
+    void SetUpButtonEnabled(bool enabled);
 
 
 protected:
