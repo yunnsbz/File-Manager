@@ -209,29 +209,41 @@ void MainWindow::on_actionTree_View_triggered()
 
 void MainWindow::updateNavButtons(int const tabIndex, bool forRightPane)
 {
-    if(forRightPane){
-        toolBarManager->SetBackButtonEnabled(!fileModelOp2->IsBackHistoryEmpty(tabIndex));
-        toolBarManager->SetForwardButtonEnabled(!fileModelOp2->IsForwardHistoryEmpty(tabIndex));
+    if(forRightPane)
+    {
+        bool backButtonEnable = !fileModelOp2->IsBackHistoryEmpty(tabIndex);
+        bool forwardButtonEnable = !fileModelOp2->IsForwardHistoryEmpty(tabIndex);
 
-        const QModelIndex currentIndex = fileModelOp->GetTabModelIndex(tabIndex);
+        toolBarManager->SetBackButtonEnabled(backButtonEnable);
+        toolBarManager->SetForwardButtonEnabled(forwardButtonEnable);
+
+        const QModelIndex currentIndex = fileModelOp2->GetTabModelIndex(tabIndex);
         const QString currentPath = fileModelOp2->GetFilePath(currentIndex);
 
         // Eğer current path boş ise daha yukarı çıkılamıyordur.
-        const bool isAtRoot = (currentPath == "");
+        const bool upEnable = (currentPath != "");
 
-        toolBarManager->SetUpButtonEnabled(!isAtRoot);
+        toolBarManager->SetUpButtonEnabled(upEnable);
+
+        tabManager2->updateNavButtons(backButtonEnable, forwardButtonEnable, upEnable);
     }
-    else{
-        toolBarManager->SetBackButtonEnabled(!fileModelOp->IsBackHistoryEmpty(tabIndex));
-        toolBarManager->SetForwardButtonEnabled(!fileModelOp->IsForwardHistoryEmpty(tabIndex));
+    else
+    {
+        bool backButtonEnable = !fileModelOp->IsBackHistoryEmpty(tabIndex);
+        bool forwardButtonEnable = !fileModelOp->IsForwardHistoryEmpty(tabIndex);
+
+        toolBarManager->SetBackButtonEnabled(backButtonEnable);
+        toolBarManager->SetForwardButtonEnabled(forwardButtonEnable);
 
         const QModelIndex currentIndex = fileModelOp->GetTabModelIndex(tabIndex);
         const QString currentPath = fileModelOp->GetFilePath(currentIndex);
 
         // Eğer current path boş ise daha yukarı çıkılamıyordur.
-        const bool isAtRoot = (currentPath == "");
+        const bool upEnable = (currentPath != "");
 
-        toolBarManager->SetUpButtonEnabled(!isAtRoot);
+        toolBarManager->SetUpButtonEnabled(upEnable);
+
+        tabManager->updateNavButtons(backButtonEnable, forwardButtonEnable, upEnable);
     }
 }
 

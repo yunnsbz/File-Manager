@@ -16,6 +16,7 @@ TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent
     forRightPane_(forRightPane)
 {
     Setup_();
+    updateNavButtons(false, false, false);
 }
 
 void TabManager::EnableNavWidget(bool enable)
@@ -29,6 +30,13 @@ void TabManager::EnableNavWidget(bool enable)
     }
 }
 
+void TabManager::updateNavButtons(bool BackEnable, bool ForwardEnable, bool UpEnabled)
+{
+    backTabButton->setEnabled(BackEnable);
+    forwTabButton->setEnabled(ForwardEnable);
+    upTabButton->setEnabled(UpEnabled);
+}
+
 void TabManager::Setup_()
 {
     // yeni sekme ekleme butonunun eklenmesi, işlevi ve ilk açılıştaki sekmeleri ayarlama
@@ -40,9 +48,9 @@ void TabManager::Setup_()
     auto *layout = new QHBoxLayout(cornerNavButtons);
     layout->setContentsMargins(0, 0, 0, 0); // sıkı olsun
 
-    auto* backTabButton = new QToolButton();
-    auto* forwTabButton = new QToolButton();
-    auto* upTabButton = new QToolButton();
+    backTabButton = new QToolButton();
+    forwTabButton = new QToolButton();
+    upTabButton = new QToolButton();
 
     bool isDarkTheme = ThemeManger::isDarkTheme();
     // tool button disable olma durumunda otomatik renk değişikliği için
@@ -74,9 +82,9 @@ void TabManager::Setup_()
         upTabButton->setIcon(icon);
     }
 
-    layout->addWidget(upTabButton);
     layout->addWidget(backTabButton);
     layout->addWidget(forwTabButton);
+    layout->addWidget(upTabButton);
 
     auto* addTabButton = new QToolButton();
     addTabButton->setText("+");

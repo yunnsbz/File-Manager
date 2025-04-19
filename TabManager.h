@@ -8,6 +8,7 @@
 #include <QSplitter>
 #include <QTableView>
 #include <QTreeView>
+#include <QToolButton>
 
 class QFileSystemModel;
 class MainWindow;
@@ -39,6 +40,8 @@ public:
     // void removeTab(int index);
 
     void EnableNavWidget(bool enable);
+    void updateNavButtons(bool BackEnable, bool ForwardEnable, bool UpEnabled);
+
 
 public slots:
     void onTabMoved(int toIndex, int fromIndex);
@@ -57,6 +60,10 @@ private:
     QTabWidget* tabWidget;
 
     QWidget* cornerNavButtons;
+
+    QToolButton* backTabButton;
+    QToolButton* forwTabButton;
+    QToolButton* upTabButton;
 
     bool forRightPane_;
 
