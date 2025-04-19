@@ -35,6 +35,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
             -O2
         >
 
+
         ## Standard library
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>: -stdlib=libstdc++>
     )
@@ -76,6 +77,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "
         $<$<CONFIG:Release>:
             -O2
         >
+
 
         ## Standard library
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>: -stdlib=libc++>

@@ -28,7 +28,7 @@ AlignConsecutiveDeclarations:
     Enabled:                   true
     AcrossEmptyLines:          false
     AcrossComments:            false
-    # AlignFunctionDeclarations: true    ## not working in clang-format 19? ##
+    # AlignFunctionDeclarations: true    ## clang-format 19 ??? ##
     AlignFunctionPointers:     false
 
 AlignConsecutiveMacros:
@@ -118,7 +118,7 @@ BreakBeforeConceptDeclarations: Allowed
 # BreakBeforeTemplateCloser: true    ## clang-format 21 ##
 BreakBeforeTernaryOperators: true
 # BreakBinaryOperations: RespectPrecedence    ## clang-format 20 ##
-BreakConstructorInitializers: AfterColon
+BreakConstructorInitializers: BeforeColon
 BreakFunctionDefinitionParameters: false
 BreakInheritanceList: AfterComma
 BreakStringLiterals: false
@@ -195,9 +195,9 @@ MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
 NamespaceMacros:
 
-PPIndentWidth: 0
+PPIndentWidth: 4
 
-PackConstructorInitializers: NextLineOnly
+PackConstructorInitializers: Never
 
 # PenaltyBreakAssignment: ?
 # PenaltyBreakBeforeFirstCallParameter: ?
@@ -215,8 +215,9 @@ PackConstructorInitializers: NextLineOnly
 PointerAlignment: Left
 QualifierAlignment: Custom
 QualifierOrder: ['friend', 'inline', 'static', 'constexpr', 'const', 'volatile', 'restrict', 'type']
-ReferenceAlignment: Left
 
+# RawStringFormats: ?
+ReferenceAlignment: Left
 ReflowComments: false
 RemoveBracesLLVM: false
 # RemoveEmptyLinesInUnwrappedLines: true    ## clang-format 20 ##
@@ -226,7 +227,7 @@ RemoveSemicolon: false
 RequiresClausePosition: WithPreceding
 RequiresExpressionIndentation: OuterScope
 
-SeparateDefinitionBlocks: Never
+SeparateDefinitionBlocks: Leave
 # ShortNamespaceLines: ?
 SkipMacroDefinitionBody: true
 SortIncludes: Never
