@@ -52,8 +52,9 @@ protected:
 
 
 private:
-    void Setup_();
-
+    void SetNavButtonThemes();
+    void SetCornerNavButtons();
+    void SetAddTabButton();
 
 private:
     MainWindow* mainWindow;

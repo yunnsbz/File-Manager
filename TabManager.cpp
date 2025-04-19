@@ -15,8 +15,28 @@ TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent
     tabWidget(tabWidget),
     forRightPane_(forRightPane)
 {
-    Setup_();
+    // sekmelerin sürüklenmesi/yer değiştirmesi hareketlerini algılamak için:
+    connect(tabWidget->tabBar(), &QTabBar::tabMoved, this, &TabManager::onTabMoved);
+
+    SetCornerNavButtons();
+
+    SetAddTabButton();
+
+    tabWidget->installEventFilter(this);
+
+    // corner nav button'ları en başta root directory'de olduklarından disable edilir
     updateNavButtons(false, false, false);
+}
+
+void TabManager::SetAddTabButton()
+{
+    auto* addTabButton = new QToolButton();
+    addTabButton->setText("+");
+    tabWidget->setCornerWidget(addTabButton, Qt::TopLeftCorner);
+    EnableNavWidget(true);
+
+    // add button onClick:
+    connect(addTabButton, &QToolButton::clicked, this, &TabManager::addNewTab);
 }
 
 void TabManager::EnableNavWidget(bool enable)
@@ -37,21 +57,31 @@ void TabManager::updateNavButtons(bool BackEnable, bool ForwardEnable, bool UpEn
     upTabButton->setEnabled(UpEnabled);
 }
 
-void TabManager::Setup_()
+void TabManager::SetCornerNavButtons()
 {
-    // yeni sekme ekleme butonunun eklenmesi, işlevi ve ilk açılıştaki sekmeleri ayarlama
-
-    connect(tabWidget->tabBar(), &QTabBar::tabMoved, this, &TabManager::onTabMoved);
-
     cornerNavButtons = new QWidget;
     cornerNavButtons->setObjectName("cornerNavButtons");
     auto *layout = new QHBoxLayout(cornerNavButtons);
-    layout->setContentsMargins(0, 0, 0, 0); // sıkı olsun
+    layout->setContentsMargins(0, 0, 0, 0);
 
     backTabButton = new QToolButton();
     forwTabButton = new QToolButton();
     upTabButton = new QToolButton();
 
+    SetNavButtonThemes();
+
+    // adding nav buttons to a parent widget
+    layout->addWidget(backTabButton);
+    layout->addWidget(forwTabButton);
+    layout->addWidget(upTabButton);
+
+    connect(upTabButton, &QToolButton::clicked, this, [this]{mainWindow->upperFolderOnClick(forRightPane_);});
+    connect(forwTabButton, &QToolButton::clicked, this, [this]{mainWindow->ForwardButtonOnClick(forRightPane_);});
+    connect(backTabButton, &QToolButton::clicked, this, [this]{mainWindow->BackButtonOnClick(forRightPane_);});
+}
+
+void TabManager::SetNavButtonThemes()
+{
     bool isDarkTheme = ThemeManger::isDarkTheme();
     // tool button disable olma durumunda otomatik renk değişikliği için
     if (isDarkTheme) {
@@ -81,24 +111,6 @@ void TabManager::Setup_()
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_up_gray.svg"), QIcon::Disabled, QIcon::Off);
         upTabButton->setIcon(icon);
     }
-
-    layout->addWidget(backTabButton);
-    layout->addWidget(forwTabButton);
-    layout->addWidget(upTabButton);
-
-    auto* addTabButton = new QToolButton();
-    addTabButton->setText("+");
-    tabWidget->setCornerWidget(addTabButton, Qt::TopLeftCorner);
-    EnableNavWidget(true);
-
-    // add button onClick:
-    connect(addTabButton, &QToolButton::clicked, this, &TabManager::addNewTab);
-
-    connect(upTabButton, &QToolButton::clicked, this, [this]{mainWindow->upperFolderOnClick(forRightPane_);});
-    connect(forwTabButton, &QToolButton::clicked, this, [this]{mainWindow->ForwardButtonOnClick(forRightPane_);});
-    connect(backTabButton, &QToolButton::clicked, this, [this]{mainWindow->BackButtonOnClick(forRightPane_);});
-
-    tabWidget->installEventFilter(this);
 }
 
 void TabManager::onTabMoved(int toIndex, int fromIndex)
