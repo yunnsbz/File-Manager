@@ -26,6 +26,9 @@ ThemeManger::ThemeManger(QObject *parent)
         ui->actionTree_View->setIcon(QIcon(":/resources/img/tree_view_black.svg"));
         ui->toolCmdButton->setIcon(QIcon(":/resources/img/terminal_black.svg"));
     }
+
+    // cmd command button qss access:
+    ui->toolCmdButton->setObjectName("tool-cmd-button");
 /*
     // tool button disable olma durumunda otomatik renk değişikliği için
     if (DarkTheme) {
