@@ -16,6 +16,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QProcess>
+#include <QScrollBar>
 #include <QPropertyAnimation>
 
 UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
@@ -295,6 +296,23 @@ void MainWindow::BackButtonOnClick(bool OnRightPane)
         // buton kontrolü:
         updateNavButtons(tabIndex, true);
     }
+    else if(ColumnViewActive){
+        int direction = -1;
+            QList<QAbstractItemView*> columns = ui->columnView->findChildren<QAbstractItemView*>();
+
+            int scrollAmount = 0;
+            for (auto *col : columns) {
+                int x = ui->columnView->viewport()->mapFromGlobal(col->mapToGlobal(QPoint(0, 0))).x();
+                if ((direction > 0 && x + col->width() > 0) || (direction < 0 && x < ui->columnView->viewport()->width())) {
+                    scrollAmount = col->width();
+                    break;
+                }
+            }
+
+            ui->columnView->horizontalScrollBar()->setValue(
+                ui->columnView->horizontalScrollBar()->value() + direction * scrollAmount
+            );
+    }
     else{
         const auto tabIndex = ui->tabWidget->currentIndex();
 
@@ -322,6 +340,23 @@ void MainWindow::ForwardButtonOnClick(bool OnRightPane)
 
         // buton kontrolü:
         updateNavButtons(tabIndex, true);
+    }
+    else if(ColumnViewActive){
+        int direction = 1;
+            QList<QAbstractItemView*> columns = ui->columnView->findChildren<QAbstractItemView*>();
+
+            int scrollAmount = 0;
+            for (auto *col : columns) {
+                int x = ui->columnView->viewport()->mapFromGlobal(col->mapToGlobal(QPoint(0, 0))).x();
+                if ((direction > 0 && x + col->width() > 0) || (direction < 0 && x < ui->columnView->viewport()->width())) {
+                    scrollAmount = col->width();
+                    break;
+                }
+            }
+
+            ui->columnView->horizontalScrollBar()->setValue(
+                ui->columnView->horizontalScrollBar()->value() + direction * scrollAmount
+            );
     }
     else{
         const auto tabIndex = ui->tabWidget->currentIndex();
@@ -473,6 +508,8 @@ void MainWindow::on_actionColumn_View_triggered()
     else{
         ColumnViewActive = true;
         ui->stackedWidget->setCurrentIndex(1);
+        toolBarManager->SetBackButtonEnabled(true);
+        toolBarManager->SetForwardButtonEnabled(true);
     }
 }
 
