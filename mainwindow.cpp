@@ -212,8 +212,8 @@ void MainWindow::updateNavButtons(int const tabIndex, bool forRightPane)
 {
     if(forRightPane)
     {
-        bool backButtonEnable = !fileModelOp2->IsBackHistoryEmpty(tabIndex);
-        bool forwardButtonEnable = !fileModelOp2->IsForwardHistoryEmpty(tabIndex);
+        const bool backButtonEnable = !fileModelOp2->IsBackHistoryEmpty(tabIndex);
+        const bool forwardButtonEnable = !fileModelOp2->IsForwardHistoryEmpty(tabIndex);
 
         toolBarManager->SetBackButtonEnabled(backButtonEnable);
         toolBarManager->SetForwardButtonEnabled(forwardButtonEnable);
@@ -297,21 +297,7 @@ void MainWindow::BackButtonOnClick(bool OnRightPane)
         updateNavButtons(tabIndex, true);
     }
     else if(ColumnViewActive){
-        int direction = -1;
-            QList<QAbstractItemView*> columns = ui->columnView->findChildren<QAbstractItemView*>();
-
-            int scrollAmount = 0;
-            for (auto *col : columns) {
-                int x = ui->columnView->viewport()->mapFromGlobal(col->mapToGlobal(QPoint(0, 0))).x();
-                if ((direction > 0 && x + col->width() > 0) || (direction < 0 && x < ui->columnView->viewport()->width())) {
-                    scrollAmount = col->width();
-                    break;
-                }
-            }
-
-            ui->columnView->horizontalScrollBar()->setValue(
-                ui->columnView->horizontalScrollBar()->value() + direction * scrollAmount
-            );
+        ScrollColumn(-1);
     }
     else{
         const auto tabIndex = ui->tabWidget->currentIndex();
@@ -325,6 +311,24 @@ void MainWindow::BackButtonOnClick(bool OnRightPane)
         // buton kontrolü:
         updateNavButtons(tabIndex, false);
     }
+}
+
+void MainWindow::ScrollColumn(int direction)
+{
+    const QList<QAbstractItemView*> columns = ui->columnView->findChildren<QAbstractItemView*>();
+
+    int scrollAmount = 0;
+    for (auto *col : columns) {
+        const int xPoint = ui->columnView->viewport()->mapFromGlobal(col->mapToGlobal(QPoint(0, 0))).x();
+        if ((direction > 0 && xPoint + col->width() > 0) || (direction < 0 && xPoint < ui->columnView->viewport()->width())) {
+            scrollAmount = col->width();
+            break;
+        }
+    }
+
+    ui->columnView->horizontalScrollBar()->setValue(
+                ui->columnView->horizontalScrollBar()->value() + direction * scrollAmount
+                );
 }
 
 void MainWindow::ForwardButtonOnClick(bool OnRightPane)
@@ -342,21 +346,7 @@ void MainWindow::ForwardButtonOnClick(bool OnRightPane)
         updateNavButtons(tabIndex, true);
     }
     else if(ColumnViewActive){
-        int direction = 1;
-            QList<QAbstractItemView*> columns = ui->columnView->findChildren<QAbstractItemView*>();
-
-            int scrollAmount = 0;
-            for (auto *col : columns) {
-                int x = ui->columnView->viewport()->mapFromGlobal(col->mapToGlobal(QPoint(0, 0))).x();
-                if ((direction > 0 && x + col->width() > 0) || (direction < 0 && x < ui->columnView->viewport()->width())) {
-                    scrollAmount = col->width();
-                    break;
-                }
-            }
-
-            ui->columnView->horizontalScrollBar()->setValue(
-                ui->columnView->horizontalScrollBar()->value() + direction * scrollAmount
-            );
+        ScrollColumn(1);
     }
     else{
         const auto tabIndex = ui->tabWidget->currentIndex();
@@ -728,7 +718,7 @@ void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
 void MainWindow::on_toolSearchButton_clicked()
 {
     if(searchOn){
-        if (ui->lineEdit_2) {
+        if (ui->lineEdit_2 != nullptr) {
             searchOn = false;
             QPropertyAnimation *animation = new QPropertyAnimation(ui->lineEdit_2, "maximumWidth");
             animation->setDuration(300);
@@ -738,7 +728,7 @@ void MainWindow::on_toolSearchButton_clicked()
         }
     }
     else{
-        if (ui->lineEdit_2) {
+        if (ui->lineEdit_2 != nullptr) {
             searchOn = true;
             QPropertyAnimation *animation = new QPropertyAnimation(ui->lineEdit_2, "maximumWidth");
             animation->setDuration(300);

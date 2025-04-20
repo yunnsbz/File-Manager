@@ -50,12 +50,13 @@ public:
     void SetTabContent(int tabIndex, bool rightPane);
     void OnTabMoved(int toIndex, int fromIndex);
     void OnTabMoved2(int toIndex, int fromIndex);
-    void updateNavButtons(int const tabIndex, bool forRightPane);
+    void updateNavButtons(int tabIndex, bool forRightPane);
 
     // nav buttons:
     void upperFolderOnClick(bool OnRightPane);
     void BackButtonOnClick(bool OnRightPane);
     void ForwardButtonOnClick(bool OnRightPane);
+    void ScrollColumn(int direction);
 
 protected:
 
@@ -83,12 +84,9 @@ private slots:
     void on_tableView_doubleClicked(const QModelIndex &index);
     void on_tableView_2_doubleClicked(const QModelIndex &index);
     void on_toolSearchButton_clicked();
-
-void on_toolUpButton_clicked();
-
-void on_actionOptions_triggered();
-
-void on_columnView_clicked(const QModelIndex &index);
+    void on_toolUpButton_clicked();
+    void on_actionOptions_triggered();
+    void on_columnView_clicked(const QModelIndex &index);
 
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
