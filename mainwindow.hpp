@@ -88,6 +88,8 @@ void on_toolUpButton_clicked();
 
 void on_actionOptions_triggered();
 
+void on_columnView_clicked(const QModelIndex &index);
+
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 
@@ -104,6 +106,7 @@ private:
     UIManager m_ui_mgr_;
     FileModelOperations* fileModelOp;
     FileModelOperations* fileModelOp2;
+    QFileSystemModel* columnFileModel;
 
     ToolBarManager* toolBarManager;
     ThemeManger* menuManager;

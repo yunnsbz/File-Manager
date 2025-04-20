@@ -49,8 +49,8 @@ MainWindow::MainWindow(QWidget *parent)
         &MainWindow::onTreeSelectionChanged
     );
 
-    auto* fileModel = fileModelOp->GetFileModel();
-    ui->columnView->setModel(fileModel);
+    columnFileModel = fileModelOp->GetFileModel();
+    ui->columnView->setModel(columnFileModel);
 
     // tree view daha küçük olmalı
     ui->splitter->setSizes({100,400});
@@ -745,6 +745,16 @@ void MainWindow::on_actionOptions_triggered()
 
         qApp->setStyleSheet(qss);
         tabCloseButtonOld = true;
+    }
+}
+
+
+void MainWindow::on_columnView_clicked(const QModelIndex &index)
+{
+    if (!columnFileModel->hasChildren(index))
+    {
+        const QString filePath = columnFileModel->filePath(index);
+        QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
     }
 }
 
