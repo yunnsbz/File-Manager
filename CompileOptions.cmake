@@ -16,7 +16,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
 
         ## Inactive warnings
-        -Wno-newline-eof
+        -Wno-unused-function
 
 
         ## Preprocessor
@@ -60,6 +60,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "
         -Wno-missing-prototypes
         -Wno-newline-eof
         -Wno-padded
+        -Wno-unused-function
 
 
         ## Preprocessor
@@ -98,7 +99,6 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
         ## Code generation
         /EHsc               # Enable C++ exceptions
-        /arch:AVX2          # Enable AVX2 extensions for code generation
 
 
         ## Diagnostics
