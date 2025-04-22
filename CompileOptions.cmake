@@ -1,12 +1,12 @@
 #[[ fatpound ]]#
 
 add_library (CompileOptions INTERFACE)
-add_library (Fat::CompileOptions ALIAS CompileOptions)
+add_library (FatCxx::CompileOptions ALIAS CompileOptions)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     target_compile_options(CompileOptions INTERFACE
         ##################################
-        -pedantic # Conform to ISO/IEC Standard C++
+        -pedantic # Conform to ISO/IEC Standard
 
 
         ## Active warnings
@@ -17,6 +17,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
         ## Inactive warnings
         -Wno-unused-function
+
+
+        ## Static analyzer
+        $<$<STREQUAL:${FATCXX_GCC_ANALYZER},Enabled>: -fanalyzer>
 
 
         ## Preprocessor
@@ -43,7 +47,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
     target_compile_options (CompileOptions INTERFACE
         ##################################
-        -pedantic # Conform to ISO/IEC Standard C++
+        -pedantic # Conform to ISO/IEC Standard
 
 
         ## Active warnings
@@ -87,7 +91,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options (CompileOptions INTERFACE
         #####################################
-        /permissive-        # Conform to ISO/IEC Standard C++
+        /permissive-        # Conform to ISO/IEC Standard
         # /std:c++latest
         # /std:clatest
         # /nologo
