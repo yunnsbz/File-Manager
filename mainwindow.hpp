@@ -124,7 +124,7 @@ private:
 
     bool treeViewActive = true;
     bool dualPaneActive = true;
-    bool ColumnViewActive = true;
+    bool ColumnViewActive = false;
 
     bool searchOn = false;
     bool tabCloseButtonOld = false;
