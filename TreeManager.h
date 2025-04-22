@@ -32,9 +32,9 @@ private:
 
 
 private:
-    FileModelOperations* fileModelOp;
+    FileModelOperations* fileModelOp_;
     QTabWidget* tabWidget_;
-    QTreeView* treeView;
+    QTreeView* treeView_;
 
 
     // treeView için her sekmede açılmış yolları tutar:

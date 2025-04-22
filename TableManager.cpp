@@ -7,13 +7,13 @@
 #include <QTimer>
 
 
-TableManager::TableManager(QTableView *tableView, FileModelOperations* fileModelOp1, QObject *parent)
+TableManager::TableManager(QTableView* tableView, FileModelOperations* fileModelOp, QObject *parent)
     :
     QObject(parent),
-    fileModelOp1(fileModelOp1),
-    tableView(tableView)
+    fileModelOp_(fileModelOp),
+    tableView_(tableView)
 {
-    auto* fileModel = fileModelOp1->GetFileModel();
+    auto* fileModel = fileModelOp_->GetFileModel();
     tableView->setModel(fileModel);
     SetColumnResize();
     tableView->verticalHeader()->setDefaultSectionSize(10);
@@ -21,16 +21,16 @@ TableManager::TableManager(QTableView *tableView, FileModelOperations* fileModel
 
 void TableManager::SetTableToDefault()
 {
-    auto* fileModel = fileModelOp1->GetFileModel();
+    auto* fileModel = fileModelOp_->GetFileModel();
     fileModel->setRootPath("");
     const QModelIndex index = fileModel->index(fileModel->rootPath());
-    tableView->setRootIndex(index);
+    tableView_->setRootIndex(index);
 }
 
 void TableManager::SetTableContent(int tabIndex)
 {
     // set table view content:
-    auto index = fileModelOp1->GetTabModelIndex(tabIndex);
+    auto index = fileModelOp_->GetTabModelIndex(tabIndex);
 
     if (!index.isValid())
     {
@@ -38,12 +38,12 @@ void TableManager::SetTableContent(int tabIndex)
         return;
     }
 
-    tableView->setRootIndex(index);
+    tableView_->setRootIndex(index);
 }
 
 void TableManager::navigateToFolder(int tabIndex, QModelIndex firstColumnIndex)
 {
-    auto* fileModel = fileModelOp1->GetFileModel();
+    auto* fileModel = fileModelOp_->GetFileModel();
     if (!fileModel->hasChildren(firstColumnIndex))
     {
         const QString filePath = fileModel->filePath(firstColumnIndex);
@@ -51,39 +51,39 @@ void TableManager::navigateToFolder(int tabIndex, QModelIndex firstColumnIndex)
     }
     else
     {
-        tableView->setRootIndex(firstColumnIndex);
-        fileModelOp1->SetTabModelIndex(tabIndex,firstColumnIndex);
+        tableView_->setRootIndex(firstColumnIndex);
+        fileModelOp_->SetTabModelIndex(tabIndex,firstColumnIndex);
     }
 }
 
 void TableManager::SetColumnResize()
 {
-QHeaderView* header = tableView->horizontalHeader();
+    QHeaderView* header = tableView_->horizontalHeader();
 
     // Stretch ile başlangıç yerleşimi (bu işlem interactive modu kapatır. aşağıda tekrar açarız)
     header->setSectionResizeMode(QHeaderView::Stretch);
-    tableView->resizeColumnsToContents();
+    tableView_->resizeColumnsToContents();
 
     // Tablonun güncellenmesini bekle
     QTimer::singleShot(0, this, [this]() {
-        QHeaderView* header = tableView->horizontalHeader();
-        const int columnCount = tableView->model()->columnCount();
+        auto* header1 = tableView_->horizontalHeader();
+        const int columnCount = tableView_->model()->columnCount();
 
         // stretch değerlerini kaydet:
         QVector<int> widths;
         for (int i = 0; i < columnCount; ++i)
         {
-            widths.append(tableView->columnWidth(i));
+            widths.append(tableView_->columnWidth(i));
         }
         // Kullanıcının sütun genişliklerini değiştirebilmesi için Interactive moda geç (stretch değerlerini değiştirir)
         for (int i = 0; i < columnCount; ++i)
         {
-            header->setSectionResizeMode(i, QHeaderView::Interactive);
+            header1->setSectionResizeMode(i, QHeaderView::Interactive);
         }
         // Stretch'te belirlenmiş genişlikleri geri uygula:
         for (int i = 0; i < columnCount; ++i)
         {
-            tableView->setColumnWidth(i, widths[i]);
+            tableView_->setColumnWidth(i, widths[i]);
         }
     });
 }

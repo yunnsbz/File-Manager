@@ -12,7 +12,7 @@ class TableManager : public QObject
     Q_OBJECT
 
 public:
-    explicit TableManager(QTableView *tableView, FileModelOperations* fileModelOp1, QObject *parent);
+    explicit TableManager(QTableView* tableView, FileModelOperations* fileModelOp, QObject* parent);
 
 
 public:
@@ -25,9 +25,9 @@ protected:
 
 
 private:
-    FileModelOperations* fileModelOp1;
+    FileModelOperations* fileModelOp_;
 
-    QTableView* tableView;
+    QTableView* tableView_;
 };
 
 #endif // TABLEMANAGER_H

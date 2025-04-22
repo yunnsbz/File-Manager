@@ -57,8 +57,8 @@ private:
     void SetAddTabButton();
 
 private:
-    MainWindow* mainWindow;
-    QTabWidget* tabWidget;
+    MainWindow* mainWindow_;
+    QTabWidget* tabWidget_;
 
     QWidget* cornerNavButtons;
 

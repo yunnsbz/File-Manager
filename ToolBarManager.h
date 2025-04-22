@@ -22,8 +22,8 @@ protected:
 
 
 private:
-    QHBoxLayout* toolBar;
-    MainWindow* mainWindow;
+    QHBoxLayout* toolBar_;
+    MainWindow* mainWindow_;
 };
 
 
