@@ -65,6 +65,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "
         -Wno-newline-eof
         -Wno-padded
         -Wno-unused-function
+        -Wno-unused-template
 
 
         ## Preprocessor
