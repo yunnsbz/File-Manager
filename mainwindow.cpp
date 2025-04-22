@@ -24,7 +24,7 @@ UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
     theUi->setupUi(pWnd);
 }
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
     :
     QMainWindow(parent),
     ui(new Ui::MainWindow),

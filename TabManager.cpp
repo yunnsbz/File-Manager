@@ -11,8 +11,8 @@
 TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent)
     :
     QObject(parent),
-    mainWindow(static_cast<MainWindow*>(parent)),
-    tabWidget(tabWidget),
+    mainWindow_(static_cast<MainWindow*>(parent)),
+    tabWidget_(tabWidget),
     forRightPane_(forRightPane)
 {
     // sekmelerin sürüklenmesi/yer değiştirmesi hareketlerini algılamak için:
@@ -33,7 +33,7 @@ void TabManager::SetAddTabButton()
     auto* addTabButton = new QToolButton();
     addTabButton->setObjectName("add-tab-button");
     addTabButton->setText("+");
-    tabWidget->setCornerWidget(addTabButton, Qt::TopLeftCorner);
+    tabWidget_->setCornerWidget(addTabButton, Qt::TopLeftCorner);
     EnableNavWidget(true);
 
     // add button onClick:
@@ -44,10 +44,10 @@ void TabManager::EnableNavWidget(bool enable)
 {
     if(enable){
         cornerNavButtons->show();
-        tabWidget->setCornerWidget(cornerNavButtons, Qt::TopRightCorner);
+        tabWidget_->setCornerWidget(cornerNavButtons, Qt::TopRightCorner);
     }
     else{
-        tabWidget->setCornerWidget(nullptr, Qt::TopRightCorner);
+        tabWidget_->setCornerWidget(nullptr, Qt::TopRightCorner);
     }
 }
 
@@ -76,9 +76,9 @@ void TabManager::SetCornerNavButtons()
     layout->addWidget(forwTabButton);
     layout->addWidget(upTabButton);
 
-    connect(upTabButton, &QToolButton::clicked, this, [this]{mainWindow->upperFolderOnClick(forRightPane_);});
-    connect(forwTabButton, &QToolButton::clicked, this, [this]{mainWindow->ForwardButtonOnClick(forRightPane_);});
-    connect(backTabButton, &QToolButton::clicked, this, [this]{mainWindow->BackButtonOnClick(forRightPane_);});
+    connect(upTabButton, &QToolButton::clicked, this, [this]{mainWindow_->upperFolderOnClick(forRightPane_);});
+    connect(forwTabButton, &QToolButton::clicked, this, [this]{mainWindow_->ForwardButtonOnClick(forRightPane_);});
+    connect(backTabButton, &QToolButton::clicked, this, [this]{mainWindow_->BackButtonOnClick(forRightPane_);});
 }
 
 void TabManager::SetNavButtonThemes()
@@ -125,11 +125,11 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
 
     if (forRightPane_)
     {
-        mainWindow->OnTabMoved2(toIndex, fromIndex);
+        mainWindow_->OnTabMoved2(toIndex, fromIndex);
     }
     else
     {
-        mainWindow->OnTabMoved(toIndex, fromIndex);
+        mainWindow_->OnTabMoved(toIndex, fromIndex);
     }
 
     // if lastLeftTabIndex is the one moved it should register
@@ -147,7 +147,7 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
 
 auto TabManager::GetPreviousSplitter()
 {
-    return tabWidget->widget(_previousLeftTabIndex)->findChild<QSplitter*>();
+    return tabWidget_->widget(_previousLeftTabIndex)->findChild<QSplitter*>();
 }
 
 auto TabManager::_getPreviousLeftTabIndex() const -> int
@@ -180,12 +180,12 @@ void TabManager::addNewTab()
     layout->addWidget(currentSplitter);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    tabWidget->addTab(newTabWidget, "new tab");
-    tabWidget->setCurrentIndex(tabWidget->count() - 1);
+    tabWidget_->addTab(newTabWidget, "new tab");
+    tabWidget_->setCurrentIndex(tabWidget_->count() - 1);
 
-    setPreviousLeftTabIndex(tabWidget->count() - 1);
+    setPreviousLeftTabIndex(tabWidget_->count() - 1);
 
-    mainWindow->SetTabContent(tabWidget->currentIndex(), forRightPane_);
+    mainWindow_->SetTabContent(tabWidget_->currentIndex(), forRightPane_);
 }
 
 void TabManager::moveTabWidget(int index)
@@ -209,9 +209,9 @@ void TabManager::moveTabWidget(int index)
     layout->setContentsMargins(0, 0, 0, 0);
 
     // Yeni sekmeyi oluştur
-    tabWidget->insertTab(index, newTabWidget, tabWidget->tabText(index));
-    tabWidget->removeTab(index + 1); // eski widget'ı kaldır
-    tabWidget->setCurrentIndex(index);
+    tabWidget_->insertTab(index, newTabWidget, tabWidget_->tabText(index));
+    tabWidget_->removeTab(index + 1); // eski widget'ı kaldır
+    tabWidget_->setCurrentIndex(index);
 
     setPreviousLeftTabIndex(index);
 }

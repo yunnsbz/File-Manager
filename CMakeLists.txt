@@ -85,6 +85,21 @@ install(TARGETS File-Manager
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+file(GLOB_RECURSE QT_GENERATED_FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/*_autogen/mocs_compilation.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/*_autogen/include/*.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/*_autogen/*.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/.rcc/*.cpp"
+)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    foreach(file IN LISTS QT_GENERATED_FILES)
+        set_source_files_properties(${file} PROPERTIES
+            COMPILE_FLAGS "-Wno-ctad-maybe-unsupported -Wno-global-constructors -Wno-unsafe-buffer-usage"
+        )
+    endforeach()
+endif()
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(File-Manager)
 endif()
