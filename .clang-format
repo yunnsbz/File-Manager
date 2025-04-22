@@ -1,8 +1,8 @@
-#[[ fatpound ]]#
-
 ##*******************************************##
-## clang-format config file for standard C++ ##
-##-------------------------------------------##
+##              [[ fatpound* ]]              ##
+##                                           ##
+## clang-format Config File for Standard C++ ##
+##*******************************************##
 
 Language: Cpp
 Standard: Latest

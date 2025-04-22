@@ -1,3 +1,9 @@
+##*******************************************##
+##              [[ fatpound* ]]              ##
+##                                           ##
+##  clang-tidy Config File for Standard C++  ##
+##*******************************************##
+
 Checks: '
    *,
   -altera-unroll-loops,

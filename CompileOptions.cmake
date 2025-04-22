@@ -1,4 +1,9 @@
-#[[ fatpound ]]#
+##*******************************************##
+##              [[ fatpound* ]]              ##
+##                                           ##
+##   CMake Utility Module for Standard C++   ##
+##        My Default Compiler Options        ##
+##*******************************************##
 
 add_library (CompileOptions INTERFACE)
 add_library (FatCxx::CompileOptions ALIAS CompileOptions)
