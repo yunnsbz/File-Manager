@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(File-Manager VERSION 0.3 LANGUAGES CXX)
 
-set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOUIC off)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
@@ -15,61 +15,61 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 include(CompileOptions.cmake)
 
-set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.hpp
-        mainwindow.ui
+# Kaynak dosyaları
+set(SOURCE_FILES
+    src/main.cpp
+    src/mainwindow.cpp
+    src/TabManager.cpp
+    src/ToolBarManager.cpp
+    src/TableManager.cpp
+    src/TreeManager.cpp
+    src/FileModelOperations.cpp
+    src/ThemeManager.cpp
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(File-Manager
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        .clang-tidy
-        TabManager.h
-        TabManager.cpp
-        ToolBarManager.h
-        ToolBarManager.cpp
-        resources.qrc
-        TableManager.h
-        TreeManager.h
-        TableManager.cpp
-        TreeManager.cpp
-        FileModelOperations.h
-        FileModelOperations.cpp
-        .clang-format
-        ThemeManager.h
-        ThemeManager.cpp
+# Header dosyaları
+set(HEADER_FILES
+    include/mainwindow.hpp
+    include/TabManager.h
+    include/ToolBarManager.h
+    include/TableManager.h
+    include/TreeManager.h
+    include/FileModelOperations.h
+    include/ThemeManager.h
+)
 
+# UI dosyaları (manuel işlenecek)
+set(UI_FILES
+    ui/mainwindow.ui
+)
 
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET File-Manager APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(File-Manager SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(File-Manager
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+# Resource dosyaları (.qrc)
+set(RESOURCE_FILES
+    resources.qrc
+)
+
+# CMake'e her şeyi bildir
+qt_add_executable(File-Manager
+    MANUAL_FINALIZATION
+    ${SOURCE_FILES}
+    ${HEADER_FILES}
+    ${UI_FILES}
+    ${RESOURCE_FILES}
+    config/.clang-format
+    config/.clang-tidy
+)
+
+qt_wrap_ui(UIC_FILES ui/mainwindow.ui)
+
+# Header klasörleri dosya yoluna ekleme işlemi
+target_include_directories(File-Manager PRIVATE include)
 
 target_link_libraries(File-Manager PRIVATE Qt${QT_VERSION_MAJOR}::Widgets FatCxx::CompileOptions)
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
 if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.File-Manager)
+    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.File-Manager)
 endif()
+
 set_target_properties(File-Manager PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
