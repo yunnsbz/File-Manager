@@ -13,11 +13,11 @@ class FileOperationManager : public QObject {
 
 public:
     explicit FileOperationManager(QObject *parent = nullptr);
-    void executeCommand(IFileOperation *cmd);
+    void executeOperation(IFileOperation *operation);
     void undoLast();
 
 private:
-    QVector<IFileOperation*> commandHistory;
+    QVector<IFileOperation*> operationHistory;
 
 private slots:
     void onProgress(int percent);

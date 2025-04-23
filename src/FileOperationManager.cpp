@@ -3,23 +3,23 @@
 
 FileOperationManager::FileOperationManager(QObject *parent) : QObject(parent) {}
 
-void FileOperationManager::executeCommand(IFileOperation *cmd) {
-    connect(cmd, &IFileOperation::progress, this, &FileOperationManager::onProgress);
-    connect(cmd, &IFileOperation::error, this, &FileOperationManager::onError);
-    connect(cmd, &IFileOperation::finished, this, &FileOperationManager::onFinished);
+void FileOperationManager::executeOperation(IFileOperation *operation) {
+    connect(operation, &IFileOperation::progress, this, &FileOperationManager::onProgress);
+    connect(operation, &IFileOperation::error, this, &FileOperationManager::onError);
+    connect(operation, &IFileOperation::finished, this, &FileOperationManager::onFinished);
 
-    if (cmd->execute()) {
-        commandHistory.append(cmd); // başarılıysa geri al listesine ekle
+    if (operation->execute()) {
+        operationHistory.append(operation); // başarılıysa geri al listesine ekle
     } else {
-        cmd->deleteLater();
+        operation->deleteLater();
     }
 }
 
 void FileOperationManager::undoLast() {
-    if (!commandHistory.isEmpty()) {
-        IFileOperation *cmd = commandHistory.takeLast();
-        cmd->undo();
-        cmd->deleteLater();
+    if (!operationHistory.isEmpty()) {
+        IFileOperation *operation = operationHistory.takeLast();
+        operation->undo();
+        operation->deleteLater();
     }
 }
 
