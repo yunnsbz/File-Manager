@@ -1,6 +1,8 @@
 #ifndef FILEOPERATIONMANAGER_H
 #define FILEOPERATIONMANAGER_H
 
+#include "IFileOperation.h"
+
 #include <QString>
 #include <QFileInfo>
 #include <QDir>
@@ -11,18 +13,16 @@ class FileOperationManager : public QObject {
 
 public:
     explicit FileOperationManager(QObject *parent = nullptr);
+    void executeCommand(IFileOperation *cmd);
+    void undoLast();
 
-    bool copy(const QString &sourcePath, const QString &destPath, bool overwrite = false);
-    bool copyToClipboard(const QString &sourcePath, bool overwrite = false);
-    bool pasteFromClipboard(const QString &destPath, bool overwrite = false);
-    bool move(const QString &sourcePath, const QString &destPath, bool overwrite = false);
-    bool remove(const QString &path);
-    bool rename(const QString &oldPath, const QString &newPath);
+private:
+    QVector<IFileOperation*> commandHistory;
 
-signals:
-    void progress(int percent);
-    void error(const QString &message);
-    void finished(const QString &operation);
+private slots:
+    void onProgress(int percent);
+    void onError(const QString &msg);
+    void onFinished(const QString &info);
 };
 
 #endif // FILEOPERATIONMANAGER_H

@@ -38,6 +38,7 @@ set(HEADER_FILES
     include/FileModelOperations.h
     include/ThemeManager.h
     include/FileOperationManager.h
+    include/IFileOperation.h
 )
 
 # UI dosyaları (manuel işlenecek)
