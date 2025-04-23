@@ -25,6 +25,7 @@ set(SOURCE_FILES
     src/TreeManager.cpp
     src/FileModelOperations.cpp
     src/ThemeManager.cpp
+    src/FileOperationManager.cpp
 )
 
 # Header dosyaları
@@ -36,6 +37,7 @@ set(HEADER_FILES
     include/TreeManager.h
     include/FileModelOperations.h
     include/ThemeManager.h
+    include/FileOperationManager.h
 )
 
 # UI dosyaları (manuel işlenecek)
