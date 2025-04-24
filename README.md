@@ -16,7 +16,7 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
 - [x] Tab support
 - [ ] Standart file operations (copy, move, delete, rename)
 - [ ] Multiple selection file operations (copy, move, delete, rename)
-- [ ] Multithread file operations
+- [ ] Paralel file operations
 - [ ] Search Support
 - [ ] Command line support
 - [ ] File preview panel
