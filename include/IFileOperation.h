@@ -3,14 +3,16 @@
 
 #include <QObject>
 
+#define PURE = 0
+
 class IFileOperation : public QObject {
     Q_OBJECT
 
 public:
     explicit IFileOperation(QObject *parent = nullptr) : QObject(parent) {}
 
-    virtual bool execute() = 0;
-    virtual bool undo() = 0;
+    virtual bool execute() PURE;
+    virtual bool undo() PURE;
 
 signals:
     void progress(int percent);
