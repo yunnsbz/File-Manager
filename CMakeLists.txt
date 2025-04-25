@@ -1,22 +1,19 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 
-project(File-Manager VERSION 0.3 LANGUAGES CXX)
-
-set(CMAKE_AUTOUIC off)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
+project(File-Manager LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_SCAN_FOR_MODULES FALSE)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
 
-include(CompileOptions.cmake)
+qt_standard_project_setup()
 
-# Kaynak dosyaları
-set(SOURCE_FILES
+qt_add_executable(File-Manager
+    WIN32 MACOSX_BUNDLE
+
     src/main.cpp
     src/mainwindow.cpp
     src/TabManager.cpp
@@ -26,10 +23,7 @@ set(SOURCE_FILES
     src/FileModelOperations.cpp
     src/ThemeManager.cpp
     src/FileOperationManager.cpp
-)
 
-# Header dosyaları
-set(HEADER_FILES
     include/mainwindow.hpp
     include/TabManager.h
     include/ToolBarManager.h
@@ -39,53 +33,26 @@ set(HEADER_FILES
     include/ThemeManager.h
     include/FileOperationManager.h
     include/IFileOperation.h
+
+    ui/MainWindow.ui
+
+    config/.clang-tidy
+    config/.clang-format
+    CompileOptions.cmake
 )
 
-# UI dosyaları (manuel işlenecek)
-set(UI_FILES
-    ui/mainwindow.ui
-)
-
-# Resource dosyaları (.qrc)
-set(RESOURCE_FILES
+qt_add_resources(RESOURCE_SOURCES
     resources.qrc
 )
 
-# CMake'e her şeyi bildir
-qt_add_executable(File-Manager
-    MANUAL_FINALIZATION
-    ${SOURCE_FILES}
-    ${HEADER_FILES}
-    ${UI_FILES}
-    ${RESOURCE_FILES}
-    config/.clang-format
-    config/.clang-tidy
-)
+include(CompileOptions.cmake)
 
-qt_wrap_ui(UIC_FILES ui/mainwindow.ui)
+target_sources(File-Manager PRIVATE ${RESOURCE_SOURCES})
 
-# Header klasörleri dosya yoluna ekleme işlemi
-target_include_directories(File-Manager PRIVATE include)
+set_property(TARGET File-Manager PROPERTY AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/ui)
 
-target_link_libraries(File-Manager PRIVATE Qt${QT_VERSION_MAJOR}::Widgets FatCxx::CompileOptions)
-
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.File-Manager)
-endif()
-
-set_target_properties(File-Manager PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
-)
-
-include(GNUInstallDirs)
-install(TARGETS File-Manager
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+target_include_directories(File-Manager PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 file(GLOB_RECURSE QT_GENERATED_FILES
@@ -93,6 +60,7 @@ file(GLOB_RECURSE QT_GENERATED_FILES
     "${CMAKE_CURRENT_BINARY_DIR}/*_autogen/include/*.cpp"
     "${CMAKE_CURRENT_BINARY_DIR}/*_autogen/*.cpp"
     "${CMAKE_CURRENT_BINARY_DIR}/.rcc/*.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/qrc_*.cpp"
 )
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -103,6 +71,35 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     endforeach()
 endif()
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(File-Manager)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    foreach(file IN LISTS QT_GENERATED_FILES)
+        set_source_files_properties(${file} PROPERTIES
+            COMPILE_FLAGS "/wd4464 /wd4866"
+        )
+    endforeach()
+
+    target_compile_options(CompileOptions INTERFACE /wd4464 /wd4625 /wd4626 /wd5026 /wd5027)
 endif()
+
+target_link_libraries(File-Manager
+    PRIVATE
+        Qt::Core
+        Qt::Widgets
+        FatCxx::CompileOptions
+)
+
+include(GNUInstallDirs)
+
+install(TARGETS File-Manager
+    BUNDLE  DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+qt_generate_deploy_app_script(
+    TARGET File-Manager
+    OUTPUT_SCRIPT deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+
+install(SCRIPT ${deploy_script})
