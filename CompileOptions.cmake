@@ -8,7 +8,7 @@
 add_library (CompileOptions INTERFACE)
 add_library (FatCxx::CompileOptions ALIAS CompileOptions)
 
-target_compile_features(CompileOptions INTERFACE cxx_std_23)
+target_compile_features(CompileOptions INTERFACE cxx_std_20)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     target_compile_options(CompileOptions INTERFACE
@@ -115,7 +115,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
 
         ## Configuration-specific
         $<$<CONFIG:Debug>:
-            -Od
+            $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -O0>
+            $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -Od>
 
             -Werror
         >
