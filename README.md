@@ -10,14 +10,15 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
 ## Features and todos:
 
 - [x] File and folder browsing
-- [ ] highly customizable interface
+- [ ] Highly customizable interface
 - [x] Dual-pane interface
 - [x] Column interface
 - [x] Tab support
 - [ ] Standart file operations (copy, move, delete, rename)
 - [ ] Multiple selection file operations (copy, move, delete, rename)
+- [ ] Paralel file operations
 - [ ] Search Support
-- [ ] command line suppport
+- [ ] Command line support
 - [ ] File preview panel
 - [ ] File details panel
 - [ ] Bookmarks and history

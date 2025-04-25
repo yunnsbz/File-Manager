@@ -8,9 +8,11 @@
 add_library (CompileOptions INTERFACE)
 add_library (FatCxx::CompileOptions ALIAS CompileOptions)
 
+target_compile_features(CompileOptions INTERFACE cxx_std_20)
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     target_compile_options(CompileOptions INTERFACE
-        ##################################
+        #################################
         -pedantic # Conform to ISO/IEC Standard
 
 
@@ -28,7 +30,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         $<$<STREQUAL:${FATCXX_GCC_ANALYZER},Enabled>: -fanalyzer>
 
 
-        ## Preprocessor
+        ## Preprocessor definitions
         -DFAT_BUILDING_WITH_MSVC=0
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFAT_BUILDING_ON_WINDOWS=0>
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFAT_BUILDING_ON_WINDOWS=1>
@@ -49,7 +51,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>: -stdlib=libstdc++>
     )
 
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_compile_options (CompileOptions INTERFACE
         ##################################
         -pedantic # Conform to ISO/IEC Standard
@@ -73,7 +75,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "
         -Wno-unused-template
 
 
-        ## Preprocessor
+        ## Preprocessor definitions
         -DFAT_BUILDING_WITH_MSVC=0
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFAT_BUILDING_ON_WINDOWS=0>
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFAT_BUILDING_ON_WINDOWS=1>
@@ -94,12 +96,39 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>: -stdlib=libc++>
     )
 
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
+    target_compile_options (CompileOptions INTERFACE
+        ##################################
+        ## Active warnings
+        -Wall
+
+
+        ## Inactive warnings
+        -Wno-unused-function
+
+
+        ## Preprocessor definitions
+        -DFAT_BUILDING_WITH_MSVC=0
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFAT_BUILDING_ON_WINDOWS=0>
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFAT_BUILDING_ON_WINDOWS=1>
+
+
+        ## Configuration-specific
+        $<$<CONFIG:Debug>:
+            $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -O0>
+            $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -Od>
+
+            -Werror
+        >
+        $<$<CONFIG:Release>:
+            -O2
+        >
+    )
+
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options (CompileOptions INTERFACE
-        #####################################
+        ##################################
         /permissive-        # Conform to ISO/IEC Standard
-        # /std:c++latest
-        # /std:clatest
         # /nologo
         # /MP               # Multi-processor compilation but it's not needed because CMake already launches multiple threads
         /Zc:wchar_t         # treat 'wchar_t' as a built-in type
@@ -145,7 +174,10 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         $<$<CONFIG:Debug>:
             /Od
 
-            /WX  # Treat warnings as errors
+            /WX # Treat warnings as errors
+
+            /wd4710 # Function not inlined
+            /wd4711 # Function selected for inline expansion
 
             /DIN_DEBUG=true
             /DIN_RELEASE=false
@@ -160,6 +192,14 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
             /DIN_DEBUG=false
             /DIN_RELEASE=true
+
+            
+            /Qpar # Enable auto-parallelization of loops with #pragma loop directive
+
+            $<$<STREQUAL:${FATCXX_MSVC_FULLREPORT},Enabled>:
+                /Qpar-report:2 # Auto-parallelizer reporting (Max)
+                /Qvec-report:2 # Auto-vectorizer   reporting (Max)
+            >
         >
     )
 
