@@ -5,7 +5,6 @@
 
 #include <QString>
 #include <QFileInfo>
-#include <QDir>
 #include <QObject>
 
 class FileOperationManager : public QObject {

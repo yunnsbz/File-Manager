@@ -5,9 +5,6 @@ FileOperationManager::FileOperationManager(QObject *) {
 
     };
 
-void FileOperationManager::executeOperations() {
-
-}
 
 void FileOperationManager::undoLast() {
 
