@@ -22,8 +22,14 @@ public:
     // copyalananları yapıştırır:
     void PasteOperation(QString dst);
 
+    // copyalananları birden fazla yolun her birine yapıştırır.
+    void PasteOperationMultiple(QList<QString> destinations);
+
     // tek bir dosyanın ismini değiştirmek için kullanılır.
     void RenameOperationBasic(QString src,QString name);
+
+    // birden fazla bir dosyanın ismini farklı şekilde değiştirmek için kullanılır. (prefix, postfix vb.)
+    void RenameOperationAdvanced(QList<QString> src);
 
     // hedef yol içinde boş klasör oluşturur.
     void CreateNewFolder(QString dst);
