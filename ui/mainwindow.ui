@@ -58,7 +58,7 @@
      <number>0</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,40,0,0,0">
+     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,40,0,0,0,0">
       <property name="spacing">
        <number>2</number>
       </property>
@@ -275,6 +275,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolHistoryButton">
+        <property name="text">
+         <string>h</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QToolButton" name="toolNotePadButton">

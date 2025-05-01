@@ -9,6 +9,8 @@
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 int main(int argc, char **argv)
 {
+    qApp->setStyle("windowsVista");
+
     const QApplication app(argc, argv);
 
     const MainWindow wnd{};

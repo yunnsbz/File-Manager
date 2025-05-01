@@ -29,5 +29,8 @@
         <file>img/view_column_white.svg</file>
         <file>styles/button-style-new.qss</file>
         <file>styles/style.qss</file>
+        <file>img/history_black.svg</file>
+        <file>img/history_gray.svg</file>
+        <file>img/history_white.svg</file>
     </qresource>
 </RCC>
