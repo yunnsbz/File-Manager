@@ -9,14 +9,12 @@
 // NOLINTBEGIN(readability-static-accessed-through-instance)
 int main(int argc, char **argv)
 {
-    qApp->setStyle("windowsVista");
-
     const QApplication app(argc, argv);
 
     const MainWindow wnd{};
 
     QString qss;
-    QFile file1(":/resources/styles/style.qss");
+    QFile file1(":/resources/styles/styleDark.qss");
     QFile file2(":/resources/styles/button-style-new.qss");
 
     file1.open(QFile::ReadOnly);
