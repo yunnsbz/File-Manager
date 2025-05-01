@@ -14,22 +14,26 @@ class FileOperationManager : public QObject {
 public:
     explicit FileOperationManager(QObject *parent = nullptr);
 
-    // execute all operations on the queue.
-    // after adding all the operations you should call this.
-    void executeOperations();
-
     // undo last operation queue
     void undoLast();
 
+    // seçimlenleri (birden fazla olabilir) taşıma işlemi yapar
+    void MoveOperation(QList<QString> src,QString dst);
 
-    void addMoveOperation(QString src,QString dst);
-    void addCutOperation(QString src);
-    void addPasteOperation(QString dst);
-    void addCopyOperation(QString src);
-    void addRenameOperation(QString src,QString name);
-    void addNewFolderOperation(QString dst);
+    // copyalananları yapıştırır:
+    void PasteOperation(QString dst);
 
+    // tek bir dosyanın ismini değiştirmek için kullanılır.
+    void RenameOperationBasic(QString src,QString name);
 
+    // hedef yol içinde boş klasör oluşturur.
+    void CreateNewFolder(QString dst);
+
+    // seçilenleri kesme işlemi için kaydeder. sonrasında PasteOperation çağırılmalıdır
+    void addToCut(QString src);
+
+    // sadece geçici olarak kopyalanma adreslerini tutar. kopyalama işlemini bitirmez. sonrasında PasteOperation çağırılmalıdır.
+    void addToCopy(QString src);
 
 private:
     QList<QVariantMap> operationHistory;

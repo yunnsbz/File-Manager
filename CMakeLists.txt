@@ -35,6 +35,12 @@ qt_add_executable(File-Manager
     include/IFileOperation.h
     include/AbstractFileOp.h
 
+    include/PasteFileOperation.h
+
+    include/MoveFileOperation.h
+    include/RenameFileOperation.h
+    include/NewFolderOperation.h
+
     ui/MainWindow.ui
 
     config/.clang-tidy

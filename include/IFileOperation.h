@@ -14,9 +14,9 @@ class IFileOperation : public QObject {
 public:
     explicit IFileOperation(QObject *parent = nullptr) : QObject(parent) {}
 
-    virtual bool start() PURE;
+    virtual void start() PURE;
     virtual void addOperations(QVariantMap params) PURE;
-    virtual bool undo(QVariantMap params) PURE;
+    virtual void undo(QVariantMap params) PURE;
     virtual void cancel() PURE;
 
 signals:
