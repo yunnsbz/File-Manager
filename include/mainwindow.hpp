@@ -88,6 +88,8 @@ private slots:
     void on_actionOptions_triggered();
     void on_columnView_clicked(const QModelIndex &index);
 
+    void on_toolHistoryButton_clicked();
+
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 

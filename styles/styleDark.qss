@@ -76,3 +76,37 @@ QTableView::item:selected {
     outline: none;
 }
 
+
+/**************** for history popup ****************/
+
+QScrollArea {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+#HistoryItem {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+#HistoryItem QToolButton {
+    padding: 1px;
+    margin: 1px;
+}
+
+#HistoryPopupFrame {
+    background-color: #2f2f2f;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 0;
+    margin: 0;
+}
+#HistoryScrollContent {
+    background-color: transparent;
+}
+
+
+

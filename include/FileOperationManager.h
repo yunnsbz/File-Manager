@@ -16,6 +16,9 @@ public:
     // undo last operation queue
     void undoLast();
 
+    // geçmişten bir işlem seçip geri almak içindir.w
+    void undo(QVariantMap params);
+
     // seçimlenleri (birden fazla olabilir) taşıma işlemi yapar
     void MoveOperation(QList<QString> src,QString dst);
 

@@ -18,6 +18,8 @@
 #include <QProcess>
 #include <QScrollBar>
 #include <QPropertyAnimation>
+#include <QScrollArea>
+#include <QToolButton>
 
 UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
 {
@@ -749,7 +751,7 @@ void MainWindow::on_actionOptions_triggered()
     if(tabCloseButtonOld){
         // style:
         QString qss;
-        QFile file1(":/resources/styles/style.qss");
+        QFile file1(":/resources/styles/styleDark.qss");
         QFile file2(":/resources/styles/button-style-new.qss");
 
         file1.open(QFile::ReadOnly);
@@ -764,7 +766,7 @@ void MainWindow::on_actionOptions_triggered()
     else{
         // style:
         QString qss;
-        QFile file1(":/resources/styles/style.qss");
+        QFile file1(":/resources/styles/styleDark.qss");
 
         file1.open(QFile::ReadOnly);
 
@@ -783,5 +785,52 @@ void MainWindow::on_columnView_clicked(const QModelIndex &index)
         const QString filePath = columnFileModel->filePath(index);
         QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
     }
+}
+
+
+void MainWindow::on_toolHistoryButton_clicked()
+{
+    QFrame* popupFrame = new QFrame(this, Qt::Popup); // Menü gibi görünür
+    QVBoxLayout* layout = new QVBoxLayout(popupFrame);
+    popupFrame->setObjectName("HistoryPopupFrame");
+
+    QScrollArea* scrollArea = new QScrollArea(popupFrame);
+    scrollArea->setWidgetResizable(true);
+
+    QWidget* scrollContent = new QWidget();
+    QVBoxLayout* contentLayout = new QVBoxLayout(scrollContent);
+    scrollContent->setObjectName("HistoryScrollContent");
+    scrollContent->setAttribute(Qt::WA_Hover, true);
+
+    contentLayout->setContentsMargins(1,2,1,2);
+    contentLayout->setSpacing(0);
+
+    for (int i = 0; i < 20; i++) {
+        QWidget* itemWidget = new QWidget;
+        QHBoxLayout* rowLayout = new QHBoxLayout(itemWidget);
+
+        rowLayout->setContentsMargins(1, 2, 1, 2); // min dikey boşluk
+        rowLayout->setSpacing(0);
+
+        QLabel* label = new QLabel("operation description (... moved to ...)");
+        QToolButton* undoButton = new QToolButton();
+        undoButton->setIcon(QIcon(":/resources/img/history_white.svg"));
+
+        rowLayout->addWidget(label);
+        rowLayout->addWidget(undoButton);
+        itemWidget->setLayout(rowLayout);
+        itemWidget->setObjectName("HistoryItem");
+
+        contentLayout->addWidget(itemWidget);
+    }
+
+    scrollContent->setLayout(contentLayout);
+    scrollArea->setWidget(scrollContent);
+
+    layout->addWidget(scrollArea);
+    popupFrame->setLayout(layout);
+    popupFrame->resize(300, 400); // Max boyut
+    popupFrame->move(ui->toolHistoryButton->mapToGlobal(QPoint(-270, ui->toolHistoryButton->height())));
+    popupFrame->show();
 }
 
