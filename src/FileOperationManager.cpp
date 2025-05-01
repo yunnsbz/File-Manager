@@ -1,26 +1,16 @@
 #include "FileOperationManager.h"
 
 
-FileOperationManager::FileOperationManager(QObject *parent) : QObject(parent) {}
+FileOperationManager::FileOperationManager(QObject *) {
 
-void FileOperationManager::executeOperation(IFileOperation *operation) {
-    connect(operation, &IFileOperation::progress, this, &FileOperationManager::onProgress);
-    connect(operation, &IFileOperation::error, this, &FileOperationManager::onError);
-    connect(operation, &IFileOperation::finished, this, &FileOperationManager::onFinished);
+    };
 
-    if (operation->execute()) {
-        operationHistory.append(operation); // başarılıysa geri al listesine ekle
-    } else {
-        operation->deleteLater();
-    }
+void FileOperationManager::executeOperations() {
+
 }
 
 void FileOperationManager::undoLast() {
-    if (!operationHistory.isEmpty()) {
-        IFileOperation *operation = operationHistory.takeLast();
-        operation->undo();
-        operation->deleteLater();
-    }
+
 }
 
 void FileOperationManager::onProgress(int percent) {

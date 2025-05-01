@@ -13,11 +13,29 @@ class FileOperationManager : public QObject {
 
 public:
     explicit FileOperationManager(QObject *parent = nullptr);
-    void executeOperation(IFileOperation *operation);
+
+    // execute all operations on the queue.
+    // after adding all the operations you should call this.
+    void executeOperations();
+
+    // undo last operation queue
     void undoLast();
 
+
+    void addMoveOperation(QString src,QString dst);
+    void addCutOperation(QString src);
+    void addPasteOperation(QString dst);
+    void addCopyOperation(QString src);
+    void addRenameOperation(QString src,QString name);
+    void addNewFolderOperation(QString dst);
+
+
+
 private:
-    QVector<IFileOperation*> operationHistory;
+    QList<QVariantMap> operationHistory;
+    QMap<QString, IFileOperation*> OperationMap;
+    QVariantMap currentOperation;
+
 
 private slots:
     void onProgress(int percent);

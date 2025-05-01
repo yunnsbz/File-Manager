@@ -33,6 +33,7 @@ qt_add_executable(File-Manager
     include/ThemeManager.h
     include/FileOperationManager.h
     include/IFileOperation.h
+    include/AbstractFileOp.h
 
     ui/MainWindow.ui
 

@@ -1,7 +1,10 @@
 #ifndef IFILEOPERATION_H
 #define IFILEOPERATION_H
 
+
+
 #include <QObject>
+
 
 #define PURE = 0
 
@@ -11,8 +14,10 @@ class IFileOperation : public QObject {
 public:
     explicit IFileOperation(QObject *parent = nullptr) : QObject(parent) {}
 
-    virtual bool execute() PURE;
-    virtual bool undo() PURE;
+    virtual bool start() PURE;
+    virtual void addOperations(QVariantMap params) PURE;
+    virtual bool undo(QVariantMap params) PURE;
+    virtual void cancel() PURE;
 
 signals:
     void progress(int percent);
