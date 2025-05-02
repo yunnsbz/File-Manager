@@ -4,6 +4,7 @@
 #include "IFileOperation.h"
 
 #include <QString>
+#include <QQueue>
 #include <QFileInfo>
 #include <QObject>
 
@@ -45,9 +46,13 @@ public:
 
 private:
     QList<QVariantMap> operationHistory;
-    QMap<QString, IFileOperation*> OperationMap;
+
+    // string key girdisinde snake case kullanılır
+    QMap<QString, IFileOperation*> operationMap;
     QVariantMap currentOperation;
 
+    // data for copied or cuted file paths: used for pasteOperation. it will be cleared after using
+    QQueue<QString> copiedPaths;
 
 private slots:
     void onProgress(int percent);

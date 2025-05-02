@@ -46,6 +46,7 @@ qt_add_executable(File-Manager
     config/.clang-tidy
     config/.clang-format
     CompileOptions.cmake
+    src/PasteFileOperation.cpp
 )
 
 qt_add_resources(RESOURCE_SOURCES

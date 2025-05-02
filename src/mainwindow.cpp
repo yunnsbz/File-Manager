@@ -40,7 +40,8 @@ MainWindow::MainWindow(QWidget* parent)
     tableManager(new TableManager(ui->tableView, fileModelOp, this)),
     tableManager2(new TableManager(ui->tableView_2, fileModelOp2, this)),
     treeManager(new TreeManager(ui->FileTreeView, fileModelOp, ui->tabWidget, this)),
-    treeManager2(new TreeManager(ui->FileTreeView_2, fileModelOp2, ui->tabWidget_2, this))
+    treeManager2(new TreeManager(ui->FileTreeView_2, fileModelOp2, ui->tabWidget_2, this)),
+    FileOpManager(new FileOperationManager)
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
@@ -832,5 +833,36 @@ void MainWindow::on_toolHistoryButton_clicked()
     popupFrame->resize(300, 400); // Max boyut
     popupFrame->move(ui->toolHistoryButton->mapToGlobal(QPoint(-270, ui->toolHistoryButton->height())));
     popupFrame->show();
+}
+
+
+void MainWindow::on_toolCopyButton_clicked()
+{
+    // seçilmiş satırların indexlerini al
+    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
+    if(selectedIndexes.count() != 0)
+    {
+        for (const QModelIndex &index : selectedIndexes) {
+            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            qDebug()<< "path added to copy (table 1):" << filePath;
+            FileOpManager->addToCopy(filePath);
+        }
+    }
+    else
+    {
+        // ilk tabloda seçilmemişse
+        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
+        for (const QModelIndex &index : selectedIndexes) {
+            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            qDebug()<< "path added to copy (table 2): " << filePath;
+            FileOpManager->addToCopy(filePath);
+        }
+    }
+}
+
+
+void MainWindow::on_toolPasteButton_clicked()
+{
+    FileOpManager->PasteOperation(fileModelOp->GetCurrentPath(ui->tabWidget->currentIndex()));
 }
 

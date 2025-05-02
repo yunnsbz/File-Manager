@@ -1,10 +1,7 @@
 #ifndef IFILEOPERATION_H
 #define IFILEOPERATION_H
 
-
-
 #include <QObject>
-
 
 #define PURE = 0
 

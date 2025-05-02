@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "FileOperationManager.h"
 #include "ui_mainwindow.h"
 #include <QMainWindow>
 #include <QObject>
@@ -90,6 +91,10 @@ private slots:
 
     void on_toolHistoryButton_clicked();
 
+    void on_toolCopyButton_clicked();
+
+    void on_toolPasteButton_clicked();
+
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 
@@ -117,6 +122,8 @@ private:
     TableManager* tableManager2;
     TreeManager* treeManager;
     TreeManager* treeManager2;
+
+    FileOperationManager* FileOpManager;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
     bool isWorkingOnRightPane = false;
