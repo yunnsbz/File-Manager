@@ -17,8 +17,9 @@ void PasteFileOperation::start()
         QString src = req["src"].toString();
         QString dst = req["dst"].toString();
 
+        QFileInfo srcInfo(src);
         QFileInfo destInfo(dst);
-        QDir destDir = destInfo.absoluteDir();
+        QDir destDir(dst);
         if (!destDir.exists()) {
             destDir.mkpath(".");
         }
@@ -29,7 +30,9 @@ void PasteFileOperation::start()
             continue;
         }
 
-        if (!file.copy(dst)) {
+        QString fullDstPath = destDir.filePath(srcInfo.fileName());
+
+        if (!file.copy(fullDstPath)) {
             emit error("Copy failed: " + src + "      dst: " + dst);
         } else {
             finishedCount++;
