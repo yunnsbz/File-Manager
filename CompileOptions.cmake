@@ -149,8 +149,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
 
         ## Inactive warnings
-        /external:anglebrackets # Treat headers included with <> as external
-        /external:W0            # Do NOT emit warnings for external headers
+        # /external:anglebrackets # Treat headers included with <> as external
+        /external:W0              # Do NOT emit warnings for external headers
 
         /wd4061 # Not all enum identifiers of an Enum (class) are handled by a switch statement (When there is a default case)
         /wd4062 # Not all enum identifiers of an Enum (class) are handled by a switch statement (When there is NOT a default case)
