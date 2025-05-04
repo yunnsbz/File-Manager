@@ -19,6 +19,7 @@ void PasteFileOperation::start()
 
         QFileInfo srcInfo(src);
         QFileInfo destInfo(dst);
+
         QDir destDir(dst);
         if (!destDir.exists()) {
             destDir.mkpath(".");
@@ -29,8 +30,25 @@ void PasteFileOperation::start()
             emit error("Source does not exist: " + src);
             continue;
         }
-
         QString fullDstPath = destDir.filePath(srcInfo.fileName());
+
+        // if path has the same file/folder it should create a duplicate with "-copy" postfix
+        if(fullDstPath == src)
+        {
+            //find dot
+            int lastDotPos = fullDstPath.lastIndexOf('.');
+
+            QString extention = "";
+            QString name = fullDstPath;
+
+            // if dot exist seperate name and the extention:
+            if (lastDotPos != -1) {
+                name = fullDstPath.left(lastDotPos);
+                extention = fullDstPath.mid(lastDotPos);
+            }
+            fullDstPath = name + "-copy" + extention;
+            qDebug() << fullDstPath;
+        }
 
         if (!file.copy(fullDstPath)) {
             emit error("Copy failed: " + src + "      dst: " + dst);
