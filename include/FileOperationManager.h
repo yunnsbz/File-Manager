@@ -3,10 +3,13 @@
 
 #include "IFileOperation.h"
 
+
 #include <QString>
 #include <QQueue>
 #include <QFileInfo>
 #include <QObject>
+
+class MainWindow;
 
 class FileOperationManager : public QObject {
     Q_OBJECT
@@ -14,11 +17,15 @@ class FileOperationManager : public QObject {
 public:
     explicit FileOperationManager(QObject *parent = nullptr);
 
+
+
     // undo last operation queue
     void undoLast();
 
     // geçmişten bir işlem seçip geri almak içindir.w
     void undo(QVariantMap params);
+
+    void DeleteOperation(QList<QString> src);
 
     // seçimlenleri (birden fazla olabilir) taşıma işlemi yapar
     void MoveOperation(QList<QString> src,QString dst);
@@ -45,6 +52,8 @@ public:
     void addToCopy(QString src);
 
 private:
+    MainWindow* mainWindow_;
+
     QList<QVariantMap> operationHistory;
 
     // string key girdisinde snake case kullanılır

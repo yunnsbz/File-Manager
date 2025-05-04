@@ -95,6 +95,8 @@ private slots:
 
     void on_toolPasteButton_clicked();
 
+    void on_toolDelButton_clicked();
+
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 

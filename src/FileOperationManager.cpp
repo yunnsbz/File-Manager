@@ -1,12 +1,17 @@
 #include "FileOperationManager.h"
+#include "DeleteFileOperation.h"
 #include "PasteFileOperation.h"
+#include "mainwindow.hpp"
 
+#include <QMessageBox>
 
-FileOperationManager::FileOperationManager(QObject *) {
+FileOperationManager::FileOperationManager(QObject * parent)
+    :
+    QObject(parent),
+    mainWindow_(static_cast<MainWindow*>(parent))
+{
     operationMap["paste"] = new PasteFileOperation();
-    operationMap["move"] = new PasteFileOperation();
-    operationMap["rename"] = new PasteFileOperation();
-    operationMap["new_folder"] = new PasteFileOperation();
+    operationMap["delete"] = new DeleteFileOperation();
 
     connect(operationMap["paste"], &IFileOperation::progress, this, &FileOperationManager::onProgress);
     connect(operationMap["paste"], &IFileOperation::error, this, &FileOperationManager::onError);
@@ -16,6 +21,23 @@ FileOperationManager::FileOperationManager(QObject *) {
 
 void FileOperationManager::undoLast() {
 
+}
+
+void FileOperationManager::DeleteOperation(QList<QString> srcList)
+{
+    // check if its a one item operation
+    if(srcList.count() == 1){
+        QString path = srcList[0]; // Seçili dosya veya klasör yolu
+
+        QFileInfo fileInfo(path);
+
+        // delete confirmation
+        QMessageBox::StandardButton reply = QMessageBox::question(
+            mainWindow_, "Silme Onayı",
+            fileInfo.isDir() ? "Klasörü silmek istediğinize emin misiniz?" : "Dosyayı silmek istediğinize emin misiniz?",
+            QMessageBox::Yes | QMessageBox::No);
+        qDebug() << reply;
+    }
 }
 
 void FileOperationManager::PasteOperation(QString dst)
@@ -58,6 +80,7 @@ void FileOperationManager::addToCopy(QString src)
 {
     copiedPaths.enqueue(src);
 }
+
 
 void FileOperationManager::onProgress(int percent) {
     qDebug() << "Progress:" << percent << "%";

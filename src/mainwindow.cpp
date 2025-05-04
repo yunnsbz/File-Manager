@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget* parent)
     tableManager2(new TableManager(ui->tableView_2, fileModelOp2, this)),
     treeManager(new TreeManager(ui->FileTreeView, fileModelOp, ui->tabWidget, this)),
     treeManager2(new TreeManager(ui->FileTreeView_2, fileModelOp2, ui->tabWidget_2, this)),
-    FileOpManager(new FileOperationManager)
+    FileOpManager(new FileOperationManager(this))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
@@ -864,5 +864,30 @@ void MainWindow::on_toolCopyButton_clicked()
 void MainWindow::on_toolPasteButton_clicked()
 {
     FileOpManager->PasteOperation(fileModelOp->GetCurrentPath(ui->tabWidget->currentIndex()));
+}
+
+
+void MainWindow::on_toolDelButton_clicked()
+{
+    // seçilmiş satırların indexlerini al
+    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
+    QList<QString> srcList;
+    if(selectedIndexes.count() != 0)
+    {
+        for (const QModelIndex &index : selectedIndexes) {
+            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            srcList.append(filePath);
+        }
+    }
+    else
+    {
+        // ilk tabloda seçilmemişse
+        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
+        for (const QModelIndex &index : selectedIndexes) {
+            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            srcList.append(filePath);
+        }
+    }
+    FileOpManager->DeleteOperation(srcList);
 }
 
