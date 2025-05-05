@@ -61,7 +61,7 @@ private:
     QVariantMap currentOperation;
 
     // data for copied or cuted file paths: used for pasteOperation. it will be cleared after using
-    QQueue<QString> copiedPaths;
+    QSet<QString> copiedPaths;
 
 private slots:
     void onProgress(int percent);

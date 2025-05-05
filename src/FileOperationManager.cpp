@@ -44,13 +44,23 @@ void FileOperationManager::PasteOperation(QString dst)
 {
     QVariantMap params;
 
+    QQueue<QString> copyQueue;
+
     auto op = operationMap["paste"];
     if (op)
     {
+        // set içindekileri queue'ye aktar:
+        for (const QString& item : copiedPaths) {
+            copyQueue.enqueue(item);
+        }
+
+        // set'i boşalt ki tekrar kullanılabilsin:
+        copiedPaths.clear();
+
         // kopyalanmış yolların tamaını addOperation için src ile birleştirip param haline getirip sıraya ekliyoruz
-        for (int i = 0; i < copiedPaths.count(); ++i)
+        for (int i = 0; i < copyQueue.count(); ++i)
         {
-            params["src"] = copiedPaths.dequeue();
+            params["src"] = copyQueue.dequeue();
             params["dst"] = dst;
 
             params["op"] = "paste";
@@ -71,14 +81,14 @@ void FileOperationManager::PasteOperation(QString dst)
 
 void FileOperationManager::addToCut(QString src)
 {
-    copiedPaths.enqueue(src);
+    copiedPaths.insert(src);
 
     //TODO: seçimin UI üzerinde grileşmesi gerekir.
 }
 
 void FileOperationManager::addToCopy(QString src)
 {
-    copiedPaths.enqueue(src);
+    copiedPaths.insert(src);
 }
 
 
