@@ -18,7 +18,7 @@ void PasteFileOperation::start()
         QString dst = req["dst"].toString();
 
         QFileInfo srcInfo(src);
-        QFileInfo destInfo(dst);
+        //QFileInfo destInfo(dst);
 
         QDir destDir(dst);
         if (!destDir.exists()) {
@@ -49,6 +49,9 @@ void PasteFileOperation::start()
             fullDstPath = name + "-copy" + extention;
             qDebug() << fullDstPath;
         }
+
+        // if a different path has the same file
+        //todo
 
         if (!file.copy(fullDstPath)) {
             emit error("Copy failed: " + src + "      dst: " + dst);
