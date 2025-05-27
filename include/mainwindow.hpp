@@ -13,6 +13,7 @@
 #include <QList>
 #include <qevent.h>
 
+class ApplicationStateHandler;
 class TabManager;
 class ToolBarManager;
 class TableManager;
@@ -60,8 +61,9 @@ public:
     void ScrollColumn(int direction);
 
     void ActivateDualPane();
-
     void DeactivateDualPane();
+    void DeactivateTreeView();
+    void ActivateTreeView();
 
 protected:
 
@@ -130,6 +132,8 @@ private:
     TreeManager* treeManager2;
 
     FileOperationManager* FileOpManager;
+
+    ApplicationStateHandler* AppStateHandler;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
     bool isWorkingOnRightPane = false;

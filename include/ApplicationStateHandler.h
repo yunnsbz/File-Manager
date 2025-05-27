@@ -23,10 +23,10 @@ public:
     void SetCurrentViewState(ViewStates newState);
     ViewStates GetCurrentViewState();
 
+    void RestoreViewState();
+
 private:
     MainWindow* mainWindow_;
-
-    QSettings settings;
 
     static inline const QString SettingName_ViewState = "view_state";
 };
