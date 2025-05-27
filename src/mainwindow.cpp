@@ -543,17 +543,39 @@ void MainWindow::on_actionDual_Pane_View_triggered()
 }
 
 
+void MainWindow::ActivateColumnView()
+{
+    ColumnViewActive = true;
+    ui->stackedWidget->setCurrentIndex(1);
+    toolBarManager->SetBackButtonEnabled(true);
+    toolBarManager->SetForwardButtonEnabled(true);
+}
+
 void MainWindow::on_actionColumn_View_triggered()
 {
     if(ui->stackedWidget->currentIndex() == 1){
         ColumnViewActive = false;
         ui->stackedWidget->setCurrentIndex(0);
+        if(dualPaneActive){
+            if(treeViewActive){
+                AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+            }
+            else{
+                AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE);
+            }
+        }
+        else{
+            if(treeViewActive){
+                AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+            }
+            else{
+                AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE);
+            }
+        }
     }
     else{
-        ColumnViewActive = true;
-        ui->stackedWidget->setCurrentIndex(1);
-        toolBarManager->SetBackButtonEnabled(true);
-        toolBarManager->SetForwardButtonEnabled(true);
+        ActivateColumnView();
+        AppStateHandler->SetCurrentViewState(ViewStates::COLUMN_VIEW);
     }
 }
 

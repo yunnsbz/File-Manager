@@ -65,6 +65,8 @@ public:
     void DeactivateTreeView();
     void ActivateTreeView();
 
+    void ActivateColumnView();
+
 protected:
 
 

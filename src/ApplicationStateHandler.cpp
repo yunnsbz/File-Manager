@@ -38,6 +38,7 @@ void ApplicationStateHandler::RestoreViewState()
         qDebug() << "DUAL_PANE";
         break;
     case ViewStates::COLUMN_VIEW:
+        mainWindow_->ActivateColumnView();
         qDebug() << "COLUMN_VIEW";
         break;
     default:
