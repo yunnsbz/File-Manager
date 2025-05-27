@@ -18,6 +18,9 @@ TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent
     // sekmelerin sürüklenmesi/yer değiştirmesi hareketlerini algılamak için:
     connect(tabWidget->tabBar(), &QTabBar::tabMoved, this, &TabManager::onTabMoved);
 
+    // should change the first tab default name
+    tabWidget->tabBar()->setTabText(0,"new tab");
+
     SetCornerNavButtons();
 
     SetAddTabButton();
