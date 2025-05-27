@@ -8,7 +8,9 @@
 add_library (CompileOptions INTERFACE)
 add_library (FatCxx::CompileOptions ALIAS CompileOptions)
 
-target_compile_features(CompileOptions INTERFACE cxx_std_20)
+if (CMAKE_CXX_STANDARD EQUAL 20)
+    target_compile_features(CompileOptions INTERFACE cxx_std_20)
+endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     target_compile_options(CompileOptions INTERFACE
@@ -133,6 +135,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         # /MP               # Multi-processor compilation but it's not needed because CMake already launches multiple threads
         /Zc:wchar_t         # treat 'wchar_t' as a built-in type
         /Zc:preprocessor    # Use standards conforming preprocessor
+        /Zc:__cplusplus     # Enable updated __cplusplus value for the corresponding standard
         /errorReport:none   # Don't report internal compiler errors
 
 
@@ -149,8 +152,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
 
         ## Inactive warnings
-        # /external:anglebrackets # Treat headers included with <> as external
-        /external:W0              # Do NOT emit warnings for external headers
+        /external:W0 # Do NOT emit warnings for external headers
 
         /wd4061 # Not all enum identifiers of an Enum (class) are handled by a switch statement (When there is a default case)
         /wd4062 # Not all enum identifiers of an Enum (class) are handled by a switch statement (When there is NOT a default case)
