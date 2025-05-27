@@ -13,6 +13,7 @@
 #include <QList>
 #include <qevent.h>
 
+class ApplicationStateHandler;
 class TabManager;
 class ToolBarManager;
 class TableManager;
@@ -59,6 +60,13 @@ public:
     void ForwardButtonOnClick(bool OnRightPane);
     void ScrollColumn(int direction);
 
+    void ActivateDualPane();
+    void DeactivateDualPane();
+    void DeactivateTreeView();
+    void ActivateTreeView();
+
+    void ActivateColumnView();
+
 protected:
 
 
@@ -97,6 +105,8 @@ private slots:
 
     void on_toolDelButton_clicked();
 
+    void on_actionSettings_triggered();
+
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 
@@ -126,6 +136,8 @@ private:
     TreeManager* treeManager2;
 
     FileOperationManager* FileOpManager;
+
+    ApplicationStateHandler* AppStateHandler;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
     bool isWorkingOnRightPane = false;

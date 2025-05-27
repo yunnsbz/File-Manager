@@ -25,6 +25,7 @@ qt_add_executable(File-Manager
     src/FileOperationManager.cpp
     src/PasteFileOperation.cpp
     src/DeleteFileOperation.cpp
+    src/ApplicationStateHandler.cpp
 
     include/mainwindow.hpp
     include/TabManager.h
@@ -43,12 +44,20 @@ qt_add_executable(File-Manager
     include/RenameFileOperation.h
     include/NewFolderOperation.h
     include/DeleteFileOperation.h
+    include/ApplicationStateHandler.h
 
     ui/MainWindow.ui
 
     config/.clang-tidy
     config/.clang-format
     CompileOptions.cmake
+
+
+
+    include/SettingsDialog.h
+    src/SettingsDialog.cpp
+    ui/settingsdialog.ui
+
 )
 
 qt_add_resources(RESOURCE_SOURCES

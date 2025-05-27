@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "SettingsDialog.h"
 #include "ThemeManager.h"
 #include "TabManager.h"
 #include "./ui_mainwindow.h"
@@ -6,6 +7,8 @@
 #include "ToolBarManager.h"
 #include "FileModelOperations.h"
 #include "TreeManager.h"
+#include "ApplicationStateHandler.h"
+
 
 #include <QFileSystemModel>
 #include <QAbstractButton>
@@ -41,7 +44,8 @@ MainWindow::MainWindow(QWidget* parent)
     tableManager2(new TableManager(ui->tableView_2, fileModelOp2, this)),
     treeManager(new TreeManager(ui->FileTreeView, fileModelOp, ui->tabWidget, this)),
     treeManager2(new TreeManager(ui->FileTreeView_2, fileModelOp2, ui->tabWidget_2, this)),
-    FileOpManager(new FileOperationManager(this))
+    FileOpManager(new FileOperationManager(this)),
+    AppStateHandler(new ApplicationStateHandler(this))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
@@ -69,6 +73,9 @@ MainWindow::MainWindow(QWidget* parent)
 
     setWindowTitle("File Manager");
     show();
+
+    // load and restore view:
+    AppStateHandler->RestoreViewState();
 }
 
 MainWindow::~MainWindow()
@@ -96,7 +103,6 @@ auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
 
     return QMainWindow::eventFilter(obj, event);
 }
-
 
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
 void MainWindow::SetTabContent(int tabIndex, bool rightPane)
@@ -166,48 +172,78 @@ void MainWindow::on_splitter_splitterMoved(int pos, int )
     }
 }
 
+void MainWindow::DeactivateTreeView()
+{
+    treeViewActive = false;
+    ui->splitter->setSizes({0,400});
+    ui->splitter_2->setSizes({0,400});
+
+    // sürüklemeyi devre dışı bırakma:
+    for (int i = 0; i < 2; ++i)
+    {
+        QSplitterHandle* handle = ui->splitter->handle(i);
+        QSplitterHandle* handle2 = ui->splitter_2->handle(i);
+        if (handle != nullptr && handle2 != nullptr)
+        {
+            handle->setEnabled(false);
+            handle2->setEnabled(false);
+        }
+    }
+
+    ui->splitter->setHandleWidth(0);
+    ui->splitter_2->setHandleWidth(0);
+}
+
+void MainWindow::ActivateTreeView()
+{
+    treeViewActive = true;
+    ui->splitter->setSizes({100,400});
+    ui->splitter_2->setSizes({100,400});
+    //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
+    for (int i = 0; i < 2; ++i)
+    {
+        QSplitterHandle* handle = ui->splitter->handle(i);
+        QSplitterHandle* handle2 = ui->splitter_2->handle(i);
+        if (handle != nullptr && handle2 != nullptr)
+        {
+            handle->setEnabled(true);
+            handle2->setEnabled(true);
+        }
+    }
+
+    ui->splitter->setHandleWidth(5);
+    ui->splitter_2->setHandleWidth(5);
+}
+
 void MainWindow::on_actionTree_View_triggered()
 {
     if (treeViewActive)
     {
-        treeViewActive = false;
-        ui->splitter->setSizes({0,400});
-        ui->splitter_2->setSizes({0,400});
+        DeactivateTreeView();
 
-        // sürüklemeyi devre dışı bırakma:
-        for (int i = 0; i < 2; ++i)
-        {
-            QSplitterHandle* handle = ui->splitter->handle(i);
-            QSplitterHandle* handle2 = ui->splitter_2->handle(i);
-            if (handle != nullptr && handle2 != nullptr)
-            {
-                handle->setEnabled(false);
-                handle2->setEnabled(false);
-            }
+        // save state update
+        if(dualPaneActive){
+            AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE);
+            qDebug()<<"dual pane açık ve ağaç kapatıldı";
         }
-
-        ui->splitter->setHandleWidth(0);
-        ui->splitter_2->setHandleWidth(0);
+        else{
+            AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE);
+            qDebug()<<"dual pane kapalı ve ağaç kapatıldı";
+        }
     }
     else
     {
-        treeViewActive = true;
-        ui->splitter->setSizes({100,400});
-        ui->splitter_2->setSizes({100,400});
-        //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
-        for (int i = 0; i < 2; ++i)
-        {
-            QSplitterHandle* handle = ui->splitter->handle(i);
-            QSplitterHandle* handle2 = ui->splitter_2->handle(i);
-            if (handle != nullptr && handle2 != nullptr)
-            {
-                handle->setEnabled(true);
-                handle2->setEnabled(true);
-            }
-        }
+        ActivateTreeView();
 
-        ui->splitter->setHandleWidth(5);
-        ui->splitter_2->setHandleWidth(5);
+        // save state update
+        if(dualPaneActive){
+            AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+            qDebug()<<"dual pane açık ve ağaç açıldı";
+        }
+        else{
+            AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+            qDebug()<<"dual pane kapalı ve ağaç açıldı";
+        }
     }
 }
 
@@ -427,82 +463,121 @@ void MainWindow::on_toolCmdButton_pressed()
 }
 
 
+void MainWindow::ActivateDualPane()
+{
+    dualPaneActive = true;
+    ui->splitter_dualPane->setChildrenCollapsible(true);
+    ui->splitter_dualPane->setSizes({1,1});
+    ui->splitter_dualPane->setChildrenCollapsible(false);
+    //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
+    for (int i = 0; i < 2; ++i)
+    {
+        QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+        if (handle != nullptr)
+        {
+            handle->setEnabled(true);
+        }
+    }
+
+    ui->splitter_dualPane->setHandleWidth(5);
+
+    // dual pane geldiğinde tablo sütun genişliklerini uygun hale getir
+    tableManager->SetColumnResize();
+
+    tabManager->EnableNavWidget(true);
+    tabManager2->EnableNavWidget(true);
+}
+
+void MainWindow::DeactivateDualPane()
+{
+    dualPaneActive = false;
+    ui->splitter_dualPane->setChildrenCollapsible(true);
+    ui->splitter_dualPane->setSizes({1,0});
+    ui->splitter_dualPane->setChildrenCollapsible(false);
+
+    // disable middle splitter:
+    for (int i = 0; i < 2; ++i)
+    {
+        QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+        if (handle != nullptr)
+        {
+            handle->setEnabled(false);
+        }
+    }
+    ui->splitter_dualPane->setHandleWidth(0);
+
+    tableManager->SetColumnResize();
+
+    tabManager->EnableNavWidget(false);
+    tabManager2->EnableNavWidget(false);
+}
+
 void MainWindow::on_actionDual_Pane_View_triggered()
 {
+    // if current stackedWidget is not on column view then open or close dual pane
     if (ui->stackedWidget->currentIndex() == 0)
     {
         if (dualPaneActive)
         {
-            dualPaneActive = false;
-            ui->splitter_dualPane->setChildrenCollapsible(true);
-            ui->splitter_dualPane->setSizes({1,0});
-            ui->splitter_dualPane->setChildrenCollapsible(false);
-            // sürüklemeyi devre dışı bırakma:
-            for (int i = 0; i < 2; ++i)
-            {
-                QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
-                if (handle != nullptr)
-                {
-                    handle->setEnabled(false);
-                }
-            }
-            ui->splitter_dualPane->setHandleWidth(0);
+            DeactivateDualPane();
 
-            tableManager->SetColumnResize();
-
-            tabManager->EnableNavWidget(false);
-            tabManager2->EnableNavWidget(false);
+            // save state update
+            if(treeViewActive) AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+            else AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE);
         }
         else
         {
-            dualPaneActive = true;
-            ui->splitter_dualPane->setChildrenCollapsible(true);
-            ui->splitter_dualPane->setSizes({1,1});
-            ui->splitter_dualPane->setChildrenCollapsible(false);
-            //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
-            for (int i = 0; i < 2; ++i)
-            {
-                QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
-                if (handle != nullptr)
-                {
-                    handle->setEnabled(true);
-                }
-            }
+            ActivateDualPane();
 
-            ui->splitter_dualPane->setHandleWidth(5);
-
-            // dual pane geldiğinde tablo sütun genişliklerini uygun hale getir
-            tableManager->SetColumnResize();
-
-            tabManager->EnableNavWidget(true);
-            tabManager2->EnableNavWidget(true);
+            // save state update
+            if(treeViewActive) AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+            else AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE);
         }
     }
     else{
-        // column view açıksa onu kapatıp bu fonksiyonu tekrar çağırarak dual pane'i açar
-        ColumnViewActive = false;
+        // if column view is active the deactivate it and open dual pane
         ui->stackedWidget->setCurrentIndex(0);
+        ColumnViewActive = false;
 
-        // column dan çıktıktan sonra her halukarda dual pane açılsın diye:
-        dualPaneActive = false;
-
-        // curent index sıfırlandığından recursive sadece bir kere çalışır
-        on_actionDual_Pane_View_triggered();
+        // column'dan çıktıktan sonra dual pane açılmalı:
+        ActivateDualPane();
     }
 }
 
+
+void MainWindow::ActivateColumnView()
+{
+    ColumnViewActive = true;
+    ui->stackedWidget->setCurrentIndex(1);
+    toolBarManager->SetBackButtonEnabled(true);
+    toolBarManager->SetForwardButtonEnabled(true);
+}
 
 void MainWindow::on_actionColumn_View_triggered()
 {
     if(ui->stackedWidget->currentIndex() == 1){
         ColumnViewActive = false;
         ui->stackedWidget->setCurrentIndex(0);
+        if(dualPaneActive){
+            if(treeViewActive){
+                AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+            }
+            else{
+                AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE);
+            }
+        }
+        else{
+            if(treeViewActive){
+                AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+            }
+            else{
+                AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE);
+            }
+        }
     }
     else{
-        ColumnViewActive = true;
-        ui->stackedWidget->setCurrentIndex(1);
-        toolBarManager->SetBackButtonEnabled(true);
-        toolBarManager->SetForwardButtonEnabled(true);
+        ActivateColumnView();
+        AppStateHandler->SetCurrentViewState(ViewStates::COLUMN_VIEW);
     }
 }
 
@@ -889,5 +964,12 @@ void MainWindow::on_toolDelButton_clicked()
         }
     }
     FileOpManager->DeleteOperation(srcList);
+}
+
+
+void MainWindow::on_actionSettings_triggered()
+{
+    SettingsDialog settingsDialog(this);
+    settingsDialog.exec(); // Modal olarak açar
 }
 
