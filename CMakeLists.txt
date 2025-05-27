@@ -52,6 +52,12 @@ qt_add_executable(File-Manager
     config/.clang-format
     CompileOptions.cmake
 
+
+
+    include/SettingsDialog.h
+    src/SettingsDialog.cpp
+    ui/settingsdialog.ui
+
 )
 
 qt_add_resources(RESOURCE_SOURCES

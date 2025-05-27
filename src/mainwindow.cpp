@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "SettingsDialog.h"
 #include "ThemeManager.h"
 #include "TabManager.h"
 #include "./ui_mainwindow.h"
@@ -7,6 +8,7 @@
 #include "FileModelOperations.h"
 #include "TreeManager.h"
 #include "ApplicationStateHandler.h"
+
 
 #include <QFileSystemModel>
 #include <QAbstractButton>
@@ -967,6 +969,7 @@ void MainWindow::on_toolDelButton_clicked()
 
 void MainWindow::on_actionSettings_triggered()
 {
-
+    SettingsDialog settingsDialog(this);
+    settingsDialog.exec(); // Modal olarak açar
 }
 
