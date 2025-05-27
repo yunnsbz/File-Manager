@@ -3,6 +3,7 @@
 
 
 #include <QObject>
+#include <QSettings>
 
 class MainWindow;
 
@@ -14,7 +15,7 @@ enum class ViewStates : char{
     COLUMN_VIEW
 };
 
-class ApplicationStateHandler{
+class ApplicationStateHandler : public QObject{
     Q_OBJECT
 
 public:
@@ -25,7 +26,9 @@ public:
 private:
     MainWindow* mainWindow_;
 
-    static inline const char* SettingName_ViewState = "view_state";
+    QSettings settings;
+
+    static inline const QString SettingName_ViewState = "view_state";
 };
 
 #endif // APPLICATIONSTATEHANDLER_H

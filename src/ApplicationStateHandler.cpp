@@ -1,13 +1,13 @@
 #include "ApplicationStateHandler.h"
 #include "mainwindow.hpp"
 
-#include <QSettings>
+
 
 ApplicationStateHandler::ApplicationStateHandler(QObject *parent)
     :
-    mainWindow_(static_cast<MainWindow*>(parent))
+    mainWindow_(static_cast<MainWindow*>(parent)),
+    settings("Yunnsbz-Fatpound", "File-Manager")
 {
-    QSettings settings("Yunnsbz-Fatpound", "File-Manager");
     int saved = settings.value(SettingName_ViewState, static_cast<int>(ViewStates::SINGLE_TABLE_W_TREE)).toInt();
     auto currentTheme = static_cast<ViewStates>(saved);
 
