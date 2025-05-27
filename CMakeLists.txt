@@ -51,6 +51,7 @@ qt_add_executable(File-Manager
     config/.clang-tidy
     config/.clang-format
     CompileOptions.cmake
+
 )
 
 qt_add_resources(RESOURCE_SOURCES

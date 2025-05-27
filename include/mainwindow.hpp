@@ -105,6 +105,8 @@ private slots:
 
     void on_toolDelButton_clicked();
 
+    void on_actionSettings_triggered();
+
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 

@@ -964,3 +964,9 @@ void MainWindow::on_toolDelButton_clicked()
     FileOpManager->DeleteOperation(srcList);
 }
 
+
+void MainWindow::on_actionSettings_triggered()
+{
+
+}
+

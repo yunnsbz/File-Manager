@@ -53,3 +53,10 @@ void ApplicationStateHandler::SetCurrentViewState(ViewStates newState)
     settings.setValue(SettingName_ViewState,static_cast<int>(newState));
     qDebug() << "new state: " << static_cast<int>(newState);
 }
+
+ViewStates ApplicationStateHandler::GetCurrentViewState()
+{
+    QSettings settings("Yunnsbz-Fatpound", "File-Manager");
+    int saved = settings.value(SettingName_ViewState, static_cast<int>(ViewStates::SINGLE_TABLE_W_TREE)).toInt();
+    return static_cast<ViewStates>(saved);
+}
