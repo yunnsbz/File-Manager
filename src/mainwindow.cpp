@@ -427,67 +427,75 @@ void MainWindow::on_toolCmdButton_pressed()
 }
 
 
+void MainWindow::ActivateDualPane()
+{
+    dualPaneActive = true;
+    ui->splitter_dualPane->setChildrenCollapsible(true);
+    ui->splitter_dualPane->setSizes({1,1});
+    ui->splitter_dualPane->setChildrenCollapsible(false);
+    //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
+    for (int i = 0; i < 2; ++i)
+    {
+        QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+        if (handle != nullptr)
+        {
+            handle->setEnabled(true);
+        }
+    }
+
+    ui->splitter_dualPane->setHandleWidth(5);
+
+    // dual pane geldiğinde tablo sütun genişliklerini uygun hale getir
+    tableManager->SetColumnResize();
+
+    tabManager->EnableNavWidget(true);
+    tabManager2->EnableNavWidget(true);
+}
+
+void MainWindow::DeactivateDualPane()
+{
+    dualPaneActive = false;
+    ui->splitter_dualPane->setChildrenCollapsible(true);
+    ui->splitter_dualPane->setSizes({1,0});
+    ui->splitter_dualPane->setChildrenCollapsible(false);
+    // sürüklemeyi devre dışı bırakma:
+    for (int i = 0; i < 2; ++i)
+    {
+        QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+        if (handle != nullptr)
+        {
+            handle->setEnabled(false);
+        }
+    }
+    ui->splitter_dualPane->setHandleWidth(0);
+
+    tableManager->SetColumnResize();
+
+    tabManager->EnableNavWidget(false);
+    tabManager2->EnableNavWidget(false);
+}
+
 void MainWindow::on_actionDual_Pane_View_triggered()
 {
+    // if current stackedWidget is not on column view then open or close dual pane
     if (ui->stackedWidget->currentIndex() == 0)
     {
         if (dualPaneActive)
         {
-            dualPaneActive = false;
-            ui->splitter_dualPane->setChildrenCollapsible(true);
-            ui->splitter_dualPane->setSizes({1,0});
-            ui->splitter_dualPane->setChildrenCollapsible(false);
-            // sürüklemeyi devre dışı bırakma:
-            for (int i = 0; i < 2; ++i)
-            {
-                QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
-                if (handle != nullptr)
-                {
-                    handle->setEnabled(false);
-                }
-            }
-            ui->splitter_dualPane->setHandleWidth(0);
-
-            tableManager->SetColumnResize();
-
-            tabManager->EnableNavWidget(false);
-            tabManager2->EnableNavWidget(false);
+            DeactivateDualPane();
         }
         else
         {
-            dualPaneActive = true;
-            ui->splitter_dualPane->setChildrenCollapsible(true);
-            ui->splitter_dualPane->setSizes({1,1});
-            ui->splitter_dualPane->setChildrenCollapsible(false);
-            //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
-            for (int i = 0; i < 2; ++i)
-            {
-                QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
-                if (handle != nullptr)
-                {
-                    handle->setEnabled(true);
-                }
-            }
-
-            ui->splitter_dualPane->setHandleWidth(5);
-
-            // dual pane geldiğinde tablo sütun genişliklerini uygun hale getir
-            tableManager->SetColumnResize();
-
-            tabManager->EnableNavWidget(true);
-            tabManager2->EnableNavWidget(true);
+            ActivateDualPane();
         }
     }
     else{
-        // column view açıksa onu kapatıp bu fonksiyonu tekrar çağırarak dual pane'i açar
-        ColumnViewActive = false;
+        // if column view is active the deactivate it and open dual pane
         ui->stackedWidget->setCurrentIndex(0);
+        ColumnViewActive = false;
 
-        // column dan çıktıktan sonra her halukarda dual pane açılsın diye:
-        dualPaneActive = false;
-
-        // curent index sıfırlandığından recursive sadece bir kere çalışır
-        on_actionDual_Pane_View_triggered();
+        // column'dan çıktıktan sonra dual pane açılmalı:
+        ActivateDualPane();
     }
 }
 

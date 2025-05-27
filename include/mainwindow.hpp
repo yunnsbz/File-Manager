@@ -59,6 +59,10 @@ public:
     void ForwardButtonOnClick(bool OnRightPane);
     void ScrollColumn(int direction);
 
+    void ActivateDualPane();
+
+    void DeactivateDualPane();
+
 protected:
 
 
