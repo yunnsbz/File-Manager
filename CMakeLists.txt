@@ -23,7 +23,6 @@ qt_add_executable(File-Manager
     src/FileModelOperations.cpp
     src/ThemeManager.cpp
     src/FileOperationManager.cpp
-
     src/DeleteFileOperation.cpp
     src/ApplicationStateHandler.cpp
 
@@ -36,28 +35,18 @@ qt_add_executable(File-Manager
     include/ThemeManager.h
     include/FileOperationManager.h
     include/IFileOperation.h
-
-
-
-
-
-
-
     include/DeleteFileOperation.h
     include/ApplicationStateHandler.h
 
     ui/MainWindow.ui
 
-    config/.clang-tidy
-    config/.clang-format
-    CompileOptions.cmake
-
-
-
     include/SettingsDialog.h
     src/SettingsDialog.cpp
     ui/settingsdialog.ui
 
+    .clang-format
+    .clang-tidy
+    CompileOptions.cmake
 )
 
 qt_add_resources(RESOURCE_SOURCES
