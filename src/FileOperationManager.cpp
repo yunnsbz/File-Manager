@@ -30,6 +30,7 @@ void FileOperationManager::DeleteOperation(QList<QString> srcList)
     // 500 ms sonra gösterilecek ama sadece hâlâ çalışıyorsa
     QTimer::singleShot(500, this, [=]() {
         if (thread->isRunning()) {
+            progressDialog->setRange(0,100);
             progressDialog->show();
         }
     });
@@ -43,6 +44,9 @@ void FileOperationManager::DeleteOperation(QList<QString> srcList)
     connect(op, &IFileOperation::progress, this, &FileOperationManager::onProgress);
     connect(op, &IFileOperation::error, this, &FileOperationManager::onError);
     connect(op, &IFileOperation::finished, this, &FileOperationManager::onFinished);
+    connect(op, &IFileOperation::progress, this, [=](int val) {
+        progressDialog->setValue(val);
+    });
 
     connect(op, &IFileOperation::finished, thread, &QThread::quit);
     connect(thread, &QThread::finished, op, &QObject::deleteLater);
