@@ -18,36 +18,37 @@ FileOperationManager::FileOperationManager(QObject * parent)
 void FileOperationManager::DeleteOperation(QList<QString> srcList)
 {
     auto* op = new DeleteFileOperation(srcList);
-        QThread* thread = new QThread(this);
-        op->moveToThread(thread);
 
-        // Progress dialog tanımla ama hemen gösterme
-        auto* progressDialog = new QProgressDialog("Deleting files...", "Cancel", 0, 0);
-        progressDialog->setWindowModality(Qt::WindowModal);
-        progressDialog->setMinimumDuration(0); // İlk başta görünmeyecek
+    QThread* thread = new QThread(this);
+    op->moveToThread(thread);
 
-        // 500 ms sonra gösterilecek ama sadece hâlâ çalışıyorsa
-        QTimer::singleShot(500, this, [=]() {
-            if (thread->isRunning()) {
-                progressDialog->show();
-            }
-        });
+    // Progress dialog tanımla ama hemen gösterme
+    auto* progressDialog = new QProgressDialog("Deleting files...", "Cancel", 0, 0);
+    progressDialog->setWindowModality(Qt::WindowModal);
+    progressDialog->setMinimumDuration(0); // İlk başta görünmeyecek
 
-        // İşlem bittiğinde progressDialog'u gizle
-        connect(op, &IFileOperation::finished, progressDialog, &QProgressDialog::hide);
-        connect(op, &IFileOperation::finished, progressDialog, &QProgressDialog::deleteLater);
+    // 500 ms sonra gösterilecek ama sadece hâlâ çalışıyorsa
+    QTimer::singleShot(500, this, [=]() {
+        if (thread->isRunning()) {
+            progressDialog->show();
+        }
+    });
 
-        // Sinyaller
-        connect(thread, &QThread::started, op, &DeleteFileOperation::start);
-        connect(op, &IFileOperation::progress, this, &FileOperationManager::onProgress);
-        connect(op, &IFileOperation::error, this, &FileOperationManager::onError);
-        connect(op, &IFileOperation::finished, this, &FileOperationManager::onFinished);
+    // İşlem bittiğinde progressDialog'u gizle
+    connect(op, &IFileOperation::finished, progressDialog, &QProgressDialog::hide);
+    connect(op, &IFileOperation::finished, progressDialog, &QProgressDialog::deleteLater);
 
-        connect(op, &IFileOperation::finished, thread, &QThread::quit);
-        connect(thread, &QThread::finished, op, &QObject::deleteLater);
-        connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+    // Sinyaller
+    connect(thread, &QThread::started, op, &DeleteFileOperation::start);
+    connect(op, &IFileOperation::progress, this, &FileOperationManager::onProgress);
+    connect(op, &IFileOperation::error, this, &FileOperationManager::onError);
+    connect(op, &IFileOperation::finished, this, &FileOperationManager::onFinished);
 
-        thread->start();
+    connect(op, &IFileOperation::finished, thread, &QThread::quit);
+    connect(thread, &QThread::finished, op, &QObject::deleteLater);
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+
+    thread->start();
 }
 
 //  FileOperationManager::PasteOperation(QString dst)
