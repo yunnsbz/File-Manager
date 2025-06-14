@@ -14,18 +14,24 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
 
 - [x] File and folder browsing
 - [ ] Highly customizable interface
-- [x] Dual-pane interface
-- [x] Column interface
-- [x] Tab support
-- [ ] Standart file operations (copy, move, delete, rename)
-- [ ] Multiple selection file operations (copy, move, delete, rename)
-- [ ] Paralel file operations
+  - [x] Dual-pane interface
+  - [x] Column interface
+  - [x] Tab support
+  - [ ] View Settings
+- [ ] Standart file operations
+  - [ ] Copy
+  - [ ] Move
+  - [x] Delete
+  - [ ] Rename
+  - [x] Multithread Support
 - [ ] Search Support
 - [ ] Command line support
 - [ ] File preview panel
 - [ ] File details panel
 - [ ] Bookmarks and history
 - [ ] Dark and Light theme support
+- [ ] History
+- [ ] Undo Operations
 ---
 
 ## Built With
