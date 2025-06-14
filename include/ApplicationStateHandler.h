@@ -28,7 +28,7 @@ public:
 private:
     MainWindow* mainWindow_;
 
-    static inline const QString SettingName_ViewState = "view_state";
+    static constexpr const char* SettingName_ViewState = "view_state";
 };
 
 #endif // APPLICATIONSTATEHANDLER_H

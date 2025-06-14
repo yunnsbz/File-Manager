@@ -16,7 +16,8 @@ void ApplicationStateHandler::RestoreViewState()
     int saved = settings.value(SettingName_ViewState, static_cast<int>(ViewStates::SINGLE_TABLE_W_TREE)).toInt();
     auto currentTheme = static_cast<ViewStates>(saved);
 
-    switch (currentTheme) {
+    switch (currentTheme)
+    {
     case ViewStates::SINGLE_TABLE_W_TREE:
         mainWindow_->ActivateTreeView();
         mainWindow_->DeactivateDualPane();
@@ -40,9 +41,6 @@ void ApplicationStateHandler::RestoreViewState()
     case ViewStates::COLUMN_VIEW:
         mainWindow_->ActivateColumnView();
         qDebug() << "COLUMN_VIEW";
-        break;
-    default:
-        qDebug() << "view state error";
         break;
     }
 }
