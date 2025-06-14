@@ -23,6 +23,7 @@
 #include <QPropertyAnimation>
 #include <QScrollArea>
 #include <QToolButton>
+#include <QMessageBox>
 
 MainWindow::UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
 {
@@ -958,7 +959,20 @@ void MainWindow::on_toolDelButton_clicked()
             srcList.append(fileModelOp->GetFileModel()->filePath(index));
         }
 
-        FileOpManager->DeleteOperation(srcList);
+        const QString text = QString("Seçili %1 dosyayı silmek üzeresiniz. Emin misiniz?")
+                               .arg(srcList.size());
+
+        QMessageBox::StandardButton const reply = QMessageBox::question(
+                this,
+                "Dosyaları Sil",
+                text,
+                QMessageBox::Yes | QMessageBox::No,
+                QMessageBox::No
+            );
+
+        if(reply == QMessageBox::Yes){
+            FileOpManager->DeleteOperation(srcList);
+        }
     }
 }
 

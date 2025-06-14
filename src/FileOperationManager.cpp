@@ -36,8 +36,12 @@ void FileOperationManager::DeleteOperation(QList<QString> srcList)
     });
 
     // İşlem bittiğinde progressDialog'u gizle
-    connect(op, &IFileOperation::finished, progressDialog, &QProgressDialog::hide);
-    connect(op, &IFileOperation::finished, progressDialog, &QProgressDialog::deleteLater);
+    connect(op, &IFileOperation::finished, this, [=]() {
+        if (progressDialog->isVisible()) {
+            progressDialog->hide();
+        }
+        progressDialog->deleteLater();
+    });
 
     // Sinyaller
     connect(thread, &QThread::started, op, &DeleteFileOperation::start);
