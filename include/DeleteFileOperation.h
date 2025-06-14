@@ -20,8 +20,6 @@ protected:
 
 
 private:
-    QThread        m_thrd_;
-
     QList<QString> m_op_files_;
 };
 
