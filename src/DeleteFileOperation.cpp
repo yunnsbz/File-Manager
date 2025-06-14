@@ -1,28 +1,45 @@
-
-
-
 #include "DeleteFileOperation.h"
-#include <qdir.h>
 
-// params: src, op (all three are QString)
+#include <QDir>
+#include <QFileInfo>
+
+DeleteFileOperation::DeleteFileOperation(QList<QString> files, QObject* parent)
+    :
+    IFileOperation(parent),
+    m_op_files_(std::move(files))
+{
+
+}
+
 void DeleteFileOperation::start()
 {
+    for (int i = 0; i < m_op_files_.size(); ++i)
+    {
+        const auto& path = m_op_files_[i];
 
-}
+        QFileInfo info(path);
 
-void DeleteFileOperation::addOperations(QVariantMap params)
-{
-    AbstractFileOp::addOperations(params);
+        if (info.isDir())
+        {
+            QDir dir(path);
 
-    // ek birşey yapılması gerekirse...
-}
+            if ( ! dir.removeRecursively())
+            {
+                emit error(QString("Could not delete FOLDER: %1").arg(path));
 
-void DeleteFileOperation::undo(QVariantMap )
-{
+                continue;
+            }
+        }
+        else if ( ! QFile::remove(path))
+        {
+            emit error(QString("Could not delete FILE: %1").arg(path));
 
-}
+            continue;
+        }
 
-void DeleteFileOperation::cancel()
-{
+        const int percent = (i + 1) * 100 / m_op_files_.size();
+        emit progress(percent);
+    }
 
+    emit finished("deleted files.");
 }

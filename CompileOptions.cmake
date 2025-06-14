@@ -8,7 +8,9 @@
 add_library (CompileOptions INTERFACE)
 add_library (FatCxx::CompileOptions ALIAS CompileOptions)
 
-if (CMAKE_CXX_STANDARD EQUAL 20)
+if (CMAKE_CXX_STANDARD EQUAL 23)
+    target_compile_features(CompileOptions INTERFACE cxx_std_23)
+elseif (CMAKE_CXX_STANDARD EQUAL 20)
     target_compile_features(CompileOptions INTERFACE cxx_std_20)
 endif()
 
@@ -33,7 +35,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
 
         ## Preprocessor definitions
-        -DFAT_BUILDING_WITH_MSVC=0
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFAT_BUILDING_ON_WINDOWS=0>
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFAT_BUILDING_ON_WINDOWS=1>
 
@@ -45,12 +46,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
             -Werror
         >
         $<$<CONFIG:Release>:
-            -O2
+            -O3
+
+            -march=native
         >
-
-
-        ## Standard library
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>: -stdlib=libstdc++>
     )
 
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -75,10 +74,10 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         -Wno-padded
         -Wno-unused-function
         -Wno-unused-template
+        -Wno-documentation
 
 
         ## Preprocessor definitions
-        -DFAT_BUILDING_WITH_MSVC=0
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFAT_BUILDING_ON_WINDOWS=0>
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFAT_BUILDING_ON_WINDOWS=1>
 
@@ -90,12 +89,21 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
             -Werror
         >
         $<$<CONFIG:Release>:
-            -O2
+            -O3
+            
+            -march=native
         >
 
 
         ## Standard library
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>: -stdlib=libc++>
+    )
+
+    target_link_options(CompileOptions INTERFACE
+        ##################################
+    
+        ## Standard library
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>: -lc++>
     )
 
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
@@ -110,7 +118,6 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
 
 
         ## Preprocessor definitions
-        -DFAT_BUILDING_WITH_MSVC=0
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFAT_BUILDING_ON_WINDOWS=0>
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFAT_BUILDING_ON_WINDOWS=1>
 
@@ -150,8 +157,9 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         ## Active warnings
         /Wall
 
-
+        
         ## Inactive warnings
+        /external:anglebrackets # Treat includes with angular brackets as external headers
         /external:W0 # Do NOT emit warnings for external headers
 
         /wd4061 # Not all enum identifiers of an Enum (class) are handled by a switch statement (When there is a default case)

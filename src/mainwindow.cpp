@@ -24,7 +24,7 @@
 #include <QScrollArea>
 #include <QToolButton>
 
-UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
+MainWindow::UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
 {
     theUi->setupUi(pWnd);
 }
@@ -914,56 +914,52 @@ void MainWindow::on_toolHistoryButton_clicked()
 void MainWindow::on_toolCopyButton_clicked()
 {
     // seçilmiş satırların indexlerini al
-    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
-    if(selectedIndexes.count() != 0)
-    {
-        for (const QModelIndex &index : selectedIndexes) {
-            QString filePath = fileModelOp->GetFileModel()->filePath(index);
-            qDebug()<< "path added to copy (table 1):" << filePath;
-            FileOpManager->addToCopy(filePath);
-        }
-    }
-    else
-    {
-        // ilk tabloda seçilmemişse
-        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
-        for (const QModelIndex &index : selectedIndexes) {
-            QString filePath = fileModelOp->GetFileModel()->filePath(index);
-            qDebug()<< "path added to copy (table 2): " << filePath;
-            FileOpManager->addToCopy(filePath);
-        }
-    }
+    // QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
+    // if(selectedIndexes.count() != 0)
+    // {
+    //     for (const QModelIndex &index : selectedIndexes) {
+    //         QString filePath = fileModelOp->GetFileModel()->filePath(index);
+    //         qDebug()<< "path added to copy (table 1):" << filePath;
+    //         FileOpManager->addToCopy(filePath);
+    //     }
+    // }
+    // else
+    // {
+    //     // ilk tabloda seçilmemişse
+    //     selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
+    //     for (const QModelIndex &index : selectedIndexes) {
+    //         QString filePath = fileModelOp->GetFileModel()->filePath(index);
+    //         qDebug()<< "path added to copy (table 2): " << filePath;
+    //         FileOpManager->addToCopy(filePath);
+    //     }
+    // }
 }
 
 
 void MainWindow::on_toolPasteButton_clicked()
 {
-    FileOpManager->PasteOperation(fileModelOp->GetCurrentPath(ui->tabWidget->currentIndex()));
+    // FileOpManager->PasteOperation(fileModelOp->GetCurrentPath(ui->tabWidget->currentIndex()));
 }
 
 
 void MainWindow::on_toolDelButton_clicked()
 {
-    // seçilmiş satırların indexlerini al
-    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
     QList<QString> srcList;
-    if(selectedIndexes.count() != 0)
+
+    QModelIndexList selectedIndexes = (! isWorkingOnRightPane)
+            ? ui->tableView->selectionModel()->selectedRows()
+            : ui->tableView_2->selectionModel()->selectedRows()
+            ;
+
+    if ( ! selectedIndexes.empty())
     {
-        for (const QModelIndex &index : selectedIndexes) {
-            QString filePath = fileModelOp->GetFileModel()->filePath(index);
-            srcList.append(filePath);
+        for (const QModelIndex& index : selectedIndexes)
+        {
+            srcList.append(fileModelOp->GetFileModel()->filePath(index));
         }
+
+        FileOpManager->DeleteOperation(srcList);
     }
-    else
-    {
-        // ilk tabloda seçilmemişse
-        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
-        for (const QModelIndex &index : selectedIndexes) {
-            QString filePath = fileModelOp->GetFileModel()->filePath(index);
-            srcList.append(filePath);
-        }
-    }
-    FileOpManager->DeleteOperation(srcList);
 }
 
 

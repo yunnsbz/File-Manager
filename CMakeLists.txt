@@ -23,7 +23,7 @@ qt_add_executable(File-Manager
     src/FileModelOperations.cpp
     src/ThemeManager.cpp
     src/FileOperationManager.cpp
-    src/PasteFileOperation.cpp
+
     src/DeleteFileOperation.cpp
     src/ApplicationStateHandler.cpp
 
@@ -36,13 +36,13 @@ qt_add_executable(File-Manager
     include/ThemeManager.h
     include/FileOperationManager.h
     include/IFileOperation.h
-    include/AbstractFileOp.h
 
-    include/PasteFileOperation.h
 
-    include/MoveFileOperation.h
-    include/RenameFileOperation.h
-    include/NewFolderOperation.h
+
+
+
+
+
     include/DeleteFileOperation.h
     include/ApplicationStateHandler.h
 

@@ -1,8 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "FileOperationManager.h"
 #include "ui_mainwindow.h"
+
+#include "FileOperationManager.h"
+
 #include <QMainWindow>
 #include <QObject>
 #include <QFileSystemModel>
@@ -11,7 +13,6 @@
 #include <QEvent>
 #include <QString>
 #include <QList>
-#include <qevent.h>
 
 class ApplicationStateHandler;
 class TabManager;
@@ -26,11 +27,6 @@ namespace Ui {
 class MainWindow;
 }
 QT_END_NAMESPACE
-
-struct UIManager final
-{
-    UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd);
-};
 
 class MainWindow : public QMainWindow
 {
@@ -61,13 +57,20 @@ public:
     void ScrollColumn(int direction);
 
     void ActivateDualPane();
+    void ActivateTreeView();
+    void ActivateColumnView();
     void DeactivateDualPane();
     void DeactivateTreeView();
-    void ActivateTreeView();
 
-    void ActivateColumnView();
 
 protected:
+
+
+private:
+    struct UIManager final
+    {
+        UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd);
+    };
 
 
 private slots:
@@ -121,6 +124,7 @@ private:
     Ui::MainWindow *ui;
 
     UIManager m_ui_mgr_;
+
     FileModelOperations* fileModelOp;
     FileModelOperations* fileModelOp2;
     QFileSystemModel* columnFileModel;
@@ -140,17 +144,18 @@ private:
     ApplicationStateHandler* AppStateHandler;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
-    bool isWorkingOnRightPane = false;
+    bool isWorkingOnLeftPane{}; // TODO: kod eklenecek
+    bool isWorkingOnRightPane{};
 
     bool leftTabIsReset_  = true;
     bool rightTabIsReset_ = true;
 
     bool treeViewActive = true;
     bool dualPaneActive = true;
-    bool ColumnViewActive = false;
+    bool ColumnViewActive{};
 
-    bool searchOn = false;
-    bool tabCloseButtonOld = false;
+    bool searchOn{};
+    bool tabCloseButtonOld{};
 
 };
 #endif // MAINWINDOW_H

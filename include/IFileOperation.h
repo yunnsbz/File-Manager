@@ -2,19 +2,26 @@
 #define IFILEOPERATION_H
 
 #include <QObject>
+#include <QString>
+#include <QFileInfo>
+#include <QList>
 
-#define PURE = 0
-
-class IFileOperation : public QObject {
+class IFileOperation : public QObject
+{
     Q_OBJECT
 
 public:
-    explicit IFileOperation(QObject *parent = nullptr) : QObject(parent) {}
+    explicit IFileOperation(QObject* parent = nullptr)
+        :
+        QObject(parent)
+    {
 
-    virtual void start() PURE;
-    virtual void addOperations(QVariantMap params) PURE;
-    virtual void undo(QVariantMap params) PURE;
-    virtual void cancel() PURE;
+    }
+
+
+public:
+    virtual void start() = 0;
+
 
 signals:
     void progress(int percent);
