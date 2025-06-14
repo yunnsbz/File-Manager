@@ -5,7 +5,10 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
 
 ⚠️ This project is currently in its early development stage.
 
----
+
+
+## Preview 
+![preview](https://github.com/yunnsbz/File-Manager/blob/feature-file-operations/preview.png)
 
 ## Features and todos:
 
@@ -30,5 +33,3 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
 - [Qt 6](https://www.qt.io/)
 - [C++20](https://en.cppreference.com/)
 - [CMake](https://cmake.org/) - Build system
-
----
