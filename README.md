@@ -17,6 +17,7 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
   - [x] Dual-pane interface
   - [x] Column interface
   - [x] Tab support
+  - [x] Tree View
   - [ ] View Settings
 - [ ] Standart file operations
   - [ ] Copy
