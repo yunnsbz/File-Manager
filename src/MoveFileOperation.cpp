@@ -15,7 +15,6 @@ MoveFileOperation::MoveFileOperation(QSet<QString> SourcePaths, QString destinat
 
 void MoveFileOperation::start()
 {
-    qDebug() << "Running in thread:" << QThread::currentThread();
     // dosyalar kaynaktan kaldırılacaksa (kesme işlemi)
     if(m_op_should_remove_){
         QList<QString> fileList = m_op_files_src.values(); // QSet → QList (sıralı)
@@ -23,7 +22,6 @@ void MoveFileOperation::start()
 
         for (int i = 0; i < totalFiles; ++i)
         {
-            QThread::sleep(1);
             const QString& srcPath = fileList[i];
             QFileInfo const srcInfo(srcPath);
             QString const destPath = QDir(m_target_dir_).filePath(srcInfo.fileName());
