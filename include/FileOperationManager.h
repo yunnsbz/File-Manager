@@ -22,7 +22,8 @@ public:
 
     void DeleteOperation(QList<QString> src);
     // void MoveOperation(QList<QString> src, QString dst);
-    // void PasteOperation(QString dst);
+
+    void MoveOperation(QString dst);
 
     // copyalananları birden fazla yolun her birine yapıştırır.
     // void PasteOperationMultiple(QList<QString> destinations);
@@ -36,11 +37,11 @@ public:
     // // hedef yol içinde boş klasör oluşturur.
     // void CreateNewFolder(QString dst);
 
-    // // seçilenleri kesme işlemi için kaydeder. sonrasında PasteOperation çağırılmalıdır
-    // void addToCut(QString src);
+    // seçilenleri kesme işlemi için kaydeder. sonrasında PasteOperation çağırılmalıdır
+    void addToCut(QString src);
 
-    // // sadece geçici olarak kopyalanma adreslerini tutar. kopyalama işlemini bitirmez. sonrasında PasteOperation çağırılmalıdır.
-    // void addToCopy(QString src);
+    // sadece geçici olarak kopyalanma adreslerini tutar. kopyalama işlemini bitirmez. sonrasında PasteOperation çağırılmalıdır.
+    void addToCopy(QString src);
 
 
 protected:
@@ -58,6 +59,8 @@ private:
     // data for copied or cuted file paths: used for pasteOperation. it will be cleared after using
     QSet<QString> copiedPaths;
 
+    // kesme işlemi için kullanılır. eğer true ise move işlemi copyaladığı dosyaları kaynaktan siler.
+    bool isFilesSelectedToCut = false;
 
 private slots:
     void onProgress(int percent);

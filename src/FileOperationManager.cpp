@@ -1,6 +1,7 @@
 #include "FileOperationManager.h"
 #include "DeleteFileOperation.h"
 
+#include "MoveFileOperation.h"
 #include "mainwindow.hpp"
 
 #include <QMessageBox>
@@ -25,15 +26,8 @@ void FileOperationManager::DeleteOperation(QList<QString> srcList)
     // Progress dialog tanımla ama hemen gösterme
     auto* progressDialog = new QProgressDialog("Deleting files...", "Cancel", 0, 0);
     progressDialog->setWindowModality(Qt::WindowModal);
-    progressDialog->setMinimumDuration(0); // İlk başta görünmeyecek
-
-    // 500 ms sonra gösterilecek ama sadece hâlâ çalışıyorsa
-    QTimer::singleShot(500, this, [=]() {
-        if (thread->isRunning()) {
-            progressDialog->setRange(0,100);
-            progressDialog->show();
-        }
-    });
+    progressDialog->setMinimumDuration(500); // yarım saniye sonra işlem hala devam ediyorsa görünecek
+    progressDialog->setRange(0, 100);
 
     // İşlem bittiğinde progressDialog'u gizle
     connect(op, &IFileOperation::finished, this, [=]() {
@@ -49,7 +43,7 @@ void FileOperationManager::DeleteOperation(QList<QString> srcList)
     connect(op, &IFileOperation::error, this, &FileOperationManager::onError);
     connect(op, &IFileOperation::finished, this, &FileOperationManager::onFinished);
     connect(op, &IFileOperation::progress, this, [=](int val) {
-        progressDialog->setValue(val);
+            progressDialog->setValue(val);
     });
 
     connect(op, &IFileOperation::finished, thread, &QThread::quit);
@@ -59,58 +53,70 @@ void FileOperationManager::DeleteOperation(QList<QString> srcList)
     thread->start();
 }
 
-//  FileOperationManager::PasteOperation(QString dst)
-//
-// QVariantMap params;
-//
-// QQueue<QString> copyQueue;
-//
-// auto op = operationMap["paste"];
-//
-// if (op)
-// {
-//     // set içindekileri queue'ye aktar:
-//     for (const QString& item : copiedPaths) {
-//         copyQueue.enqueue(item);
-//     }
-//
-//     // set'i boşalt ki tekrar kullanılabilsin:
-//     copiedPaths.clear();
-//
-//     // kopyalanmış yolların tamaını addOperation için src ile birleştirip param haline getirip sıraya ekliyoruz
-//     for (int i = 0; i < copyQueue.count(); ++i)
-//     {
-//             params["src"] = copyQueue.dequeue();
-//             params["dst"] = dst;
-//
-//             params["op"] = "paste";
-//
-//             // işlem tamamlandığında işlem geçmişine ekle:
-//             connect(op, &IFileOperation::finished, this, [this, params](){
-//                 operationHistory.append(params);
-//             });
-//
-//             currentOperation = params;
-//             op->addOperations(params);
-//         }
-//
-//         // tüm yapılacaklar sıraya eklendiğinde işlemi başlat
-//         op->start();
-//     }
-// }
+void FileOperationManager::MoveOperation(QString dst){
 
-// void FileOperationManager::addToCut(QString src)
-// {
-//     copiedPaths.insert(src);
-//
-//     //TODO: seçimin UI üzerinde grileşmesi gerekir.
-// }
-//
-// void FileOperationManager::addToCopy(QString src)
-// {
-//     copiedPaths.insert(src);
-// }
-//
+    if(!copiedPaths.empty()){
+        // kesme, kopyalama yada taşıma işlemi
+        auto* op = new MoveFileOperation(copiedPaths, dst, isFilesSelectedToCut);
+
+        auto* thread = new QThread(this);
+        op->moveToThread(thread);
+        connect(thread, &QThread::started, op, &MoveFileOperation::start);
+
+        // Progress dialog tanımla ama hemen gösterme
+        auto* progressDialog = new QProgressDialog("Copying Files...", "Cancel", 0, 0);
+        progressDialog->setWindowModality(Qt::WindowModal);
+        progressDialog->setMinimumDuration(500); // İlk başta görünmeyecek
+        progressDialog->setRange(0, 100);
+
+        // İşlem bittiğinde progressDialog'u gizle
+        connect(op, &IFileOperation::finished, this, [=]() {
+            if (progressDialog != nullptr) {
+            if (progressDialog->isVisible()) {
+                progressDialog->hide();
+            }
+            progressDialog->deleteLater();
+            }
+        });
+
+        // Sinyaller
+        connect(op, &IFileOperation::progress, this, &FileOperationManager::onProgress);
+        connect(op, &IFileOperation::error, this, &FileOperationManager::onError);
+        connect(op, &IFileOperation::finished, this, &FileOperationManager::onFinished);
+        connect(op, &IFileOperation::progress, this, [=](int val) {
+            if(progressDialog != nullptr) {
+                progressDialog->setValue(val);
+            }
+        });
+
+        connect(op, &IFileOperation::finished, thread, &QThread::quit);
+        connect(thread, &QThread::finished, op, &QObject::deleteLater);
+        connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+
+        thread->start();
+
+        copiedPaths.clear();
+    }
+}
+
+void FileOperationManager::addToCut(QString src)
+{
+    // eğer öncesinde copy için eklenmişlerse listeyi boşalt. aynı anda hem kesme hem de kopyalama yapılmayacak
+    if(!isFilesSelectedToCut)copiedPaths.clear();
+
+    isFilesSelectedToCut = true;
+    copiedPaths.insert(src);
+}
+
+void FileOperationManager::addToCopy(QString src)
+{
+    // eğer öncesinde kesme işlemi için liste doldurulmuşsa listeyi boşalt. aynı anda hem kesme hem de kopyalama yapılmayacak
+    if(isFilesSelectedToCut)copiedPaths.clear();
+
+    isFilesSelectedToCut = false;
+    copiedPaths.insert(src);
+}
+
 
 void FileOperationManager::onProgress(int percent) {
     qDebug() << "Progress:" << percent << "%";

@@ -25,6 +25,7 @@ qt_add_executable(File-Manager
     src/FileOperationManager.cpp
     src/DeleteFileOperation.cpp
     src/ApplicationStateHandler.cpp
+    src/MoveFileOperation.cpp
 
     include/mainwindow.hpp
     include/TabManager.h
@@ -37,6 +38,8 @@ qt_add_executable(File-Manager
     include/IFileOperation.h
     include/DeleteFileOperation.h
     include/ApplicationStateHandler.h
+    include/MoveFileOperation.h
+
 
     ui/MainWindow.ui
 
