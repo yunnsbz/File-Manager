@@ -63,7 +63,44 @@ void MoveFileOperation::start()
         emit finished("moved (cut) files.");
     }
     else{
+        QList<QString> fileList = m_op_files_src.values(); // QSet → QList (sıralı)
+        const int totalFiles = fileList.size();
 
+        for (int i = 0; i < totalFiles; ++i)
+        {
+            const QString& srcPath = fileList[i];
+            QFileInfo const srcInfo(srcPath);
+            QString const destPath = QDir(m_target_dir_).filePath(srcInfo.fileName());
+
+            bool moveSuccess = false;
+
+            if (srcInfo.isDir())
+            {
+                // Klasörleri kopyala (recursive)
+                QDir const sourceDir(srcPath);
+                QDir const destDir;
+                if (!destDir.mkpath(destPath)) {
+                    emit error(QString("Could not create target folder: %1").arg(destPath));
+                    continue;
+                }
+
+                moveSuccess = copyDirectoryRecursively(srcPath, destPath);
+            }
+            else
+            {
+                moveSuccess = QFile::copy(srcPath, destPath);
+            }
+
+            if (!moveSuccess) {
+                emit error(QString("Could not copy: %1").arg(srcPath));
+                continue;
+            }
+
+            int percent = (i + 1) * 100 / totalFiles;
+            emit progress(percent);
+        }
+
+        emit finished("move (copy) files.");
     }
 }
 
