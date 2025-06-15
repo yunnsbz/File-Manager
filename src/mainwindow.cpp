@@ -940,7 +940,12 @@ void MainWindow::on_toolCopyButton_clicked()
 
 void MainWindow::on_toolPasteButton_clicked()
 {
-    FileOpManager->MoveOperation(fileModelOp->GetCurrentPath(ui->tabWidget->currentIndex()));
+    if(isWorkingOnRightPane){
+        FileOpManager->MoveOperation(fileModelOp2->GetCurrentPath(ui->tabWidget_2->currentIndex()));
+    }
+    else{
+        FileOpManager->MoveOperation(fileModelOp->GetCurrentPath(ui->tabWidget->currentIndex()));
+    }
 }
 
 
