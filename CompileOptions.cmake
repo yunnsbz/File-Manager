@@ -35,8 +35,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
 
         ## Preprocessor definitions
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFAT_BUILDING_ON_WINDOWS=0>
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFAT_BUILDING_ON_WINDOWS=1>
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFATLIB_BUILDING_ON_WINDOWS=0>
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFATLIB_BUILDING_ON_WINDOWS=1>
 
 
         ## Configuration-specific
@@ -78,8 +78,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
 
         ## Preprocessor definitions
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFAT_BUILDING_ON_WINDOWS=0>
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFAT_BUILDING_ON_WINDOWS=1>
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFATLIB_BUILDING_ON_WINDOWS=0>
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFATLIB_BUILDING_ON_WINDOWS=1>
 
 
         ## Configuration-specific
@@ -118,8 +118,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
 
 
         ## Preprocessor definitions
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFAT_BUILDING_ON_WINDOWS=0>
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFAT_BUILDING_ON_WINDOWS=1>
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFATLIB_BUILDING_ON_WINDOWS=0>
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFATLIB_BUILDING_ON_WINDOWS=1>
 
 
         ## Configuration-specific
@@ -172,8 +172,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
 
         ## Preprocessor definitions
-        /DFAT_BUILDING_WITH_MSVC=1
-        /DFAT_BUILDING_ON_WINDOWS=1
+        /DFATLIB_BUILDING_WITH_MSVC=1
+        /DFATLIB_BUILDING_ON_WINDOWS=1
         /DNOMINMAX
         /DSTRICT
         /D_UNICODE
