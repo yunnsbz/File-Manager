@@ -6,7 +6,8 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
 ⚠️ This project is currently in its early development stage.
 
 ## Preview 
-![preview](https://github.com/yunnsbz/File-Manager/blob/feature-file-operations/preview.png)
+![preview](https://github.com/yunnsbz/File-Manager/blob/master/preview.png)
+
 
 ## Features and todos:
 
