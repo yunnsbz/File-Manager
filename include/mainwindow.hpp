@@ -21,6 +21,7 @@ class TableManager;
 class TreeManager;
 class FileModelOperations;
 class ThemeManger;
+class SettingsDialog;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -97,7 +98,6 @@ private slots:
     void on_tableView_2_doubleClicked(const QModelIndex &index);
     void on_toolSearchButton_clicked();
     void on_toolUpButton_clicked();
-    void on_actionOptions_triggered();
     void on_columnView_clicked(const QModelIndex &index);
 
     void on_toolHistoryButton_clicked();
@@ -146,6 +146,7 @@ private:
     FileOperationManager* FileOpManager;
 
     ApplicationStateHandler* AppStateHandler;
+    SettingsDialog* settingsDialog;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
     bool isWorkingOnLeftPane{}; // TODO: kod eklenecek
@@ -159,7 +160,7 @@ private:
     bool ColumnViewActive{};
 
     bool searchOn{};
-    bool tabCloseButtonOld{};
+
 
 };
 #endif // MAINWINDOW_H

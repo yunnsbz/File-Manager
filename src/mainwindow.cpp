@@ -47,7 +47,8 @@ MainWindow::MainWindow(QWidget* parent)
     treeManager(new TreeManager(ui->FileTreeView, fileModelOp, ui->tabWidget, this)),
     treeManager2(new TreeManager(ui->FileTreeView_2, fileModelOp2, ui->tabWidget_2, this)),
     FileOpManager(new FileOperationManager(this)),
-    AppStateHandler(new ApplicationStateHandler(this))
+    AppStateHandler(new ApplicationStateHandler(this)),
+    settingsDialog(new SettingsDialog(this))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
@@ -822,41 +823,6 @@ void MainWindow::on_toolSearchButton_clicked()
     }
 }
 
-
-
-
-void MainWindow::on_actionOptions_triggered()
-{
-    if(tabCloseButtonOld){
-        // style:
-        QString qss;
-        QFile file1(":/resources/styles/styleDark.qss");
-        QFile file2(":/resources/styles/button-style-new.qss");
-
-        file1.open(QFile::ReadOnly);
-        file2.open(QFile::ReadOnly);
-
-        qss += file1.readAll();
-        qss += file2.readAll();
-
-        qApp->setStyleSheet(qss);
-        tabCloseButtonOld = false;
-    }
-    else{
-        // style:
-        QString qss;
-        QFile file1(":/resources/styles/styleDark.qss");
-
-        file1.open(QFile::ReadOnly);
-
-        qss += file1.readAll();
-
-        qApp->setStyleSheet(qss);
-        tabCloseButtonOld = true;
-    }
-}
-
-
 void MainWindow::on_columnView_clicked(const QModelIndex &index)
 {
     if (!columnFileModel->hasChildren(index))
@@ -986,8 +952,7 @@ void MainWindow::on_toolDelButton_clicked()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    SettingsDialog settingsDialog(this);
-    settingsDialog.exec(); // Modal olarak açar
+    settingsDialog->exec(); // Modal olarak açar
 }
 
 

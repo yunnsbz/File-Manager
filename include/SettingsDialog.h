@@ -15,8 +15,14 @@ public:
     explicit SettingsDialog(QWidget *parent = nullptr);
     ~SettingsDialog() override;
 
+    void SetOldButtonStyle(bool buttonStyle);
+
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::SettingsDialog *ui;
+    bool tabCloseButtonOld{};
 };
 
 #endif // SETTINGSDIALOG_H
