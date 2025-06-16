@@ -5,8 +5,6 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
 
 ⚠️ This project is currently in its early development stage.
 
-
-
 ## Preview 
 ![preview](https://github.com/yunnsbz/File-Manager/blob/feature-file-operations/preview.png)
 
@@ -32,9 +30,13 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
 - [ ] File details panel
 - [ ] Bookmarks and history
 - [ ] Dark and Light theme support
-- [ ] History
 - [ ] Undo Operations
----
+
+<br>
+
+## How To Use
+At this stage of development, we are not providing a pre-built executable. However, you can build the project yourself using Qt (version 6.7 or higher) and CMake.
+
 
 ## Built With
 
