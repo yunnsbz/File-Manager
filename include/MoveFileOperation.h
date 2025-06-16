@@ -25,8 +25,8 @@ public:
     bool copyDirectoryRecursively(const QString &srcPath, const QString &destPath);
 
     void CutFilesOperation();
-    
     void CopyFilesOperation();
+
     
 protected:
 

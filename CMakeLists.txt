@@ -74,12 +74,18 @@ file(GLOB_RECURSE QT_GENERATED_FILES
     "${CMAKE_CURRENT_BINARY_DIR}/qrc_*.cpp"
 )
 
+add_library(qt_clang_warning_suppress INTERFACE)
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     foreach(file IN LISTS QT_GENERATED_FILES)
         set_source_files_properties(${file} PROPERTIES
             COMPILE_FLAGS "-Wno-ctad-maybe-unsupported -Wno-global-constructors -Wno-unsafe-buffer-usage"
         )
     endforeach()
+
+    target_compile_options(qt_clang_warning_suppress INTERFACE
+        -Wno-reserved-identifier
+    )
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -97,6 +103,7 @@ target_link_libraries(File-Manager
         Qt::Core
         Qt::Widgets
         FatCxx::CompileOptions
+        qt_clang_warning_suppress
 )
 
 include(GNUInstallDirs)

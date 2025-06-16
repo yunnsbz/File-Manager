@@ -30,7 +30,7 @@ void MoveFileOperation::start()
 void MoveFileOperation::CutFilesOperation()
 {
     QList<QString> fileList = m_op_files_src.values(); // QSet → QList (sıralı)
-    const int totalFiles = fileList.size();
+    const auto totalFiles = fileList.size();
 
     for (int i = 0; i < totalFiles; ++i)
     {
@@ -80,7 +80,7 @@ void MoveFileOperation::CutFilesOperation()
 void MoveFileOperation::CopyFilesOperation()
 {
     QList<QString> fileList = m_op_files_src.values(); // QSet → QList (sıralı)
-    const int totalFiles = fileList.size();
+    const auto totalFiles = fileList.size();
 
     for (int i = 0; i < totalFiles; ++i)
     {
