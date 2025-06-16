@@ -5,6 +5,9 @@
 #include <QTreeView>
 #include <QMap>
 #include <QList>
+#include <QString>
+#include <QTabWidget>
+#include <QModelIndex>
 
 class FileModelOperations;
 

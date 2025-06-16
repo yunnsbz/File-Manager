@@ -47,7 +47,12 @@ void SettingsDialog::SetOldButtonStyle(bool buttonStyle)
 void SettingsDialog::on_pushButton_clicked()
 {
     SetOldButtonStyle(tabCloseButtonOld);
-    if(tabCloseButtonOld) tabCloseButtonOld = false;
+
+    if(tabCloseButtonOld)
+    {
+        tabCloseButtonOld = false;
+    }
+
     else tabCloseButtonOld = true;
 
 }

@@ -86,7 +86,7 @@ void TabManager::SetCornerNavButtons()
 
 void TabManager::SetNavButtonThemes()
 {
-    bool isDarkTheme = ThemeManger::isDarkTheme();
+    const bool isDarkTheme = ThemeManger::isDarkTheme();
     // tool button disable olma durumunda otomatik renk değişikliği için
     if (isDarkTheme) {
         QIcon icon;

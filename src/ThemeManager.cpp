@@ -1,6 +1,10 @@
 #include "ThemeManager.h"
 #include "mainwindow.hpp"
 
+#include <QIcon>
+#include <QPixmap>
+#include <QPalette>
+#include <QColor>
 
 ThemeManger::ThemeManger(QObject *parent)
     :
@@ -45,11 +49,11 @@ ThemeManger::ThemeManger(QObject *parent)
 }
 
 bool ThemeManger::isDarkTheme() {
-    QPalette palette = qApp->palette(); // qApp yerine QApplication::palette() de olur
-    QColor bg = palette.color(QPalette::Window); // pencere arka planı
+    const QPalette palette = qApp->palette(); // qApp yerine QApplication::palette() de olur
+    const QColor bg = palette.color(QPalette::Window); // pencere arka planı
 
     // Parlaklık hesaplaması: İnsan gözünün algıladığı parlaklık değeri
-    int brightness = (bg.red() * 299 + bg.green() * 587 + bg.blue() * 114) / 1000;
+    const int brightness = (bg.red() * 299 + bg.green() * 587 + bg.blue() * 114) / 1000;
 
     return brightness < 128; // 0-255; 128'den düşükse koyu temadır
 }

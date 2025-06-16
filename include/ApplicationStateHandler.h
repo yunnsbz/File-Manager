@@ -1,13 +1,13 @@
 #ifndef APPLICATIONSTATEHANDLER_H
 #define APPLICATIONSTATEHANDLER_H
 
-
 #include <QObject>
 #include <QSettings>
 
 class MainWindow;
 
-enum class ViewStates : char{
+enum class ViewStates : char
+{
     DUAL_PANE,
     DUAL_PANE_W_TREE,
     SINGLE_TABLE,
@@ -15,15 +15,18 @@ enum class ViewStates : char{
     COLUMN_VIEW
 };
 
-class ApplicationStateHandler : public QObject{
+class ApplicationStateHandler : public QObject
+{
     Q_OBJECT
 
 public:
     explicit ApplicationStateHandler(QObject* parent);
-    void SetCurrentViewState(ViewStates newState);
-    ViewStates GetCurrentViewState();
+
+    static void SetCurrentViewState(ViewStates newState);
+    static ViewStates GetCurrentViewState();
 
     void RestoreViewState();
+
 
 private:
     MainWindow* mainWindow_;

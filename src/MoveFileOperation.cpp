@@ -3,6 +3,8 @@
 #include <QDir>
 #include <QFileInfo>
 
+#include <utility>
+
 MoveFileOperation::MoveFileOperation(QSet<QString> SourcePaths, QString destinationPath, bool shouldRemove, QObject* parent)
     :
     IFileOperation(parent),
@@ -44,7 +46,7 @@ void MoveFileOperation::CutFilesOperation()
             QDir const sourceDir(srcPath);
             QDir const destDir;
             if (!destDir.mkpath(destPath)) {
-                //TODO: check if there is a name conflict then ask user if they want to override, rename or skip this one
+                //TODO(yunnsbz): check if there is a name conflict then ask user if they want to override, rename or skip this one
                 emit error(QString("Could not create target folder: %1").arg(destPath));
                 continue;
             }
@@ -60,7 +62,7 @@ void MoveFileOperation::CutFilesOperation()
             if (QFile::copy(srcPath, destPath)) {
                 moveSuccess = QFile::remove(srcPath); // kaynak dosyayı sil
             }
-            //TODO: check if there is a name conflict then ask user if they want to override, rename or skip this one
+            //TODO(yunnsbz): check if there is a name conflict then ask user if they want to override, rename or skip this one
         }
 
         if (!moveSuccess) {
@@ -94,7 +96,7 @@ void MoveFileOperation::CopyFilesOperation()
             QDir const sourceDir(srcPath);
             QDir const destDir;
             if (!destDir.mkpath(destPath)) {
-                //TODO: check if there is a name conflict then ask user if they want to override, rename or skip this one
+                //TODO(yunnsbz): check if there is a name conflict then ask user if they want to override, rename or skip this one
                 emit error(QString("Could not create target folder: %1").arg(destPath));
                 continue;
             }
@@ -104,7 +106,7 @@ void MoveFileOperation::CopyFilesOperation()
         else
         {
             moveSuccess = QFile::copy(srcPath, destPath);
-            //TODO: check if there is a name conflict then ask user if they want to override, rename or skip this one
+            //TODO(yunnsbz): check if there is a name conflict then ask user if they want to override, rename or skip this one
         }
 
         if (!moveSuccess) {
@@ -112,7 +114,7 @@ void MoveFileOperation::CopyFilesOperation()
             continue;
         }
 
-        int percent = (i + 1) * 100 / totalFiles;
+        const int percent = (i + 1) * 100 / totalFiles;
         emit progress(percent);
     }
 
@@ -123,14 +125,19 @@ bool MoveFileOperation::copyDirectoryRecursively(const QString &srcPath, const Q
 {
     QDir const srcDir(srcPath);
     if (!srcDir.exists())
+    {
         return false;
+    }
 
     QDir const destDir(destPath);
     if (!destDir.exists())
+    {
         destDir.mkpath(".");
+    }
 
     QFileInfoList const entries = srcDir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries);
-    for (const QFileInfo &entry : entries) {
+    for (const QFileInfo &entry : entries)
+    {
         QString const srcFilePath = entry.absoluteFilePath();
         QString const destFilePath = destDir.filePath(entry.fileName());
 
@@ -145,7 +152,7 @@ bool MoveFileOperation::copyDirectoryRecursively(const QString &srcPath, const Q
         {
             if (!QFile::copy(srcFilePath, destFilePath))
             {
-                //TODO: check if there is a name conflict then ask user if they want to override, rename or skip this one
+                //TODO(yunnsbz): check if there is a name conflict then ask user if they want to override, rename or skip this one
                 // if this is not resolving the conflict:
                 return false;
             }

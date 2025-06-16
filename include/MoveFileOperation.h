@@ -3,9 +3,13 @@
 
 #include "IFileOperation.h"
 
+#include <QObject>
 #include <QProgressDialog>
 #include <QThread>
-
+#include <QSet>
+#include <QString>
+#include <QWidget>
+#include <QList>
 
 class MoveFileOperation : public IFileOperation
 {
@@ -30,6 +34,7 @@ protected:
 private:
     QSet<QString> m_op_files_src;
     QString m_target_dir_;
+
     bool m_op_should_remove_;
 };
 

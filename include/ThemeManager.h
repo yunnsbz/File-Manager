@@ -1,7 +1,7 @@
 #ifndef THEMEMANAGER_H
 #define THEMEMANAGER_H
 
-#include <qobject.h>
+#include <QObject>
 
 class MainWindow;
 

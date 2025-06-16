@@ -3,8 +3,9 @@
 
 #include "IFileOperation.h"
 
-#include <QProgressDialog>
-#include <QThread>
+#include <QObject>
+#include <QList>
+#include <QString>
 
 class DeleteFileOperation : public IFileOperation
 {

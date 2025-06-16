@@ -2,15 +2,12 @@
 #include "SettingsDialog.h"
 #include "ThemeManager.h"
 #include "TabManager.h"
-#include "./ui_mainwindow.h"
 #include "TableManager.h"
 #include "ToolBarManager.h"
 #include "FileModelOperations.h"
 #include "TreeManager.h"
 #include "ApplicationStateHandler.h"
 
-
-#include <QFileSystemModel>
 #include <QAbstractButton>
 #include <QDesktopServices>
 #include <QToolButton>
@@ -22,9 +19,16 @@
 #include <QScrollBar>
 #include <QPropertyAnimation>
 #include <QScrollArea>
-#include <QToolButton>
 #include <QMessageBox>
-#include <qtimer.h>
+#include <QItemSelectionModel>
+#include <QAbstractItemModel>
+#include <QSplitterHandle>
+#include <QVBoxLayout>
+#include <QAbstractAnimation>
+#include <QFrame>
+#include <QHBoxLayout>
+#include <QIcon>
+#include <QModelIndexList>
 
 MainWindow::UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
 {
@@ -38,6 +42,7 @@ MainWindow::MainWindow(QWidget* parent)
     m_ui_mgr_(ui, this),
     fileModelOp(new FileModelOperations()),
     fileModelOp2(new FileModelOperations()),
+    columnFileModel(fileModelOp->GetFileModel()),
     toolBarManager(new ToolBarManager(ui->toolBar, this)),
     menuManager(new ThemeManger(this)),
     tabManager(new TabManager(ui->tabWidget, false, this)),
@@ -60,7 +65,6 @@ MainWindow::MainWindow(QWidget* parent)
         &MainWindow::onTreeSelectionChanged
     );
 
-    columnFileModel = fileModelOp->GetFileModel();
     ui->columnView->setModel(columnFileModel);
     ui->columnView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -273,8 +277,8 @@ void MainWindow::updateNavButtons(int const tabIndex, bool forRightPane)
     }
     else
     {
-        bool backButtonEnable = !fileModelOp->IsBackHistoryEmpty(tabIndex);
-        bool forwardButtonEnable = !fileModelOp->IsForwardHistoryEmpty(tabIndex);
+        const bool backButtonEnable = !fileModelOp->IsBackHistoryEmpty(tabIndex);
+        const bool forwardButtonEnable = !fileModelOp->IsForwardHistoryEmpty(tabIndex);
 
         toolBarManager->SetBackButtonEnabled(backButtonEnable);
         toolBarManager->SetForwardButtonEnabled(forwardButtonEnable);
@@ -887,7 +891,7 @@ void MainWindow::on_toolCopyButton_clicked()
     if(selectedIndexes.count() != 0)
     {
         for (const QModelIndex &index : selectedIndexes) {
-            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            const QString filePath = fileModelOp->GetFileModel()->filePath(index);
             qDebug()<< "path added to copy (table 1):" << filePath;
             FileOpManager->addToCopy(filePath);
         }
@@ -897,7 +901,7 @@ void MainWindow::on_toolCopyButton_clicked()
         // ilk tabloda seçilmemişse
         selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
         for (const QModelIndex &index : selectedIndexes) {
-            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            const QString filePath = fileModelOp->GetFileModel()->filePath(index);
             qDebug()<< "path added to copy (table 2): " << filePath;
             FileOpManager->addToCopy(filePath);
         }
@@ -962,7 +966,7 @@ void MainWindow::on_toolCutButton_clicked()
     if(selectedIndexes.count() != 0)
     {
         for (const QModelIndex &index : selectedIndexes) {
-            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            const QString filePath = fileModelOp->GetFileModel()->filePath(index);
             qDebug()<< "path added to cut (table 1):" << filePath;
             FileOpManager->addToCut(filePath);
         }
@@ -972,13 +976,13 @@ void MainWindow::on_toolCutButton_clicked()
         // ilk tabloda seçilmemişse
         selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
         for (const QModelIndex &index : selectedIndexes) {
-            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            const QString filePath = fileModelOp->GetFileModel()->filePath(index);
             qDebug()<< "path added to cut (table 2): " << filePath;
             FileOpManager->addToCut(filePath);
         }
     }
 
-    // TODO: şeçilenler grileştirilmeli (kesmek için işaretlenmişler)
+    // TODO(yunnsbz): şeçilenler grileştirilmeli (kesmek için işaretlenmişler)
 }
 
 
@@ -988,14 +992,17 @@ void MainWindow::on_toolRenameButton_clicked()
     if(selectedIndexes.count() != 0)
     {
         // tek bir dosya ismi değiştirilecekse yerinde değişim yapılabilir.
-        if(selectedIndexes.count() == 1){
-            QModelIndex index = ui->tableView->currentIndex();
-            if (index.isValid()) {
+        if(selectedIndexes.count() == 1)
+        {
+            const QModelIndex index = ui->tableView->currentIndex();
+            if (index.isValid())
+            {
                 ui->tableView->edit(index);
             }
         }
-        else if(selectedIndexes.count() > 1){
-
+        else if(selectedIndexes.count() > 1)
+        {
+            // TODO(yunnsbz): todo.
         }
     }
     else
@@ -1003,14 +1010,17 @@ void MainWindow::on_toolRenameButton_clicked()
         // ilk tabloda seçilmemişse
         selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
         // tek bir dosya ismi değiştirilecekse yerinde değişim yapılabilir.
-        if(selectedIndexes.count() == 1){
-            QModelIndex index = ui->tableView_2->currentIndex();
-            if (index.isValid()) {
+        if(selectedIndexes.count() == 1)
+        {
+            const QModelIndex index = ui->tableView_2->currentIndex();
+            if (index.isValid())
+            {
                 ui->tableView_2->edit(index);
             }
         }
-        else if(selectedIndexes.count() > 1){
-
+        else if(selectedIndexes.count() > 1)
+        {
+            // TODO(yunnsbz): todo.
         }
     }
 }

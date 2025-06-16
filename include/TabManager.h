@@ -9,6 +9,8 @@
 #include <QTableView>
 #include <QTreeView>
 #include <QToolButton>
+#include <QPixmap>
+#include <QSplitter>
 
 class QFileSystemModel;
 class MainWindow;

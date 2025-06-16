@@ -12,6 +12,7 @@
 #include <QModelIndex>
 #include <QEvent>
 #include <QString>
+#include <QKeyEvent>
 #include <QList>
 
 class ApplicationStateHandler;
@@ -149,7 +150,7 @@ private:
     SettingsDialog* settingsDialog;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
-    bool isWorkingOnLeftPane{}; // TODO: kod eklenecek
+    bool isWorkingOnLeftPane{}; // TODO(fatpound): kod eklenecek
     bool isWorkingOnRightPane{};
 
     bool leftTabIsReset_  = true;
@@ -160,7 +161,5 @@ private:
     bool ColumnViewActive{};
 
     bool searchOn{};
-
-
 };
 #endif // MAINWINDOW_H

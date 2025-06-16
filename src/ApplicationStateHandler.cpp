@@ -1,8 +1,6 @@
 #include "ApplicationStateHandler.h"
 #include "mainwindow.hpp"
 
-
-
 ApplicationStateHandler::ApplicationStateHandler(QObject *parent)
     :
     mainWindow_(static_cast<MainWindow*>(parent))
@@ -12,8 +10,8 @@ ApplicationStateHandler::ApplicationStateHandler(QObject *parent)
 
 void ApplicationStateHandler::RestoreViewState()
 {
-    QSettings settings("Yunnsbz-Fatpound", "File-Manager");
-    int saved = settings.value(SettingName_ViewState, static_cast<int>(ViewStates::SINGLE_TABLE_W_TREE)).toInt();
+    const QSettings settings("Yunnsbz-Fatpound", "File-Manager");
+    const int saved = settings.value(SettingName_ViewState, static_cast<int>(ViewStates::SINGLE_TABLE_W_TREE)).toInt();
     auto currentTheme = static_cast<ViewStates>(saved);
 
     switch (currentTheme)
@@ -54,7 +52,7 @@ void ApplicationStateHandler::SetCurrentViewState(ViewStates newState)
 
 ViewStates ApplicationStateHandler::GetCurrentViewState()
 {
-    QSettings settings("Yunnsbz-Fatpound", "File-Manager");
-    int saved = settings.value(SettingName_ViewState, static_cast<int>(ViewStates::SINGLE_TABLE_W_TREE)).toInt();
+    const QSettings settings("Yunnsbz-Fatpound", "File-Manager");
+    const int saved = settings.value(SettingName_ViewState, static_cast<int>(ViewStates::SINGLE_TABLE_W_TREE)).toInt();
     return static_cast<ViewStates>(saved);
 }

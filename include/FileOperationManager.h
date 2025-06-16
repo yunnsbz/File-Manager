@@ -3,10 +3,14 @@
 
 #include "IFileOperation.h"
 
+#include <QObject>
 #include <QString>
 #include <QQueue>
 #include <QFileInfo>
-#include <QObject>
+#include <QList>
+#include <QVariantMap>
+#include <QMap>
+#include <QSet>
 
 class MainWindow;
 
@@ -38,10 +42,10 @@ public:
     // void CreateNewFolder(QString dst);
 
     // seçilenleri kesme işlemi için kaydeder. sonrasında PasteOperation çağırılmalıdır
-    void addToCut(QString src);
+    void addToCut(const QString& src);
 
     // sadece geçici olarak kopyalanma adreslerini tutar. kopyalama işlemini bitirmez. sonrasında PasteOperation çağırılmalıdır.
-    void addToCopy(QString src);
+    void addToCopy(const QString& src);
 
 
 protected:

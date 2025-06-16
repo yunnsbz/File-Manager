@@ -2,6 +2,8 @@
 #define SETTINGSDIALOG_H
 
 #include <QDialog>
+#include <QWidget>
+#include <QString>
 
 namespace Ui {
 class SettingsDialog;
@@ -15,7 +17,7 @@ public:
     explicit SettingsDialog(QWidget *parent = nullptr);
     ~SettingsDialog() override;
 
-    void SetOldButtonStyle(bool buttonStyle);
+    static void SetOldButtonStyle(bool buttonStyle);
 
 private slots:
     void on_pushButton_clicked();

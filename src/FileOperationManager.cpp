@@ -6,6 +6,8 @@
 
 #include <QMessageBox>
 #include <QTimer>
+#include <QThread>
+#include <QProgressDialog>
 
 FileOperationManager::FileOperationManager(QObject * parent)
     :
@@ -18,9 +20,9 @@ FileOperationManager::FileOperationManager(QObject * parent)
 
 void FileOperationManager::DeleteOperation(QList<QString> srcList)
 {
-    auto* op = new DeleteFileOperation(srcList);
+    auto* op = new DeleteFileOperation(std::move(srcList));
 
-    QThread* thread = new QThread(this);
+    auto* thread = new QThread(this);
     op->moveToThread(thread);
 
     // Progress dialog tanımla ama hemen gösterme
@@ -55,9 +57,10 @@ void FileOperationManager::DeleteOperation(QList<QString> srcList)
 
 void FileOperationManager::MoveOperation(QString dst){
 
-    if(!copiedPaths.empty()){
+    if(!copiedPaths.empty())
+    {
         // kesme, kopyalama yada taşıma işlemi
-        auto* op = new MoveFileOperation(copiedPaths, dst, isFilesSelectedToCut);
+        auto* op = new MoveFileOperation(copiedPaths, std::move(dst), isFilesSelectedToCut);
 
         auto* thread = new QThread(this);
         op->moveToThread(thread);
@@ -99,19 +102,25 @@ void FileOperationManager::MoveOperation(QString dst){
     }
 }
 
-void FileOperationManager::addToCut(QString src)
+void FileOperationManager::addToCut(const QString& src)
 {
     // eğer öncesinde copy için eklenmişlerse listeyi boşalt. aynı anda hem kesme hem de kopyalama yapılmayacak
-    if(!isFilesSelectedToCut)copiedPaths.clear();
+    if(!isFilesSelectedToCut)
+    {
+        copiedPaths.clear();
+    }
 
     isFilesSelectedToCut = true;
     copiedPaths.insert(src);
 }
 
-void FileOperationManager::addToCopy(QString src)
+void FileOperationManager::addToCopy(const QString& src)
 {
     // eğer öncesinde kesme işlemi için liste doldurulmuşsa listeyi boşalt. aynı anda hem kesme hem de kopyalama yapılmayacak
-    if(isFilesSelectedToCut)copiedPaths.clear();
+    if(isFilesSelectedToCut)
+    {
+        copiedPaths.clear();
+    }
 
     isFilesSelectedToCut = false;
     copiedPaths.insert(src);

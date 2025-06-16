@@ -1,11 +1,14 @@
 #include "TableManager.h"
 #include "FileModelOperations.h"
 
+#include <QFileSystemModel>
 #include <QUrl>
 #include <QDesktopServices>
 #include <QHeaderView>
 #include <QTimer>
-
+#include <QAbstractItemView>
+#include <QModelIndex>
+#include <QVector>
 
 TableManager::TableManager(QTableView* tableView, FileModelOperations* fileModelOp, QObject *parent)
     :

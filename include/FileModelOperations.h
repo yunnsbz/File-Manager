@@ -2,6 +2,8 @@
 #define FILEMODELOPERATIONS_H
 
 #include <QFileSystemModel>
+#include <QModelIndex>
+#include <QFileInfo>
 #include <QObject>
 #include <QMap>
 #include <QList>

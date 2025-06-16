@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QTableView>
-#include <QFileSystemModel>
 
 class FileModelOperations;
 

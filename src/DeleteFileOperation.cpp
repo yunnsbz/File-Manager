@@ -3,6 +3,8 @@
 #include <QDir>
 #include <QFileInfo>
 
+#include <utility>
+
 DeleteFileOperation::DeleteFileOperation(QList<QString> files, QObject* parent)
     :
     IFileOperation(parent),
