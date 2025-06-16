@@ -20,8 +20,8 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
   - [x] Tree View
   - [ ] View Settings
 - [ ] Standart file operations
-  - [ ] Copy
-  - [ ] Move
+  - [x] Copy
+  - [x] Move
   - [x] Delete
   - [ ] Rename
   - [x] Multithread Support
