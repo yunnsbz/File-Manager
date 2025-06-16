@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QWidget>
 #include <QString>
-#include <qtreewidget.h>
+#include <QTreeWidget>
 
 namespace Ui {
 class SettingsDialog;

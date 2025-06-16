@@ -62,13 +62,15 @@ void SettingsDialog::on_pushButton_clicked()
 void SettingsDialog::onSettingItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* /*previous*/) {
     if (!current) return;
 
-    QString name = current->text(0); // öğenin adı
+    QString settingsName = current->text(0);
 
-    if (name == "Styles")
+    // TODO (yunnsbz): change this to enum and switch case
+
+    if (settingsName == "Styles")
         ui->stackedWidget->setCurrentIndex(0);
-    else if (name == "Tab Buttons")
+    else if (settingsName == "Tab Buttons")
         ui->stackedWidget->setCurrentIndex(1);
-    else if (name == "Files")
+    else if (settingsName == "Files")
         ui->stackedWidget->setCurrentIndex(2);
     // ... vb.
 }
