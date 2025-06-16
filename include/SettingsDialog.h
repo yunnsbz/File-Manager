@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QWidget>
 #include <QString>
+#include <qtreewidget.h>
 
 namespace Ui {
 class SettingsDialog;
@@ -18,6 +19,8 @@ public:
     ~SettingsDialog() override;
 
     static void SetOldButtonStyle(bool buttonStyle);
+
+    void onSettingItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* /*previous*/);
 
 private slots:
     void on_pushButton_clicked();

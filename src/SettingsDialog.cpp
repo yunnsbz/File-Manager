@@ -8,6 +8,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
+    connect(ui->treeWidget, &QTreeWidget::currentItemChanged, this, &SettingsDialog::onSettingItemChanged);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -52,8 +53,22 @@ void SettingsDialog::on_pushButton_clicked()
     {
         tabCloseButtonOld = false;
     }
-
-    else tabCloseButtonOld = true;
-
+    else
+    {
+        tabCloseButtonOld = true;
+    }
 }
 
+void SettingsDialog::onSettingItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* /*previous*/) {
+    if (!current) return;
+
+    QString name = current->text(0); // öğenin adı
+
+    if (name == "Styles")
+        ui->stackedWidget->setCurrentIndex(0);
+    else if (name == "Tab Buttons")
+        ui->stackedWidget->setCurrentIndex(1);
+    else if (name == "Files")
+        ui->stackedWidget->setCurrentIndex(2);
+    // ... vb.
+}
