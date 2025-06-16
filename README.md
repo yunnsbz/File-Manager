@@ -5,29 +5,38 @@ This project aims to deliver a lightweight, modern, and extensible file manager 
 
 ⚠️ This project is currently in its early development stage.
 
-<br>
+## Preview 
+![preview](https://github.com/yunnsbz/File-Manager/blob/feature-file-operations/preview.png)
 
 ## Features and todos:
 
 - [x] File and folder browsing
 - [ ] Highly customizable interface
-- [x] Dual-pane interface
-- [x] Column interface
-- [x] Tab support
-- [ ] Standart file operations (copy, move, delete, rename)
-- [ ] Multiple selection file operations (copy, move, delete, rename)
-- [ ] Paralel file operations
+  - [x] Dual-pane interface
+  - [x] Column interface
+  - [x] Tab support
+  - [x] Tree View
+  - [ ] View Settings
+- [x] Standart file operations
+  - [x] Copy
+  - [x] Move
+  - [x] Delete
+  - [x] Rename
+  - [x] Multithread Support
+- [ ] Rename Multiple Files
 - [ ] Search Support
 - [ ] Command line support
 - [ ] File preview panel
 - [ ] File details panel
 - [ ] Bookmarks and history
 - [ ] Dark and Light theme support
+- [ ] Undo Operations
 
 <br>
 
 ## How To Use
 At this stage of development, we are not providing a pre-built executable. However, you can build the project yourself using Qt (version 6.7 or higher) and CMake.
+
 
 ## Built With
 

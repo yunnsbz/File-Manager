@@ -1,0 +1,112 @@
+QToolButton {
+    background-color: #00000000;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QTabWidget QToolButton {
+    padding: 0;
+}
+
+#add-tab-button{
+    padding: 5px 5px 8px 5px;
+}
+
+#tool-cmd-button{
+    padding: 0px 2px -1px 2px;
+}
+
+/* tab üzerindeki sağ corner buttonları */
+#cornerNavButtons QToolButton {
+    padding: 1px 0px 0px 1px;
+}
+
+#cornerNavButtons QToolButton::hover {
+    border-radius: 9px;
+    background-color: #666;
+}
+
+
+QTabBar::tab {
+    background-color: #22222255;
+    padding: 3px 20px;
+    border: none;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin-left: 2px;
+}
+QTabBar::tab:selected {
+    background: #222222ff;
+}
+
+QToolButton:hover {
+    background-color: #999;
+}
+QToolButton:pressed {
+    background-color: #555;
+}
+
+QTableView {
+    gridline-color: transparent;
+    selection-background-color: #a8d5ff;
+    selection-color: black;
+    outline: none;
+}
+
+QTableView::item {
+    border: none;
+}
+
+
+QTableView::selection{
+    border-bottom: 1px solid #1c1c1cbb;
+    padding: 2px 5px 2px 5px;
+}
+
+QTableView::item:focus {
+    outline: none;
+    background-color: transparent;
+}
+
+QTableView::item:selected {
+    background-color: #a0a0a0bb;
+    color: black;
+    border: none;
+    outline: none;
+}
+
+
+/**************** for history popup ****************/
+
+QScrollArea {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+#HistoryItem {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+#HistoryItem QToolButton {
+    padding: 1px;
+    margin: 1px;
+}
+
+#HistoryPopupFrame {
+    background-color: #2f2f2f;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 0;
+    margin: 0;
+}
+#HistoryScrollContent {
+    background-color: transparent;
+}
+
+
+

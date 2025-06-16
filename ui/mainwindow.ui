@@ -58,7 +58,7 @@
      <number>0</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,40,0,0,0">
+     <layout class="QHBoxLayout" name="toolBar" stretch="0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,40,0,0,0,0">
       <property name="spacing">
        <number>2</number>
       </property>
@@ -275,6 +275,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolHistoryButton">
+        <property name="text">
+         <string>h</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QToolButton" name="toolNotePadButton">
@@ -789,11 +796,17 @@
      <string>File</string>
     </property>
     <addaction name="actionExit"/>
-    <addaction name="actionOptions"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuview"/>
    <addaction name="menuHelp"/>
+   <addaction name="menuTools"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionTree_View">
@@ -849,6 +862,11 @@
   <action name="actionOptions">
    <property name="text">
     <string>change tab close button</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
    </property>
   </action>
  </widget>

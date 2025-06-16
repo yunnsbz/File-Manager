@@ -1,8 +1,24 @@
 <RCC>
     <qresource prefix="/resources">
-        <file>styles/style.qss</file>
+        <file>img/arrow_circle_left_black.svg</file>
+        <file>img/arrow_circle_left_gray.svg</file>
+        <file>img/arrow_circle_left_white.svg</file>
+        <file>img/arrow_circle_right_black.svg</file>
+        <file>img/arrow_circle_right_gray.svg</file>
+        <file>img/arrow_circle_right_white.svg</file>
+        <file>img/arrow_circle_up_black.svg</file>
+        <file>img/arrow_circle_up_gray.svg</file>
+        <file>img/arrow_circle_up_white.svg</file>
+        <file>img/cancel_gray.svg</file>
+        <file>img/cancel_red.svg</file>
+        <file>img/cancel_white.svg</file>
+        <file>img/share_black.svg</file>
+        <file>img/share_gray.svg</file>
+        <file>img/share_white.svg</file>
         <file>img/table_rows_black.svg</file>
         <file>img/table_rows_white.svg</file>
+        <file>img/terminal_black.svg</file>
+        <file>img/terminal_white.svg</file>
         <file>img/tiles_view_black.svg</file>
         <file>img/tiles_view_white.svg</file>
         <file>img/tree_view_black.svg</file>
@@ -11,23 +27,11 @@
         <file>img/two_pager_white.svg</file>
         <file>img/view_column_black.svg</file>
         <file>img/view_column_white.svg</file>
-        <file>img/terminal_black.svg</file>
-        <file>img/terminal_white.svg</file>
-        <file>img/share_black.svg</file>
-        <file>img/share_gray.svg</file>
-        <file>img/share_white.svg</file>
-        <file>img/arrow_circle_left_black.svg</file>
-        <file>img/arrow_circle_left_white.svg</file>
-        <file>img/arrow_circle_right_black.svg</file>
-        <file>img/arrow_circle_right_white.svg</file>
-        <file>img/arrow_circle_up_black.svg</file>
-        <file>img/arrow_circle_up_white.svg</file>
-        <file>img/arrow_circle_left_gray.svg</file>
-        <file>img/arrow_circle_right_gray.svg</file>
-        <file>img/arrow_circle_up_gray.svg</file>
-        <file>img/cancel_white.svg</file>
-        <file>img/cancel_gray.svg</file>
-        <file>img/cancel_red.svg</file>
         <file>styles/button-style-new.qss</file>
+        <file>styles/styleDark.qss</file>
+        <file>img/history_black.svg</file>
+        <file>img/history_gray.svg</file>
+        <file>img/history_white.svg</file>
+        <file>styles/styleLight.qss</file>
     </qresource>
 </RCC>

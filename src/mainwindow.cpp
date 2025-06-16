@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "SettingsDialog.h"
 #include "ThemeManager.h"
 #include "TabManager.h"
 #include "./ui_mainwindow.h"
@@ -6,6 +7,8 @@
 #include "ToolBarManager.h"
 #include "FileModelOperations.h"
 #include "TreeManager.h"
+#include "ApplicationStateHandler.h"
+
 
 #include <QFileSystemModel>
 #include <QAbstractButton>
@@ -18,8 +21,12 @@
 #include <QProcess>
 #include <QScrollBar>
 #include <QPropertyAnimation>
+#include <QScrollArea>
+#include <QToolButton>
+#include <QMessageBox>
+#include <qtimer.h>
 
-UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
+MainWindow::UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
 {
     theUi->setupUi(pWnd);
 }
@@ -38,7 +45,10 @@ MainWindow::MainWindow(QWidget* parent)
     tableManager(new TableManager(ui->tableView, fileModelOp, this)),
     tableManager2(new TableManager(ui->tableView_2, fileModelOp2, this)),
     treeManager(new TreeManager(ui->FileTreeView, fileModelOp, ui->tabWidget, this)),
-    treeManager2(new TreeManager(ui->FileTreeView_2, fileModelOp2, ui->tabWidget_2, this))
+    treeManager2(new TreeManager(ui->FileTreeView_2, fileModelOp2, ui->tabWidget_2, this)),
+    FileOpManager(new FileOperationManager(this)),
+    AppStateHandler(new ApplicationStateHandler(this)),
+    settingsDialog(new SettingsDialog(this))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
@@ -52,6 +62,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     columnFileModel = fileModelOp->GetFileModel();
     ui->columnView->setModel(columnFileModel);
+    ui->columnView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     // tree view daha küçük olmalı
     ui->splitter->setSizes({100,400});
@@ -66,6 +77,9 @@ MainWindow::MainWindow(QWidget* parent)
 
     setWindowTitle("File Manager");
     show();
+
+    // load and restore view:
+    AppStateHandler->RestoreViewState();
 }
 
 MainWindow::~MainWindow()
@@ -93,7 +107,6 @@ auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
 
     return QMainWindow::eventFilter(obj, event);
 }
-
 
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
 void MainWindow::SetTabContent(int tabIndex, bool rightPane)
@@ -163,48 +176,78 @@ void MainWindow::on_splitter_splitterMoved(int pos, int )
     }
 }
 
+void MainWindow::DeactivateTreeView()
+{
+    treeViewActive = false;
+    ui->splitter->setSizes({0,400});
+    ui->splitter_2->setSizes({0,400});
+
+    // sürüklemeyi devre dışı bırakma:
+    for (int i = 0; i < 2; ++i)
+    {
+        QSplitterHandle* handle = ui->splitter->handle(i);
+        QSplitterHandle* handle2 = ui->splitter_2->handle(i);
+        if (handle != nullptr && handle2 != nullptr)
+        {
+            handle->setEnabled(false);
+            handle2->setEnabled(false);
+        }
+    }
+
+    ui->splitter->setHandleWidth(0);
+    ui->splitter_2->setHandleWidth(0);
+}
+
+void MainWindow::ActivateTreeView()
+{
+    treeViewActive = true;
+    ui->splitter->setSizes({100,400});
+    ui->splitter_2->setSizes({100,400});
+    //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
+    for (int i = 0; i < 2; ++i)
+    {
+        QSplitterHandle* handle = ui->splitter->handle(i);
+        QSplitterHandle* handle2 = ui->splitter_2->handle(i);
+        if (handle != nullptr && handle2 != nullptr)
+        {
+            handle->setEnabled(true);
+            handle2->setEnabled(true);
+        }
+    }
+
+    ui->splitter->setHandleWidth(5);
+    ui->splitter_2->setHandleWidth(5);
+}
+
 void MainWindow::on_actionTree_View_triggered()
 {
     if (treeViewActive)
     {
-        treeViewActive = false;
-        ui->splitter->setSizes({0,400});
-        ui->splitter_2->setSizes({0,400});
+        DeactivateTreeView();
 
-        // sürüklemeyi devre dışı bırakma:
-        for (int i = 0; i < 2; ++i)
-        {
-            QSplitterHandle* handle = ui->splitter->handle(i);
-            QSplitterHandle* handle2 = ui->splitter_2->handle(i);
-            if (handle != nullptr && handle2 != nullptr)
-            {
-                handle->setEnabled(false);
-                handle2->setEnabled(false);
-            }
+        // save state update
+        if(dualPaneActive){
+            AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE);
+            qDebug()<<"dual pane açık ve ağaç kapatıldı";
         }
-
-        ui->splitter->setHandleWidth(0);
-        ui->splitter_2->setHandleWidth(0);
+        else{
+            AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE);
+            qDebug()<<"dual pane kapalı ve ağaç kapatıldı";
+        }
     }
     else
     {
-        treeViewActive = true;
-        ui->splitter->setSizes({100,400});
-        ui->splitter_2->setSizes({100,400});
-        //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
-        for (int i = 0; i < 2; ++i)
-        {
-            QSplitterHandle* handle = ui->splitter->handle(i);
-            QSplitterHandle* handle2 = ui->splitter_2->handle(i);
-            if (handle != nullptr && handle2 != nullptr)
-            {
-                handle->setEnabled(true);
-                handle2->setEnabled(true);
-            }
-        }
+        ActivateTreeView();
 
-        ui->splitter->setHandleWidth(5);
-        ui->splitter_2->setHandleWidth(5);
+        // save state update
+        if(dualPaneActive){
+            AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+            qDebug()<<"dual pane açık ve ağaç açıldı";
+        }
+        else{
+            AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+            qDebug()<<"dual pane kapalı ve ağaç açıldı";
+        }
     }
 }
 
@@ -424,82 +467,121 @@ void MainWindow::on_toolCmdButton_pressed()
 }
 
 
+void MainWindow::ActivateDualPane()
+{
+    dualPaneActive = true;
+    ui->splitter_dualPane->setChildrenCollapsible(true);
+    ui->splitter_dualPane->setSizes({1,1});
+    ui->splitter_dualPane->setChildrenCollapsible(false);
+    //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
+    for (int i = 0; i < 2; ++i)
+    {
+        QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+        if (handle != nullptr)
+        {
+            handle->setEnabled(true);
+        }
+    }
+
+    ui->splitter_dualPane->setHandleWidth(5);
+
+    // dual pane geldiğinde tablo sütun genişliklerini uygun hale getir
+    tableManager->SetColumnResize();
+
+    tabManager->EnableNavWidget(true);
+    tabManager2->EnableNavWidget(true);
+}
+
+void MainWindow::DeactivateDualPane()
+{
+    dualPaneActive = false;
+    ui->splitter_dualPane->setChildrenCollapsible(true);
+    ui->splitter_dualPane->setSizes({1,0});
+    ui->splitter_dualPane->setChildrenCollapsible(false);
+
+    // disable middle splitter:
+    for (int i = 0; i < 2; ++i)
+    {
+        QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
+        if (handle != nullptr)
+        {
+            handle->setEnabled(false);
+        }
+    }
+    ui->splitter_dualPane->setHandleWidth(0);
+
+    tableManager->SetColumnResize();
+
+    tabManager->EnableNavWidget(false);
+    tabManager2->EnableNavWidget(false);
+}
+
 void MainWindow::on_actionDual_Pane_View_triggered()
 {
+    // if current stackedWidget is not on column view then open or close dual pane
     if (ui->stackedWidget->currentIndex() == 0)
     {
         if (dualPaneActive)
         {
-            dualPaneActive = false;
-            ui->splitter_dualPane->setChildrenCollapsible(true);
-            ui->splitter_dualPane->setSizes({1,0});
-            ui->splitter_dualPane->setChildrenCollapsible(false);
-            // sürüklemeyi devre dışı bırakma:
-            for (int i = 0; i < 2; ++i)
-            {
-                QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
-                if (handle != nullptr)
-                {
-                    handle->setEnabled(false);
-                }
-            }
-            ui->splitter_dualPane->setHandleWidth(0);
+            DeactivateDualPane();
 
-            tableManager->SetColumnResize();
-
-            tabManager->EnableNavWidget(false);
-            tabManager2->EnableNavWidget(false);
+            // save state update
+            if(treeViewActive) AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+            else AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE);
         }
         else
         {
-            dualPaneActive = true;
-            ui->splitter_dualPane->setChildrenCollapsible(true);
-            ui->splitter_dualPane->setSizes({1,1});
-            ui->splitter_dualPane->setChildrenCollapsible(false);
-            //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
-            for (int i = 0; i < 2; ++i)
-            {
-                QSplitterHandle* handle = ui->splitter_dualPane->handle(i);
-                if (handle != nullptr)
-                {
-                    handle->setEnabled(true);
-                }
-            }
+            ActivateDualPane();
 
-            ui->splitter_dualPane->setHandleWidth(5);
-
-            // dual pane geldiğinde tablo sütun genişliklerini uygun hale getir
-            tableManager->SetColumnResize();
-
-            tabManager->EnableNavWidget(true);
-            tabManager2->EnableNavWidget(true);
+            // save state update
+            if(treeViewActive) AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+            else AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE);
         }
     }
     else{
-        // column view açıksa onu kapatıp bu fonksiyonu tekrar çağırarak dual pane'i açar
-        ColumnViewActive = false;
+        // if column view is active the deactivate it and open dual pane
         ui->stackedWidget->setCurrentIndex(0);
+        ColumnViewActive = false;
 
-        // column dan çıktıktan sonra her halukarda dual pane açılsın diye:
-        dualPaneActive = false;
-
-        // curent index sıfırlandığından recursive sadece bir kere çalışır
-        on_actionDual_Pane_View_triggered();
+        // column'dan çıktıktan sonra dual pane açılmalı:
+        ActivateDualPane();
     }
 }
 
+
+void MainWindow::ActivateColumnView()
+{
+    ColumnViewActive = true;
+    ui->stackedWidget->setCurrentIndex(1);
+    toolBarManager->SetBackButtonEnabled(true);
+    toolBarManager->SetForwardButtonEnabled(true);
+}
 
 void MainWindow::on_actionColumn_View_triggered()
 {
     if(ui->stackedWidget->currentIndex() == 1){
         ColumnViewActive = false;
         ui->stackedWidget->setCurrentIndex(0);
+        if(dualPaneActive){
+            if(treeViewActive){
+                AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+            }
+            else{
+                AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE);
+            }
+        }
+        else{
+            if(treeViewActive){
+                AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+            }
+            else{
+                AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE);
+            }
+        }
     }
     else{
-        ColumnViewActive = true;
-        ui->stackedWidget->setCurrentIndex(1);
-        toolBarManager->SetBackButtonEnabled(true);
-        toolBarManager->SetForwardButtonEnabled(true);
+        ActivateColumnView();
+        AppStateHandler->SetCurrentViewState(ViewStates::COLUMN_VIEW);
     }
 }
 
@@ -741,47 +823,195 @@ void MainWindow::on_toolSearchButton_clicked()
     }
 }
 
-
-
-
-void MainWindow::on_actionOptions_triggered()
-{
-    if(tabCloseButtonOld){
-        // style:
-        QString qss;
-        QFile file1(":/resources/styles/style.qss");
-        QFile file2(":/resources/styles/button-style-new.qss");
-
-        file1.open(QFile::ReadOnly);
-        file2.open(QFile::ReadOnly);
-
-        qss += file1.readAll();
-        qss += file2.readAll();
-
-        qApp->setStyleSheet(qss);
-        tabCloseButtonOld = false;
-    }
-    else{
-        // style:
-        QString qss;
-        QFile file1(":/resources/styles/style.qss");
-
-        file1.open(QFile::ReadOnly);
-
-        qss += file1.readAll();
-
-        qApp->setStyleSheet(qss);
-        tabCloseButtonOld = true;
-    }
-}
-
-
 void MainWindow::on_columnView_clicked(const QModelIndex &index)
 {
     if (!columnFileModel->hasChildren(index))
     {
         const QString filePath = columnFileModel->filePath(index);
         QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
+    }
+}
+
+
+void MainWindow::on_toolHistoryButton_clicked()
+{
+    QFrame* popupFrame = new QFrame(this, Qt::Popup); // Menü gibi görünür
+    QVBoxLayout* layout = new QVBoxLayout(popupFrame);
+    popupFrame->setObjectName("HistoryPopupFrame");
+
+    QScrollArea* scrollArea = new QScrollArea(popupFrame);
+    scrollArea->setWidgetResizable(true);
+
+    QWidget* scrollContent = new QWidget();
+    QVBoxLayout* contentLayout = new QVBoxLayout(scrollContent);
+    scrollContent->setObjectName("HistoryScrollContent");
+    scrollContent->setAttribute(Qt::WA_Hover, true);
+
+    contentLayout->setContentsMargins(1,2,1,2);
+    contentLayout->setSpacing(0);
+
+    for (int i = 0; i < 20; i++) {
+        QWidget* itemWidget = new QWidget;
+        QHBoxLayout* rowLayout = new QHBoxLayout(itemWidget);
+
+        rowLayout->setContentsMargins(1, 2, 1, 2); // min dikey boşluk
+        rowLayout->setSpacing(0);
+
+        QLabel* label = new QLabel("operation description (... moved to ...)");
+        QToolButton* undoButton = new QToolButton();
+        undoButton->setIcon(QIcon(":/resources/img/history_white.svg"));
+
+        rowLayout->addWidget(label);
+        rowLayout->addWidget(undoButton);
+        itemWidget->setLayout(rowLayout);
+        itemWidget->setObjectName("HistoryItem");
+
+        contentLayout->addWidget(itemWidget);
+    }
+
+    scrollContent->setLayout(contentLayout);
+    scrollArea->setWidget(scrollContent);
+
+    layout->addWidget(scrollArea);
+    popupFrame->setLayout(layout);
+    popupFrame->resize(300, 400); // Max boyut
+    popupFrame->move(ui->toolHistoryButton->mapToGlobal(QPoint(-270, ui->toolHistoryButton->height())));
+    popupFrame->show();
+}
+
+
+void MainWindow::on_toolCopyButton_clicked()
+{
+    // seçilmiş satırların indexlerini al
+    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
+    if(selectedIndexes.count() != 0)
+    {
+        for (const QModelIndex &index : selectedIndexes) {
+            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            qDebug()<< "path added to copy (table 1):" << filePath;
+            FileOpManager->addToCopy(filePath);
+        }
+    }
+    else
+    {
+        // ilk tabloda seçilmemişse
+        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
+        for (const QModelIndex &index : selectedIndexes) {
+            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            qDebug()<< "path added to copy (table 2): " << filePath;
+            FileOpManager->addToCopy(filePath);
+        }
+    }
+}
+
+
+void MainWindow::on_toolPasteButton_clicked()
+{
+    if(isWorkingOnRightPane){
+        FileOpManager->MoveOperation(fileModelOp2->GetCurrentPath(ui->tabWidget_2->currentIndex()));
+    }
+    else{
+        FileOpManager->MoveOperation(fileModelOp->GetCurrentPath(ui->tabWidget->currentIndex()));
+    }
+}
+
+
+void MainWindow::on_toolDelButton_clicked()
+{
+    QList<QString> srcList;
+
+    QModelIndexList selectedIndexes = (! isWorkingOnRightPane)
+            ? ui->tableView->selectionModel()->selectedRows()
+            : ui->tableView_2->selectionModel()->selectedRows()
+            ;
+
+    if ( ! selectedIndexes.empty())
+    {
+        for (const QModelIndex& index : selectedIndexes)
+        {
+            srcList.append(fileModelOp->GetFileModel()->filePath(index));
+        }
+
+        const QString text = QString("Seçili %1 dosyayı silmek üzeresiniz. Emin misiniz?")
+                               .arg(srcList.size());
+
+        QMessageBox::StandardButton const reply = QMessageBox::question(
+                this,
+                "Dosyaları Sil",
+                text,
+                QMessageBox::Yes | QMessageBox::No,
+                QMessageBox::No
+            );
+
+        if(reply == QMessageBox::Yes){
+            FileOpManager->DeleteOperation(srcList);
+        }
+    }
+}
+
+
+void MainWindow::on_actionSettings_triggered()
+{
+    settingsDialog->exec(); // Modal olarak açar
+}
+
+
+void MainWindow::on_toolCutButton_clicked()
+{
+    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
+    if(selectedIndexes.count() != 0)
+    {
+        for (const QModelIndex &index : selectedIndexes) {
+            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            qDebug()<< "path added to cut (table 1):" << filePath;
+            FileOpManager->addToCut(filePath);
+        }
+    }
+    else
+    {
+        // ilk tabloda seçilmemişse
+        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
+        for (const QModelIndex &index : selectedIndexes) {
+            QString filePath = fileModelOp->GetFileModel()->filePath(index);
+            qDebug()<< "path added to cut (table 2): " << filePath;
+            FileOpManager->addToCut(filePath);
+        }
+    }
+
+    // TODO: şeçilenler grileştirilmeli (kesmek için işaretlenmişler)
+}
+
+
+void MainWindow::on_toolRenameButton_clicked()
+{
+    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
+    if(selectedIndexes.count() != 0)
+    {
+        // tek bir dosya ismi değiştirilecekse yerinde değişim yapılabilir.
+        if(selectedIndexes.count() == 1){
+            QModelIndex index = ui->tableView->currentIndex();
+            if (index.isValid()) {
+                ui->tableView->edit(index);
+            }
+        }
+        else if(selectedIndexes.count() > 1){
+
+        }
+    }
+    else
+    {
+        // ilk tabloda seçilmemişse
+        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
+        // tek bir dosya ismi değiştirilecekse yerinde değişim yapılabilir.
+        if(selectedIndexes.count() == 1){
+            QModelIndex index = ui->tableView_2->currentIndex();
+            if (index.isValid()) {
+                ui->tableView_2->edit(index);
+            }
+        }
+        else if(selectedIndexes.count() > 1){
+
+        }
     }
 }
 

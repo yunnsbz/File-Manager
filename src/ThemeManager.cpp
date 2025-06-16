@@ -29,20 +29,19 @@ ThemeManger::ThemeManger(QObject *parent)
 
     // cmd command button qss access:
     ui->toolCmdButton->setObjectName("tool-cmd-button");
-/*
+
     // tool button disable olma durumunda otomatik renk değişikliği için
     if (DarkTheme) {
         QIcon icon;
-        icon.addPixmap(QPixmap(":/resources/img/share_white.svg"), QIcon::Normal, QIcon::Off);
-        icon.addPixmap(QPixmap(":/resources/img/share_gray.svg"), QIcon::Disabled, QIcon::Off);
-        //ui->toolShareButton->setIcon(icon);
+        icon.addPixmap(QPixmap(":/resources/img/history_white.svg"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/resources/img/history_gray.svg"), QIcon::Disabled, QIcon::Off);
+        ui->toolHistoryButton->setIcon(icon);
     } else {
         QIcon icon;
-        icon.addPixmap(QPixmap(":/resources/img/share_black.svg"), QIcon::Normal, QIcon::Off);
-        icon.addPixmap(QPixmap(":/resources/img/share_gray.svg"), QIcon::Disabled, QIcon::Off);
-        ui->toolShareButton->setIcon(icon);
+        icon.addPixmap(QPixmap(":/resources/img/history_black.svg"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/resources/img/history_gray.svg"), QIcon::Disabled, QIcon::Off);
+        ui->toolHistoryButton->setIcon(icon);
     }
-*/
 }
 
 bool ThemeManger::isDarkTheme() {

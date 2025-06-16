@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include "ui_mainwindow.h"
+
+#include "FileOperationManager.h"
+
 #include <QMainWindow>
 #include <QObject>
 #include <QFileSystemModel>
@@ -10,25 +13,21 @@
 #include <QEvent>
 #include <QString>
 #include <QList>
-#include <qevent.h>
 
+class ApplicationStateHandler;
 class TabManager;
 class ToolBarManager;
 class TableManager;
 class TreeManager;
 class FileModelOperations;
 class ThemeManger;
+class SettingsDialog;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
 }
 QT_END_NAMESPACE
-
-struct UIManager final
-{
-    UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd);
-};
 
 class MainWindow : public QMainWindow
 {
@@ -58,7 +57,21 @@ public:
     void ForwardButtonOnClick(bool OnRightPane);
     void ScrollColumn(int direction);
 
+    void ActivateDualPane();
+    void ActivateTreeView();
+    void ActivateColumnView();
+    void DeactivateDualPane();
+    void DeactivateTreeView();
+
+
 protected:
+
+
+private:
+    struct UIManager final
+    {
+        UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd);
+    };
 
 
 private slots:
@@ -85,8 +98,21 @@ private slots:
     void on_tableView_2_doubleClicked(const QModelIndex &index);
     void on_toolSearchButton_clicked();
     void on_toolUpButton_clicked();
-    void on_actionOptions_triggered();
     void on_columnView_clicked(const QModelIndex &index);
+
+    void on_toolHistoryButton_clicked();
+
+    void on_toolCopyButton_clicked();
+
+    void on_toolPasteButton_clicked();
+
+    void on_toolDelButton_clicked();
+
+    void on_actionSettings_triggered();
+
+    void on_toolCutButton_clicked();
+
+    void on_toolRenameButton_clicked();
 
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
@@ -102,6 +128,7 @@ private:
     Ui::MainWindow *ui;
 
     UIManager m_ui_mgr_;
+
     FileModelOperations* fileModelOp;
     FileModelOperations* fileModelOp2;
     QFileSystemModel* columnFileModel;
@@ -116,18 +143,24 @@ private:
     TreeManager* treeManager;
     TreeManager* treeManager2;
 
+    FileOperationManager* FileOpManager;
+
+    ApplicationStateHandler* AppStateHandler;
+    SettingsDialog* settingsDialog;
+
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
-    bool isWorkingOnRightPane = false;
+    bool isWorkingOnLeftPane{}; // TODO: kod eklenecek
+    bool isWorkingOnRightPane{};
 
     bool leftTabIsReset_  = true;
     bool rightTabIsReset_ = true;
 
     bool treeViewActive = true;
     bool dualPaneActive = true;
-    bool ColumnViewActive = false;
+    bool ColumnViewActive{};
 
-    bool searchOn = false;
-    bool tabCloseButtonOld = false;
+    bool searchOn{};
+
 
 };
 #endif // MAINWINDOW_H
