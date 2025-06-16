@@ -44,9 +44,13 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
             -O0
 
             -Werror
+
+            -DIN_DEBUG
         >
         $<$<CONFIG:Release>:
             -O3
+
+            -DIN_RELEASE
 
             -march=native
         >
@@ -87,10 +91,14 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
             -O0
 
             -Werror
+
+            -DIN_DEBUG
         >
         $<$<CONFIG:Release>:
             -O3
-            
+
+            -DIN_RELEASE
+
             -march=native
         >
 
@@ -101,7 +109,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
     target_link_options(CompileOptions INTERFACE
         ##################################
-    
+
         ## Standard library
         $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>: -lc++>
     )
@@ -128,9 +136,13 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
             $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -Od>
 
             -Werror
+
+            -DIN_DEBUG
         >
         $<$<CONFIG:Release>:
             -O2
+
+            -DIN_RELEASE
         >
     )
 
@@ -157,7 +169,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         ## Active warnings
         /Wall
 
-        
+
         ## Inactive warnings
         /external:anglebrackets # Treat includes with angular brackets as external headers
         /external:W0 # Do NOT emit warnings for external headers
@@ -189,8 +201,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
             /wd4710 # Function not inlined
             /wd4711 # Function selected for inline expansion
 
-            /DIN_DEBUG=true
-            /DIN_RELEASE=false
+            /DIN_DEBUG=1
         >
         $<$<CONFIG:Release>:
             /O2
@@ -200,10 +211,10 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
             /GF  # String pooling
             /GL  # Whole-program optimization
 
-            /DIN_DEBUG=false
-            /DIN_RELEASE=true
+            /DIN_RELEASE=1
 
-            
+
+            ## Advanced Options
             /Qpar # Enable auto-parallelization of loops with #pragma loop directive
 
             $<$<STREQUAL:${FATCXX_MSVC_FULLREPORT},Enabled>:
