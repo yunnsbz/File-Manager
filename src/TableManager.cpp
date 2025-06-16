@@ -17,6 +17,7 @@ TableManager::TableManager(QTableView* tableView, FileModelOperations* fileModel
     tableView->setModel(fileModel);
     SetColumnResize();
     tableView->verticalHeader()->setDefaultSectionSize(10);
+    tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void TableManager::SetTableToDefault()

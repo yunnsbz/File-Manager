@@ -61,6 +61,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     columnFileModel = fileModelOp->GetFileModel();
     ui->columnView->setModel(columnFileModel);
+    ui->columnView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     // tree view daha küçük olmalı
     ui->splitter->setSizes({100,400});
@@ -1013,5 +1014,39 @@ void MainWindow::on_toolCutButton_clicked()
     }
 
     // TODO: şeçilenler grileştirilmeli (kesmek için işaretlenmişler)
+}
+
+
+void MainWindow::on_toolRenameButton_clicked()
+{
+    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
+    if(selectedIndexes.count() != 0)
+    {
+        // tek bir dosya ismi değiştirilecekse yerinde değişim yapılabilir.
+        if(selectedIndexes.count() == 1){
+            QModelIndex index = ui->tableView->currentIndex();
+            if (index.isValid()) {
+                ui->tableView->edit(index);
+            }
+        }
+        else if(selectedIndexes.count() > 1){
+
+        }
+    }
+    else
+    {
+        // ilk tabloda seçilmemişse
+        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
+        // tek bir dosya ismi değiştirilecekse yerinde değişim yapılabilir.
+        if(selectedIndexes.count() == 1){
+            QModelIndex index = ui->tableView_2->currentIndex();
+            if (index.isValid()) {
+                ui->tableView_2->edit(index);
+            }
+        }
+        else if(selectedIndexes.count() > 1){
+
+        }
+    }
 }
 
