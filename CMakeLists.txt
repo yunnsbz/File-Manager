@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(File-Manager LANGUAGES CXX)
+project (File-Manager
+    VERSION 0.5
+    HOMEPAGE_URL "https://github.com/yunnsbz/File-Manager"
+    DESCRIPTION "A lightweight file manager application developed using Qt, designed to work seamlessly on both Windows and Linux. Offers advanced file operations with a clean and intuitive interface."
+    LANGUAGES CXX
+)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
