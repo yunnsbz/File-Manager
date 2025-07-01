@@ -443,6 +443,9 @@
                 <property name="defaultDropAction">
                  <enum>Qt::DropAction::MoveAction</enum>
                 </property>
+                <property name="alternatingRowColors">
+                 <bool>false</bool>
+                </property>
                 <property name="selectionMode">
                  <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                 </property>
@@ -576,6 +579,9 @@
                 </property>
                 <property name="defaultDropAction">
                  <enum>Qt::DropAction::MoveAction</enum>
+                </property>
+                <property name="alternatingRowColors">
+                 <bool>false</bool>
                 </property>
                 <property name="selectionMode">
                  <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>

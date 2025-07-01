@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_SCAN_FOR_MODULES FALSE)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia MultimediaWidgets)
 
 qt_standard_project_setup()
 
@@ -106,6 +106,8 @@ target_link_libraries(File-Manager
     PRIVATE
         Qt::Core
         Qt::Widgets
+        Qt::Multimedia
+        Qt6::MultimediaWidgets
         FatCxx::CompileOptions
         qt_clang_warning_suppress
 )
