@@ -12,7 +12,6 @@
 #include <QDesktopServices>
 #include <QToolButton>
 #include <QMouseEvent>
-#include <QDir>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QProcess>
@@ -28,7 +27,6 @@
 #include <QFrame>
 #include <QHBoxLayout>
 #include <QIcon>
-#include <QModelIndexList>
 
 MainWindow::UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
 {
@@ -231,11 +229,11 @@ void MainWindow::on_actionTree_View_triggered()
 
         // save state update
         if(dualPaneActive){
-            AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE);
+            ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE);
             qDebug()<<"dual pane açık ve ağaç kapatıldı";
         }
         else{
-            AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE);
+            ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE);
             qDebug()<<"dual pane kapalı ve ağaç kapatıldı";
         }
     }
@@ -245,11 +243,11 @@ void MainWindow::on_actionTree_View_triggered()
 
         // save state update
         if(dualPaneActive){
-            AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+            ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
             qDebug()<<"dual pane açık ve ağaç açıldı";
         }
         else{
-            AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+            ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
             qDebug()<<"dual pane kapalı ve ağaç açıldı";
         }
     }
@@ -374,7 +372,7 @@ void MainWindow::ScrollColumn(int direction)
     }
 
     ui->columnView->horizontalScrollBar()->setValue(
-                ui->columnView->horizontalScrollBar()->value() + direction * scrollAmount
+                ui->columnView->horizontalScrollBar()->value() + (direction * scrollAmount)
                 );
 }
 
@@ -530,16 +528,20 @@ void MainWindow::on_actionDual_Pane_View_triggered()
             DeactivateDualPane();
 
             // save state update
-            if(treeViewActive) AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
-            else AppStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE);
+            if(treeViewActive)
+                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+            else
+                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE);
         }
         else
         {
             ActivateDualPane();
 
             // save state update
-            if(treeViewActive) AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
-            else AppStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE);
+            if(treeViewActive)
+                ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+            else
+                ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE);
         }
     }
     else{
@@ -806,7 +808,7 @@ void MainWindow::on_toolSearchButton_clicked()
     if(searchOn){
         if (ui->lineEdit_2 != nullptr) {
             searchOn = false;
-            QPropertyAnimation *animation = new QPropertyAnimation(ui->lineEdit_2, "maximumWidth");
+            auto *animation = new QPropertyAnimation(ui->lineEdit_2, "maximumWidth");
             animation->setDuration(300);
             animation->setStartValue(ui->lineEdit_2->width());
             animation->setEndValue(0); // önceki boyut
@@ -816,7 +818,7 @@ void MainWindow::on_toolSearchButton_clicked()
     else{
         if (ui->lineEdit_2 != nullptr) {
             searchOn = true;
-            QPropertyAnimation *animation = new QPropertyAnimation(ui->lineEdit_2, "maximumWidth");
+            auto *animation = new QPropertyAnimation(ui->lineEdit_2, "maximumWidth");
             animation->setDuration(300);
             animation->setStartValue(ui->lineEdit_2->width());
             animation->setEndValue(250); // hedef genişlik
@@ -839,15 +841,15 @@ void MainWindow::on_columnView_clicked(const QModelIndex &index)
 
 void MainWindow::on_toolHistoryButton_clicked()
 {
-    QFrame* popupFrame = new QFrame(this, Qt::Popup); // Menü gibi görünür
-    QVBoxLayout* layout = new QVBoxLayout(popupFrame);
+    auto* popupFrame = new QFrame(this, Qt::Popup); // Menü gibi görünür
+    auto* layout = new QVBoxLayout(popupFrame);
     popupFrame->setObjectName("HistoryPopupFrame");
 
-    QScrollArea* scrollArea = new QScrollArea(popupFrame);
+    auto* scrollArea = new QScrollArea(popupFrame);
     scrollArea->setWidgetResizable(true);
 
-    QWidget* scrollContent = new QWidget();
-    QVBoxLayout* contentLayout = new QVBoxLayout(scrollContent);
+    auto* scrollContent = new QWidget();
+    auto* contentLayout = new QVBoxLayout(scrollContent);
     scrollContent->setObjectName("HistoryScrollContent");
     scrollContent->setAttribute(Qt::WA_Hover, true);
 
@@ -855,14 +857,14 @@ void MainWindow::on_toolHistoryButton_clicked()
     contentLayout->setSpacing(0);
 
     for (int i = 0; i < 20; i++) {
-        QWidget* itemWidget = new QWidget;
-        QHBoxLayout* rowLayout = new QHBoxLayout(itemWidget);
+        auto* itemWidget = new QWidget;
+        auto* rowLayout = new QHBoxLayout(itemWidget);
 
         rowLayout->setContentsMargins(1, 2, 1, 2); // min dikey boşluk
         rowLayout->setSpacing(0);
 
-        QLabel* label = new QLabel("operation description (... moved to ...)");
-        QToolButton* undoButton = new QToolButton();
+        auto* label = new QLabel("operation description (... moved to ...)");
+        auto* undoButton = new QToolButton();
         undoButton->setIcon(QIcon(":/resources/img/history_white.svg"));
 
         rowLayout->addWidget(label);

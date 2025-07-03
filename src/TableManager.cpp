@@ -57,19 +57,18 @@ void TableManager::navigateToFolder(int tabIndex, QModelIndex firstColumnIndex)
     if (!fileModel->hasChildren(firstColumnIndex))
     {
         const QString filePath = fileModel->filePath(firstColumnIndex);
-        // Dosya uzantısını kontrol et
+
+        // Dosya uzantısı
         const QString suffix = QFileInfo(filePath).suffix().toLower();
         const QStringList videoExts = { "mp4", "avi", "mkv", "mov" };
         const QStringList audioExts = { "mp3", "wav", "flac", "ogg" };
 
         if (videoExts.contains(suffix) || audioExts.contains(suffix))
         {
-            // Medya penceresini aç
             openMediaWindow(filePath);
         }
         else
         {
-            // Normal dosya için sistemle aç
             QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
         }
     }
@@ -84,7 +83,7 @@ void TableManager::SetColumnResize()
 {
     QHeaderView* header = tableView_->horizontalHeader();
 
-    // Stretch ile başlangıç yerleşimi (bu işlem interactive modu kapatır. aşağıda tekrar açarız)
+    // Stretch ile başlangıç yerleşimi. bu işlem interactive modu kapatır. aşağıda tekrar açılacak
     header->setSectionResizeMode(QHeaderView::Stretch);
     tableView_->resizeColumnsToContents();
 
@@ -115,37 +114,36 @@ void TableManager::SetColumnResize()
 void TableManager::openMediaWindow(const QString filePath)
 {
     auto* player = new QMediaPlayer;
-        auto* audioOutput = new QAudioOutput;
-        player->setAudioOutput(audioOutput);
+    auto* audioOutput = new QAudioOutput;
+    player->setAudioOutput(audioOutput);
 
-        QFileInfo fi(filePath);
-        const QString suffix = fi.suffix().toLower();
+    QFileInfo fi(filePath);
+    const QString suffix = fi.suffix().toLower();
 
-        // Yeni bir pencere
-        QWidget* window = new QWidget;
-        window->setAttribute(Qt::WA_DeleteOnClose); // pencere kapanınca belleği temizle
+    QWidget* window = new QWidget;
+    window->setAttribute(Qt::WA_DeleteOnClose); // pencere kapanınca belleği temizle
 
-        QVBoxLayout* layout = new QVBoxLayout(window);
+    QVBoxLayout* layout = new QVBoxLayout(window);
 
-        if (QStringList{ "mp4", "avi", "mkv", "mov" }.contains(suffix))
-        {
-            auto* videoWidget = new QVideoWidget;
-            layout->addWidget(videoWidget);
-            player->setVideoOutput(videoWidget);
-        }
-        else
-        {
-            layout->addWidget(new QLabel("Playing audio: " + fi.fileName()));
-        }
+    if (QStringList{ "mp4", "avi", "mkv", "mov" }.contains(suffix))
+    {
+        auto* videoWidget = new QVideoWidget;
+        layout->addWidget(videoWidget);
+        player->setVideoOutput(videoWidget);
+    }
+    else
+    {
+        layout->addWidget(new QLabel("Playing audio: " + fi.fileName()));
+    }
 
-        player->setSource(QUrl::fromLocalFile(filePath));
-        player->play();
+    player->setSource(QUrl::fromLocalFile(filePath));
+    player->play();
 
-        connect(window, &QVideoWidget::destroyed, player, &QMediaPlayer::stop);
+    connect(window, &QVideoWidget::destroyed, player, &QMediaPlayer::stop);
 
-        window->setWindowTitle("Playing: " + fi.fileName());
-        window->resize(640, 480);
-        window->show();
+    window->setWindowTitle("Playing: " + fi.fileName());
+    window->resize(640, 480);
+    window->show();
 }
 
 
