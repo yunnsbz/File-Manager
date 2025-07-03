@@ -68,16 +68,16 @@ private:
     QToolButton* forwTabButton;
     QToolButton* upTabButton;
 
-    bool forRightPane_;
+    bool m_forRightPane;
 
     // last opened tabs (when moving to another tab system should know the last one)
-    int lastRightTabIndex = 0;
+    int m_lastRightTabIndex = 0;
 
     // _previous geçici olarak veri tutar.
     // yeni tab'e geçtiğin anda geçici önceki sekmenin index'ini tutar. daha sonra bu index'i kalıcıya aktarır.
     // daha sonra current index'e eşitlenir.
-    int _previousLeftTabIndex = 0;
-    int persistentPreviousLeftTabIndex = 0;
+    int m_previousLeftTabIndex = 0;
+    int m_persistentPreviousLeftTabIndex = 0;
 };
 
 

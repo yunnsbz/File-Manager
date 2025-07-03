@@ -13,7 +13,7 @@ TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent
     QObject(parent),
     mainWindow_(static_cast<MainWindow*>(parent)),
     tabWidget_(tabWidget),
-    forRightPane_(forRightPane)
+    m_forRightPane(forRightPane)
 {
     // sekmelerin sürüklenmesi/yer değiştirmesi hareketlerini algılamak için:
     connect(tabWidget->tabBar(), &QTabBar::tabMoved, this, &TabManager::onTabMoved);
@@ -45,7 +45,7 @@ void TabManager::SetAddTabButton()
 
 void TabManager::EnableNavWidget(bool enable)
 {
-    if(enable){
+     if(enable){
         cornerNavButtons->show();
         tabWidget_->setCornerWidget(cornerNavButtons, Qt::TopRightCorner);
     }
@@ -79,9 +79,9 @@ void TabManager::SetCornerNavButtons()
     layout->addWidget(forwTabButton);
     layout->addWidget(upTabButton);
 
-    connect(upTabButton, &QToolButton::clicked, this, [this]{mainWindow_->upperFolderOnClick(forRightPane_);});
-    connect(forwTabButton, &QToolButton::clicked, this, [this]{mainWindow_->ForwardButtonOnClick(forRightPane_);});
-    connect(backTabButton, &QToolButton::clicked, this, [this]{mainWindow_->BackButtonOnClick(forRightPane_);});
+    connect(upTabButton, &QToolButton::clicked, this, [this]{mainWindow_->upperFolderOnClick(m_forRightPane);});
+    connect(forwTabButton, &QToolButton::clicked, this, [this]{mainWindow_->ForwardButtonOnClick(m_forRightPane);});
+    connect(backTabButton, &QToolButton::clicked, this, [this]{mainWindow_->BackButtonOnClick(m_forRightPane);});
 }
 
 void TabManager::SetNavButtonThemes()
@@ -126,7 +126,7 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
         return;
     }
 
-    if (forRightPane_)
+    if (m_forRightPane)
     {
         mainWindow_->OnTabMoved2(toIndex, fromIndex);
     }
@@ -136,37 +136,37 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
     }
 
     // if lastLeftTabIndex is the one moved it should register
-    if (fromIndex == _previousLeftTabIndex)
+    if (fromIndex == m_previousLeftTabIndex)
     {
-        _previousLeftTabIndex = toIndex;
-        persistentPreviousLeftTabIndex = toIndex;
+        m_previousLeftTabIndex = toIndex;
+        m_persistentPreviousLeftTabIndex = toIndex;
     }
-    else if (toIndex == lastRightTabIndex)
+    else if (toIndex == m_lastRightTabIndex)
     {
-        _previousLeftTabIndex = fromIndex;
-        persistentPreviousLeftTabIndex = fromIndex;
+        m_previousLeftTabIndex = fromIndex;
+        m_persistentPreviousLeftTabIndex = fromIndex;
     }
 }
 
 auto TabManager::GetPreviousSplitter()
 {
-    return tabWidget_->widget(_previousLeftTabIndex)->findChild<QSplitter*>();
+    return tabWidget_->widget(m_previousLeftTabIndex)->findChild<QSplitter*>();
 }
 
 auto TabManager::_getPreviousLeftTabIndex() const -> int
 {
-    return _previousLeftTabIndex;
+    return m_previousLeftTabIndex;
 }
 
 auto TabManager::getPersistentPreviousLeftTabIndex() const ->int
 {
-    return persistentPreviousLeftTabIndex;
+    return m_persistentPreviousLeftTabIndex;
 }
 
 void TabManager::setPreviousLeftTabIndex(int value)
 {
-    persistentPreviousLeftTabIndex = _previousLeftTabIndex;
-    _previousLeftTabIndex = value;
+    m_persistentPreviousLeftTabIndex = m_previousLeftTabIndex;
+    m_previousLeftTabIndex = value;
 }
 
 void TabManager::addNewTab()
@@ -188,7 +188,7 @@ void TabManager::addNewTab()
 
     setPreviousLeftTabIndex(tabWidget_->count() - 1);
 
-    mainWindow_->SetTabContent(tabWidget_->currentIndex(), forRightPane_);
+    mainWindow_->SetTabContent(tabWidget_->currentIndex(), m_forRightPane);
 }
 
 void TabManager::moveTabWidget(int index)
