@@ -811,8 +811,8 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuview"/>
-   <addaction name="menuHelp"/>
    <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionTree_View">

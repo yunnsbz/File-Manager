@@ -230,11 +230,9 @@ void MainWindow::on_actionTree_View_triggered()
         // save state update
         if(dualPaneActive){
             ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE);
-            qDebug()<<"dual pane açık ve ağaç kapatıldı";
         }
         else{
             ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE);
-            qDebug()<<"dual pane kapalı ve ağaç kapatıldı";
         }
     }
     else
@@ -244,11 +242,9 @@ void MainWindow::on_actionTree_View_triggered()
         // save state update
         if(dualPaneActive){
             ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
-            qDebug()<<"dual pane açık ve ağaç açıldı";
         }
         else{
             ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
-            qDebug()<<"dual pane kapalı ve ağaç açıldı";
         }
     }
 }
@@ -427,7 +423,7 @@ void MainWindow::on_actionAbout_triggered()
 
     auto* layout = new QVBoxLayout(&dialog);
 
-    auto* label = new QLabel("Made by fatpound & yunns\nCopyright (c) 2025", &dialog);
+    auto* label = new QLabel("Made by fatpound & yunns\n\nCopyright (c) 2025\n\n[ early development ]", &dialog);
     label->setAlignment(Qt::AlignmentFlag::AlignCenter);
     label->setWordWrap(true);
     layout->addWidget(label);
