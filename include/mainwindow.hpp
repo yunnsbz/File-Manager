@@ -64,17 +64,14 @@ public:
     void DeactivateDualPane();
     void DeactivateTreeView();
 
-    [[nodiscard]] auto getTabWidgetLeft() const -> QTabWidget* { return ui->tabWidget;}
-    [[nodiscard]] auto getTabWidgetRight() const -> QTabWidget*{ return ui->tabWidget_2;}
-    [[nodiscard]] auto getTabBarLeft() const -> QTabBar*{ return ui->tabWidget->tabBar();}
-    [[nodiscard]] auto getTabBarRight() const -> QTabBar*{ return ui->tabWidget_2->tabBar();}
-    [[nodiscard]] auto getTreeViewLeft() const -> QTreeView*{ return ui->FileTreeView;}
-    [[nodiscard]] auto getTreeViewRight() const -> QTreeView*{ return ui->FileTreeView_2;}
-    [[nodiscard]] auto getTableViewLeft() const -> QTableView*{ return ui->tableView;}
-    [[nodiscard]] auto getTableViewRight() const -> QTableView*{ return ui->tableView_2;}
-
-protected:
-
+    [[nodiscard]] auto getTabWidgetLeft()   const -> QTabWidget*    { return ui->tabWidget; }
+    [[nodiscard]] auto getTabWidgetRight()  const -> QTabWidget*    { return ui->tabWidget_2; }
+    [[nodiscard]] auto getTabBarLeft()      const -> QTabBar*       { return ui->tabWidget->tabBar(); }
+    [[nodiscard]] auto getTabBarRight()     const -> QTabBar*       { return ui->tabWidget_2->tabBar(); }
+    [[nodiscard]] auto getTreeViewLeft()    const -> QTreeView*     { return ui->FileTreeView; }
+    [[nodiscard]] auto getTreeViewRight()   const -> QTreeView*     { return ui->FileTreeView_2; }
+    [[nodiscard]] auto getTableViewLeft()   const -> QTableView*    { return ui->tableView; }
+    [[nodiscard]] auto getTableViewRight()  const -> QTableView*    { return ui->tableView_2; }
 
 private:
     struct UIManager final

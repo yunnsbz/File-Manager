@@ -54,6 +54,8 @@ qt_add_executable(File-Manager
 
     .clang-format
     .clang-tidy
+    include/FileOperationView.h
+    src/FileOperationView.cpp
 )
 
 qt_add_resources(RESOURCE_SOURCES

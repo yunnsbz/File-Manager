@@ -1,0 +1,5 @@
+
+FileOperationView::FileOperationView(QObject *parent)
+{
+
+}
