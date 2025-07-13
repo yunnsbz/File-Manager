@@ -81,11 +81,19 @@ public:
     [[nodiscard]] auto getDeleteButton()    const -> QToolButton*   { return ui->toolDelButton; }
     [[nodiscard]] auto getRenameButton()    const -> QToolButton*   { return ui->toolRenameButton; }
 
+    [[nodiscard]] auto getActionAbout()         const -> QAction*   { return ui->actionAbout; }
+    [[nodiscard]] auto getActionColumnView()    const -> QAction*   { return ui->actionColumn_View; }
+    [[nodiscard]] auto getActionDualPaneView()  const -> QAction*   { return ui->actionDual_Pane_View; }
+    [[nodiscard]] auto getActionTreeView()      const -> QAction*   { return ui->actionTree_View; }
+    [[nodiscard]] auto getActionExit()          const -> QAction*   { return ui->actionExit; }
+    [[nodiscard]] auto getActionSettings()      const -> QAction*   { return ui->actionSettings; }
+
     [[nodiscard]] auto isWorkingOnRightPane()   const -> bool       { return m_isWorkingOnRightPane; }
 
     [[nodiscard]] auto getFileModelOpLeft()     const -> FileModelOperations*   { return m_fileModelOpLeft; }
     [[nodiscard]] auto getFileModelOpRight()    const -> FileModelOperations*   { return m_fileModelOpRight; }
     [[nodiscard]] auto getFileOpManager()       const -> FileOperationManager*  { return m_fileOpManager; }
+    [[nodiscard]] auto getSettingsWindow()      const -> SettingsDialog*        { return m_settingsDialog; }
 
 private:
     struct UIManager final
@@ -101,21 +109,15 @@ private slots:
     void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
     // menu bar
-    void on_actionExit_triggered();
-    void on_actionTree_View_triggered();
-    void on_actionAbout_triggered();
     void on_actionColumn_View_triggered();
     void on_actionDual_Pane_View_triggered();
-    void on_actionSettings_triggered();
+    void on_actionTree_View_triggered();
 
     // column view
     void on_columnView_clicked(const QModelIndex &index);
 
     // spliter
     void on_splitter_splitterMoved(int pos, int index);
-
-
-    void on_toolCmdButton_pressed();
 
     // tab bar
     void on_tabWidget_tabBarClicked(int index);
@@ -127,13 +129,16 @@ private slots:
     void on_tableView_doubleClicked(const QModelIndex &index);
     void on_tableView_2_doubleClicked(const QModelIndex &index);
 
-    // tool bar
+    // nav buttons
     void on_toolUpButton_clicked();
     void on_toolBackButton_clicked();
     void on_toolForwardButton_clicked();
+
+    // other buttons
     void on_lineEdit_returnPressed();
     void on_toolSearchButton_clicked();
     void on_toolHistoryButton_clicked();
+    void on_toolCmdButton_pressed();
 
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
