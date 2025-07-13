@@ -33,7 +33,6 @@ private:
     // sinyal oluşturmadan ağacın tüm dallarını kapat
     void CollapseAll_noSig();
 
-
 private:
     FileModelOperations* fileModelOp_;
     QTabWidget* tabWidget_;

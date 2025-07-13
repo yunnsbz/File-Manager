@@ -29,10 +29,12 @@ public:
     // getters:
     auto GetPreviousSplitter();
     // yeni sekmeye geçiş yapıldığı anda önceki sekmeyi gösterir:
-    [[nodiscard]] auto _getPreviousLeftTabIndex() const -> int;
+    [[nodiscard]]
+    auto _getPreviousLeftTabIndex() const -> int;
 
     // yeni sekmeye geçiş tamamlandıktan sonra önceki sekmeyi gösterir:
-    [[nodiscard]] auto getPersistentPreviousLeftTabIndex() const -> int;
+    [[nodiscard]]
+    auto getPersistentPreviousLeftTabIndex() const -> int;
 
     // auto tabCount() const -> int;
 

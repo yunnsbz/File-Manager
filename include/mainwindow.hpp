@@ -76,30 +76,42 @@ private:
 
 
 private slots:
+    // tree
     void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
-    void on_actionExit_triggered();
-    void on_splitter_splitterMoved(int pos, int index);
-    void on_actionTree_View_triggered();
+    void on_FileTreeView_clicked(const QModelIndex &index);
+    void on_FileTreeView_2_clicked(const QModelIndex &index);
 
+    // menu bar
+    void on_actionExit_triggered();
+    void on_actionTree_View_triggered();
+    void on_actionAbout_triggered();
+    void on_actionColumn_View_triggered();
+    void on_actionDual_Pane_View_triggered();
+    void on_columnView_clicked(const QModelIndex &index);
+
+    // spliter
+    void on_splitter_splitterMoved(int pos, int index);
+
+    // tool bar
+    void on_toolUpButton_clicked();
     void on_toolBackButton_clicked();
     void on_toolForwardButton_clicked();
-    void on_actionAbout_triggered();
     void on_lineEdit_returnPressed();
-    void on_toolCmdButton_pressed();
-    void on_actionDual_Pane_View_triggered();
-    void on_actionColumn_View_triggered();
+    void on_toolSearchButton_clicked();
 
+    void on_toolCmdButton_pressed();
+
+    // tab bar
     void on_tabWidget_tabBarClicked(int index);
     void on_tabWidget_2_tabBarClicked(int index);
     void on_tabWidget_tabCloseRequested(int index);
     void on_tabWidget_2_tabCloseRequested(int index);
-    void on_FileTreeView_clicked(const QModelIndex &index);
-    void on_FileTreeView_2_clicked(const QModelIndex &index);
+
+    // table view
     void on_tableView_doubleClicked(const QModelIndex &index);
     void on_tableView_2_doubleClicked(const QModelIndex &index);
-    void on_toolSearchButton_clicked();
-    void on_toolUpButton_clicked();
-    void on_columnView_clicked(const QModelIndex &index);
+
+
 
     void on_toolHistoryButton_clicked();
 
