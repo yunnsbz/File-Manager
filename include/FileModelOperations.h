@@ -8,7 +8,9 @@
 #include <QMap>
 #include <QList>
 #include <QDir>
-
+/**
+ * file model ile alakalı tüm fonksiyonları barındırır
+ */
 class FileModelOperations : public QObject
 {
     Q_OBJECT

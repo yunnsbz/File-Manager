@@ -14,6 +14,7 @@
 #include <QString>
 #include <QKeyEvent>
 #include <QList>
+#include <QToolButton>
 
 class ApplicationStateHandler;
 class TabManager;
@@ -73,6 +74,16 @@ public:
     [[nodiscard]] auto getTableViewLeft()   const -> QTableView*    { return ui->tableView; }
     [[nodiscard]] auto getTableViewRight()  const -> QTableView*    { return ui->tableView_2; }
 
+    [[nodiscard]] auto getPasteButton()     const -> QToolButton*   { return ui->toolPasteButton; }
+    [[nodiscard]] auto getCutButton()       const -> QToolButton*   { return ui->toolCutButton; }
+    [[nodiscard]] auto getCopyButton()      const -> QToolButton*   { return ui->toolCopyButton; }
+    [[nodiscard]] auto getDeleteButton()    const -> QToolButton*   { return ui->toolDelButton; }
+    [[nodiscard]] auto getRenameButton()    const -> QToolButton*   { return ui->toolRenameButton; }
+
+    [[nodiscard]] auto getFileModelOpLeft()     const -> FileModelOperations*   { return m_fileModelOpLeft; }
+    [[nodiscard]] auto getFileModelOpRight()    const -> FileModelOperations*   { return m_fileModelOpRight; }
+    [[nodiscard]] auto getFileOpManager()       const -> FileOperationManager*  { return m_fileOpManager; }
+
 private:
     struct UIManager final
     {
@@ -119,9 +130,9 @@ private slots:
     void on_toolForwardButton_clicked();
     void on_lineEdit_returnPressed();
     void on_toolSearchButton_clicked();
+    void on_toolHistoryButton_clicked();
 
     // tool bar operations
-    void on_toolHistoryButton_clicked();
     void on_toolCopyButton_clicked();
     void on_toolPasteButton_clicked();
     void on_toolDelButton_clicked();
@@ -139,28 +150,28 @@ private:
 
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
 
     UIManager m_ui_mgr_;
 
-    FileModelOperations* fileModelOp;
-    FileModelOperations* fileModelOp2;
-    QFileSystemModel* columnFileModel;
+    FileModelOperations* m_fileModelOpLeft;
+    FileModelOperations* m_fileModelOpRight;
+    QFileSystemModel* m_columnFileModel;
 
-    ToolBarManager* toolBarManager;
-    ThemeManger* menuManager;
+    ToolBarManager* m_toolBarManager;
+    ThemeManger* m_menuManager;
 
-    TabManager* tabManager;
-    TabManager* tabManager2;
-    TableManager* tableManager;
-    TableManager* tableManager2;
-    TreeManager* treeManager;
-    TreeManager* treeManager2;
+    TabManager* m_tabManagerLeft;
+    TabManager* m_tabManagerRight;
+    TableManager* m_tableManagerLeft;
+    TableManager* m_tableManagerRight;
+    TreeManager* m_treeManagerLeft;
+    TreeManager* m_treeManagerRight;
 
-    FileOperationManager* FileOpManager;
+    FileOperationManager* m_fileOpManager;
 
-    ApplicationStateHandler* AppStateHandler;
-    SettingsDialog* settingsDialog;
+    ApplicationStateHandler* m_appStateHandler;
+    SettingsDialog* m_settingsDialog;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
     bool isWorkingOnLeftPane{}; // TODO(fatpound): kod eklenecek
@@ -171,7 +182,7 @@ private:
 
     bool treeViewActive = true;
     bool dualPaneActive = true;
-    bool ColumnViewActive{};
+    bool columnViewActive{};
 
     bool searchOn{};
 };
