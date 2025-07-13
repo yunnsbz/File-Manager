@@ -1,5 +1,6 @@
 #include "mainwindow.hpp"
 #include "FileOperationView.h"
+#include "MenuBarView.h"
 #include "SettingsDialog.h"
 #include "ThemeManager.h"
 #include "TabManager.h"
@@ -53,7 +54,8 @@ MainWindow::MainWindow(QWidget* parent)
     m_fileOpManager(new FileOperationManager(this)),
     m_appStateHandler(new ApplicationStateHandler(this)),
     m_settingsDialog(new SettingsDialog(this)),
-    m_fileOperationView(new FileOperationView(this))
+    m_fileOperationView(new FileOperationView(this)),
+    m_menuBarView(new MenuBarView(this))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
@@ -156,11 +158,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void MainWindow::on_actionExit_triggered()
-{
-    close();
-}
-
 void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModelIndex&)
 {
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(current);
@@ -170,6 +167,7 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
 
 void MainWindow::on_splitter_splitterMoved(int pos, int )
 {
+    // TODO: this doesn't work for right pane
     if (pos < 10 && m_treeViewActive )
     {
         m_treeViewActive = false;
@@ -221,34 +219,6 @@ void MainWindow::ActivateTreeView()
 
     ui->splitter->setHandleWidth(5);
     ui->splitter_2->setHandleWidth(5);
-}
-
-void MainWindow::on_actionTree_View_triggered()
-{
-    if (m_treeViewActive)
-    {
-        DeactivateTreeView();
-
-        // save state update
-        if(m_dualPaneActive){
-            ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE);
-        }
-        else{
-            ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE);
-        }
-    }
-    else
-    {
-        ActivateTreeView();
-
-        // save state update
-        if(m_dualPaneActive){
-            ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
-        }
-        else{
-            ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
-        }
-    }
 }
 
 void MainWindow::updateNavButtons(int const tabIndex, bool forRightPane)
@@ -418,26 +388,6 @@ void MainWindow::on_toolForwardButton_clicked()
     ForwardButtonOnClick(m_isWorkingOnRightPane);
 }
 
-void MainWindow::on_actionAbout_triggered()
-{
-    QDialog dialog(this);
-    dialog.setWindowTitle("About");
-
-    auto* layout = new QVBoxLayout(&dialog);
-
-    auto* label = new QLabel("Made by fatpound & yunns\n\nCopyright (c) 2025\n\n[ early development ]", &dialog);
-    label->setAlignment(Qt::AlignmentFlag::AlignCenter);
-    label->setWordWrap(true);
-    layout->addWidget(label);
-
-    auto* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok, &dialog);
-    connect(buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
-    layout->addWidget(buttonBox);
-
-    dialog.setLayout(layout);
-    dialog.setFixedSize(300, 200);
-    dialog.exec();
-}
 
 void MainWindow::on_lineEdit_returnPressed()
 {
@@ -516,42 +466,11 @@ void MainWindow::DeactivateDualPane()
     m_tabManagerRight->EnableNavWidget(false);
 }
 
-void MainWindow::on_actionDual_Pane_View_triggered()
+void MainWindow::DeactivateColumnView()
 {
-    // if current stackedWidget is not on column view then open or close dual pane
-    if (ui->stackedWidget->currentIndex() == 0)
-    {
-        if (m_dualPaneActive)
-        {
-            DeactivateDualPane();
-
-            // save state update
-            if(m_treeViewActive)
-                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
-            else
-                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE);
-        }
-        else
-        {
-            ActivateDualPane();
-
-            // save state update
-            if(m_treeViewActive)
-                ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
-            else
-                ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE);
-        }
-    }
-    else{
-        // if column view is active the deactivate it and open dual pane
-        ui->stackedWidget->setCurrentIndex(0);
-        m_columnViewActive = false;
-
-        // column'dan çıktıktan sonra dual pane açılmalı:
-        ActivateDualPane();
-    }
+    m_columnViewActive = false;
+    ui->stackedWidget->setCurrentIndex(0);
 }
-
 
 void MainWindow::ActivateColumnView()
 {
@@ -559,34 +478,6 @@ void MainWindow::ActivateColumnView()
     ui->stackedWidget->setCurrentIndex(1);
     m_toolBarManager->SetBackButtonEnabled(true);
     m_toolBarManager->SetForwardButtonEnabled(true);
-}
-
-void MainWindow::on_actionColumn_View_triggered()
-{
-    if(ui->stackedWidget->currentIndex() == 1){
-        m_columnViewActive = false;
-        ui->stackedWidget->setCurrentIndex(0);
-        if(m_dualPaneActive){
-            if(m_treeViewActive){
-                m_appStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
-            }
-            else{
-                m_appStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE);
-            }
-        }
-        else{
-            if(m_treeViewActive){
-                m_appStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
-            }
-            else{
-                m_appStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE);
-            }
-        }
-    }
-    else{
-        ActivateColumnView();
-        m_appStateHandler->SetCurrentViewState(ViewStates::COLUMN_VIEW);
-    }
 }
 
 void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
@@ -880,9 +771,4 @@ void MainWindow::on_toolHistoryButton_clicked()
     popupFrame->resize(300, 400); // Max boyut
     popupFrame->move(ui->toolHistoryButton->mapToGlobal(QPoint(-270, ui->toolHistoryButton->height())));
     popupFrame->show();
-}
-
-void MainWindow::on_actionSettings_triggered()
-{
-    m_settingsDialog->exec(); // Modal olarak açar
 }

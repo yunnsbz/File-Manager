@@ -25,6 +25,7 @@ class FileModelOperations;
 class ThemeManger;
 class SettingsDialog;
 class FileOperationView;
+class MenuBarView;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -65,6 +66,7 @@ public:
     void ActivateColumnView();
     void DeactivateDualPane();
     void DeactivateTreeView();
+    void DeactivateColumnView();
 
     [[nodiscard]] auto getTabWidgetLeft()   const -> QTabWidget*    { return ui->tabWidget; }
     [[nodiscard]] auto getTabWidgetRight()  const -> QTabWidget*    { return ui->tabWidget_2; }
@@ -74,6 +76,7 @@ public:
     [[nodiscard]] auto getTreeViewRight()   const -> QTreeView*     { return ui->FileTreeView_2; }
     [[nodiscard]] auto getTableViewLeft()   const -> QTableView*    { return ui->tableView; }
     [[nodiscard]] auto getTableViewRight()  const -> QTableView*    { return ui->tableView_2; }
+    [[nodiscard]] auto getStackedWidget()   const -> QStackedWidget*{ return ui->stackedWidget; }
 
     [[nodiscard]] auto getPasteButton()     const -> QToolButton*   { return ui->toolPasteButton; }
     [[nodiscard]] auto getCutButton()       const -> QToolButton*   { return ui->toolCutButton; }
@@ -89,6 +92,9 @@ public:
     [[nodiscard]] auto getActionSettings()      const -> QAction*   { return ui->actionSettings; }
 
     [[nodiscard]] auto isWorkingOnRightPane()   const -> bool       { return m_isWorkingOnRightPane; }
+    [[nodiscard]] auto isTreeViewActive()       const -> bool       { return m_treeViewActive; }
+    [[nodiscard]] auto isDualPaneActive()       const -> bool       { return m_dualPaneActive; }
+    [[nodiscard]] auto isColumnViewActive()     const -> bool       { return m_columnViewActive; }
 
     [[nodiscard]] auto getFileModelOpLeft()     const -> FileModelOperations*   { return m_fileModelOpLeft; }
     [[nodiscard]] auto getFileModelOpRight()    const -> FileModelOperations*   { return m_fileModelOpRight; }
@@ -107,11 +113,6 @@ private slots:
     void on_FileTreeView_clicked(const QModelIndex &index);
     void on_FileTreeView_2_clicked(const QModelIndex &index);
     void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
-
-    // menu bar
-    void on_actionColumn_View_triggered();
-    void on_actionDual_Pane_View_triggered();
-    void on_actionTree_View_triggered();
 
     // column view
     void on_columnView_clicked(const QModelIndex &index);
@@ -175,17 +176,18 @@ private:
     SettingsDialog* m_settingsDialog;
 
     FileOperationView* m_fileOperationView;
+    MenuBarView* m_menuBarView;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
     bool isWorkingOnLeftPane{}; // TODO(fatpound): kod eklenecek
     bool m_isWorkingOnRightPane{};
 
-    bool m_leftTabIsReset  = true;
-    bool m_rightTabIsReset = true;
+    bool m_leftTabIsReset   = true;
+    bool m_rightTabIsReset  = true;
 
-    bool m_treeViewActive = true;
-    bool m_dualPaneActive = true;
-    bool m_columnViewActive{};
+    bool m_treeViewActive   = true;
+    bool m_dualPaneActive   = true;
+    bool m_columnViewActive = false;
 
     bool m_searchOn{};
 };

@@ -32,6 +32,7 @@ qt_add_executable(File-Manager
     src/ApplicationStateHandler.cpp
     src/MoveFileOperation.cpp
     src/FileOperationView.cpp
+    src/MenuBarView.cpp
 
     include/mainwindow.hpp
     include/TabManager.h
