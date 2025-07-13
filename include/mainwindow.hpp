@@ -175,13 +175,14 @@ private:
     bool isWorkingOnLeftPane{}; // TODO(fatpound): kod eklenecek
     bool m_isWorkingOnRightPane{};
 
-    bool leftTabIsReset_  = true;
-    bool rightTabIsReset_ = true;
+    bool m_leftTabIsReset  = true;
+    bool m_rightTabIsReset = true;
 
-    bool treeViewActive = true;
-    bool dualPaneActive = true;
-    bool columnViewActive{};
+    bool m_treeViewActive = true;
+    bool m_dualPaneActive = true;
+    bool m_columnViewActive{};
 
-    bool searchOn{};
+    bool m_searchOn{};
 };
+
 #endif // MAINWINDOW_H

@@ -170,19 +170,19 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
 
 void MainWindow::on_splitter_splitterMoved(int pos, int )
 {
-    if (pos < 10 && treeViewActive )
+    if (pos < 10 && m_treeViewActive )
     {
-        treeViewActive = false;
+        m_treeViewActive = false;
     }
-    else if (pos > 10 && ! treeViewActive)
+    else if (pos > 10 && ! m_treeViewActive)
     {
-        treeViewActive = true;
+        m_treeViewActive = true;
     }
 }
 
 void MainWindow::DeactivateTreeView()
 {
-    treeViewActive = false;
+    m_treeViewActive = false;
     ui->splitter->setSizes({0,400});
     ui->splitter_2->setSizes({0,400});
 
@@ -204,7 +204,7 @@ void MainWindow::DeactivateTreeView()
 
 void MainWindow::ActivateTreeView()
 {
-    treeViewActive = true;
+    m_treeViewActive = true;
     ui->splitter->setSizes({100,400});
     ui->splitter_2->setSizes({100,400});
     //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
@@ -225,12 +225,12 @@ void MainWindow::ActivateTreeView()
 
 void MainWindow::on_actionTree_View_triggered()
 {
-    if (treeViewActive)
+    if (m_treeViewActive)
     {
         DeactivateTreeView();
 
         // save state update
-        if(dualPaneActive){
+        if(m_dualPaneActive){
             ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE);
         }
         else{
@@ -242,7 +242,7 @@ void MainWindow::on_actionTree_View_triggered()
         ActivateTreeView();
 
         // save state update
-        if(dualPaneActive){
+        if(m_dualPaneActive){
             ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
         }
         else{
@@ -339,7 +339,7 @@ void MainWindow::BackButtonOnClick(bool OnRightPane)
         // buton kontrolü:
         updateNavButtons(tabIndex, true);
     }
-    else if(columnViewActive){
+    else if(m_columnViewActive){
         ScrollColumn(-1);
     }
     else{
@@ -388,7 +388,7 @@ void MainWindow::ForwardButtonOnClick(bool OnRightPane)
         // buton kontrolü:
         updateNavButtons(tabIndex, true);
     }
-    else if(columnViewActive){
+    else if(m_columnViewActive){
         ScrollColumn(1);
     }
     else{
@@ -469,7 +469,7 @@ void MainWindow::on_toolCmdButton_pressed()
 
 void MainWindow::ActivateDualPane()
 {
-    dualPaneActive = true;
+    m_dualPaneActive = true;
     ui->splitter_dualPane->setChildrenCollapsible(true);
     ui->splitter_dualPane->setSizes({1,1});
     ui->splitter_dualPane->setChildrenCollapsible(false);
@@ -494,7 +494,7 @@ void MainWindow::ActivateDualPane()
 
 void MainWindow::DeactivateDualPane()
 {
-    dualPaneActive = false;
+    m_dualPaneActive = false;
     ui->splitter_dualPane->setChildrenCollapsible(true);
     ui->splitter_dualPane->setSizes({1,0});
     ui->splitter_dualPane->setChildrenCollapsible(false);
@@ -521,12 +521,12 @@ void MainWindow::on_actionDual_Pane_View_triggered()
     // if current stackedWidget is not on column view then open or close dual pane
     if (ui->stackedWidget->currentIndex() == 0)
     {
-        if (dualPaneActive)
+        if (m_dualPaneActive)
         {
             DeactivateDualPane();
 
             // save state update
-            if(treeViewActive)
+            if(m_treeViewActive)
                 ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
             else
                 ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE);
@@ -536,7 +536,7 @@ void MainWindow::on_actionDual_Pane_View_triggered()
             ActivateDualPane();
 
             // save state update
-            if(treeViewActive)
+            if(m_treeViewActive)
                 ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
             else
                 ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE);
@@ -545,7 +545,7 @@ void MainWindow::on_actionDual_Pane_View_triggered()
     else{
         // if column view is active the deactivate it and open dual pane
         ui->stackedWidget->setCurrentIndex(0);
-        columnViewActive = false;
+        m_columnViewActive = false;
 
         // column'dan çıktıktan sonra dual pane açılmalı:
         ActivateDualPane();
@@ -555,7 +555,7 @@ void MainWindow::on_actionDual_Pane_View_triggered()
 
 void MainWindow::ActivateColumnView()
 {
-    columnViewActive = true;
+    m_columnViewActive = true;
     ui->stackedWidget->setCurrentIndex(1);
     m_toolBarManager->SetBackButtonEnabled(true);
     m_toolBarManager->SetForwardButtonEnabled(true);
@@ -564,10 +564,10 @@ void MainWindow::ActivateColumnView()
 void MainWindow::on_actionColumn_View_triggered()
 {
     if(ui->stackedWidget->currentIndex() == 1){
-        columnViewActive = false;
+        m_columnViewActive = false;
         ui->stackedWidget->setCurrentIndex(0);
-        if(dualPaneActive){
-            if(treeViewActive){
+        if(m_dualPaneActive){
+            if(m_treeViewActive){
                 m_appStateHandler->SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
             }
             else{
@@ -575,7 +575,7 @@ void MainWindow::on_actionColumn_View_triggered()
             }
         }
         else{
-            if(treeViewActive){
+            if(m_treeViewActive){
                 m_appStateHandler->SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
             }
             else{
@@ -655,9 +655,9 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
         m_treeManagerLeft->setTreeToDefault();
         m_tableManagerLeft->SetTableToDefault();
 
-        leftTabIsReset_ = true;
+        m_leftTabIsReset = true;
 
-        if (rightTabIsReset_)
+        if (m_rightTabIsReset)
         {
             SetLabelText_("\\\\");
         }
@@ -700,9 +700,9 @@ void MainWindow::on_tabWidget_2_tabCloseRequested(int index)
         m_treeManagerRight->setTreeToDefault();
         m_tableManagerRight->SetTableToDefault();
 
-        rightTabIsReset_ = true;
+        m_rightTabIsReset = true;
 
-        if (leftTabIsReset_)
+        if (m_leftTabIsReset)
         {
             SetLabelText_("\\\\");
         }
@@ -731,7 +731,7 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
     // buton kontrolü:
     updateNavButtons(tabIndex, false);
 
-    leftTabIsReset_ = false;
+    m_leftTabIsReset = false;
 
     m_isWorkingOnRightPane = false;
 
@@ -752,7 +752,7 @@ void MainWindow::on_FileTreeView_2_clicked(const QModelIndex &modelIndex)
     // buton kontrolü:
     updateNavButtons(tabIndex, true);
 
-    rightTabIsReset_ = false;
+    m_rightTabIsReset = false;
 
     m_isWorkingOnRightPane = true;
 }
@@ -773,7 +773,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
 
-    leftTabIsReset_ = false;
+    m_leftTabIsReset = false;
 
     m_isWorkingOnRightPane = false;
 
@@ -795,7 +795,7 @@ void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
     const auto& path = static_cast<QFileSystemModel*>(ui->FileTreeView_2->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
 
-    rightTabIsReset_ = false;
+    m_rightTabIsReset = false;
 
     m_isWorkingOnRightPane = true;
 
@@ -803,9 +803,9 @@ void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
 
 void MainWindow::on_toolSearchButton_clicked()
 {
-    if(searchOn){
+    if(m_searchOn){
         if (ui->lineEdit_2 != nullptr) {
-            searchOn = false;
+            m_searchOn = false;
             auto *animation = new QPropertyAnimation(ui->lineEdit_2, "maximumWidth");
             animation->setDuration(300);
             animation->setStartValue(ui->lineEdit_2->width());
@@ -815,7 +815,7 @@ void MainWindow::on_toolSearchButton_clicked()
     }
     else{
         if (ui->lineEdit_2 != nullptr) {
-            searchOn = true;
+            m_searchOn = true;
             auto *animation = new QPropertyAnimation(ui->lineEdit_2, "maximumWidth");
             animation->setDuration(300);
             animation->setStartValue(ui->lineEdit_2->width());
