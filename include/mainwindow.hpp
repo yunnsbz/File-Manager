@@ -80,6 +80,8 @@ public:
     [[nodiscard]] auto getDeleteButton()    const -> QToolButton*   { return ui->toolDelButton; }
     [[nodiscard]] auto getRenameButton()    const -> QToolButton*   { return ui->toolRenameButton; }
 
+    [[nodiscard]] auto isWorkingOnRightPane()   const -> bool       { return m_isWorkingOnRightPane; }
+
     [[nodiscard]] auto getFileModelOpLeft()     const -> FileModelOperations*   { return m_fileModelOpLeft; }
     [[nodiscard]] auto getFileModelOpRight()    const -> FileModelOperations*   { return m_fileModelOpRight; }
     [[nodiscard]] auto getFileOpManager()       const -> FileOperationManager*  { return m_fileOpManager; }
@@ -132,13 +134,6 @@ private slots:
     void on_toolSearchButton_clicked();
     void on_toolHistoryButton_clicked();
 
-    // tool bar operations
-    void on_toolCopyButton_clicked();
-    void on_toolPasteButton_clicked();
-    void on_toolDelButton_clicked();
-    void on_toolCutButton_clicked();
-    void on_toolRenameButton_clicked();
-
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 
@@ -175,7 +170,7 @@ private:
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
     bool isWorkingOnLeftPane{}; // TODO(fatpound): kod eklenecek
-    bool isWorkingOnRightPane{};
+    bool m_isWorkingOnRightPane{};
 
     bool leftTabIsReset_  = true;
     bool rightTabIsReset_ = true;

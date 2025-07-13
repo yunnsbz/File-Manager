@@ -405,15 +405,15 @@ void MainWindow::ForwardButtonOnClick(bool OnRightPane)
 
 void MainWindow::on_toolUpButton_clicked()
 {
-    upperFolderOnClick(isWorkingOnRightPane);
+    upperFolderOnClick(m_isWorkingOnRightPane);
 }
 void MainWindow::on_toolBackButton_clicked()
 {
-    BackButtonOnClick(isWorkingOnRightPane);
+    BackButtonOnClick(m_isWorkingOnRightPane);
 }
 void MainWindow::on_toolForwardButton_clicked()
 {
-    ForwardButtonOnClick(isWorkingOnRightPane);
+    ForwardButtonOnClick(m_isWorkingOnRightPane);
 }
 
 void MainWindow::on_actionAbout_triggered()
@@ -602,7 +602,7 @@ void MainWindow::on_tabWidget_tabBarClicked(int tabIndex)
 
     SetLabelText_(m_fileModelOpLeft->GetCurrentPath(tabIndex));
 
-    isWorkingOnRightPane = false;
+    m_isWorkingOnRightPane = false;
 }
 
 void MainWindow::on_tabWidget_2_tabBarClicked(int tabIndex)
@@ -620,7 +620,7 @@ void MainWindow::on_tabWidget_2_tabBarClicked(int tabIndex)
 
     SetLabelText_(m_fileModelOpRight->GetCurrentPath(tabIndex));
 
-    isWorkingOnRightPane = true;
+    m_isWorkingOnRightPane = true;
 }
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
@@ -664,7 +664,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
             SetLabelText_(m_fileModelOpRight->GetFilePath(m_fileModelOpRight->GetTabModelIndex(ui->tabWidget_2->currentIndex())));
         }
     }
-    isWorkingOnRightPane = false;
+    m_isWorkingOnRightPane = false;
 
 }
 
@@ -709,7 +709,7 @@ void MainWindow::on_tabWidget_2_tabCloseRequested(int index)
             SetLabelText_(m_fileModelOpLeft->GetFilePath(m_fileModelOpLeft->GetTabModelIndex(ui->tabWidget->currentIndex())));
         }
     }
-    isWorkingOnRightPane = true;
+    m_isWorkingOnRightPane = true;
 
 }
 
@@ -731,7 +731,7 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
 
     leftTabIsReset_ = false;
 
-    isWorkingOnRightPane = false;
+    m_isWorkingOnRightPane = false;
 
 }
 
@@ -752,7 +752,7 @@ void MainWindow::on_FileTreeView_2_clicked(const QModelIndex &modelIndex)
 
     rightTabIsReset_ = false;
 
-    isWorkingOnRightPane = true;
+    m_isWorkingOnRightPane = true;
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
@@ -773,7 +773,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
 
     leftTabIsReset_ = false;
 
-    isWorkingOnRightPane = false;
+    m_isWorkingOnRightPane = false;
 
 }
 
@@ -795,7 +795,7 @@ void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
 
     rightTabIsReset_ = false;
 
-    isWorkingOnRightPane = true;
+    m_isWorkingOnRightPane = true;
 
 }
 
@@ -833,7 +833,6 @@ void MainWindow::on_columnView_clicked(const QModelIndex &index)
         QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
     }
 }
-
 
 void MainWindow::on_toolHistoryButton_clicked()
 {
@@ -881,145 +880,7 @@ void MainWindow::on_toolHistoryButton_clicked()
     popupFrame->show();
 }
 
-
-void MainWindow::on_toolCopyButton_clicked()
-{
-    // seçilmiş satırların indexlerini al
-    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
-    if(selectedIndexes.count() != 0)
-    {
-        for (const QModelIndex &index : selectedIndexes) {
-            const QString filePath = fileModelOp->GetFileModel()->filePath(index);
-            qDebug()<< "path added to copy (table 1):" << filePath;
-            FileOpManager->addToCopy(filePath);
-        }
-    }
-    else
-    {
-        // ilk tabloda seçilmemişse
-        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
-        for (const QModelIndex &index : selectedIndexes) {
-            const QString filePath = fileModelOp->GetFileModel()->filePath(index);
-            qDebug()<< "path added to copy (table 2): " << filePath;
-            FileOpManager->addToCopy(filePath);
-        }
-    }
-}
-
-
-void MainWindow::on_toolPasteButton_clicked()
-{
-    if(isWorkingOnRightPane){
-        m_fileOpManager->MoveOperation(m_fileModelOpRight->GetCurrentPath(ui->tabWidget_2->currentIndex()));
-    }
-    else{
-        m_fileOpManager->MoveOperation(m_fileModelOpLeft->GetCurrentPath(ui->tabWidget->currentIndex()));
-    }
-}
-
-
-void MainWindow::on_toolDelButton_clicked()
-{
-    QList<QString> srcList;
-
-    QModelIndexList selectedIndexes = (! isWorkingOnRightPane)
-            ? ui->tableView->selectionModel()->selectedRows()
-            : ui->tableView_2->selectionModel()->selectedRows()
-            ;
-
-    if ( ! selectedIndexes.empty())
-    {
-        for (const QModelIndex& index : selectedIndexes)
-        {
-            srcList.append(m_fileModelOpLeft->GetFileModel()->filePath(index));
-        }
-
-        const QString text = QString("Seçili %1 dosyayı silmek üzeresiniz. Emin misiniz?")
-                               .arg(srcList.size());
-
-        QMessageBox::StandardButton const reply = QMessageBox::question(
-                this,
-                "Dosyaları Sil",
-                text,
-                QMessageBox::Yes | QMessageBox::No,
-                QMessageBox::No
-            );
-
-        if(reply == QMessageBox::Yes){
-            m_fileOpManager->DeleteOperation(srcList);
-        }
-    }
-}
-
-
 void MainWindow::on_actionSettings_triggered()
 {
     m_settingsDialog->exec(); // Modal olarak açar
 }
-
-
-void MainWindow::on_toolCutButton_clicked()
-{
-    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
-    if(selectedIndexes.count() != 0)
-    {
-        for (const QModelIndex &index : selectedIndexes) {
-            const QString filePath = m_fileModelOpLeft->GetFileModel()->filePath(index);
-            qDebug()<< "path added to cut (table 1):" << filePath;
-            m_fileOpManager->addToCut(filePath);
-        }
-    }
-    else
-    {
-        // ilk tabloda seçilmemişse
-        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
-        for (const QModelIndex &index : selectedIndexes) {
-            const QString filePath = m_fileModelOpLeft->GetFileModel()->filePath(index);
-            qDebug()<< "path added to cut (table 2): " << filePath;
-            m_fileOpManager->addToCut(filePath);
-        }
-    }
-
-    // TODO(yunnsbz): şeçilenler grileştirilmeli (kesmek için işaretlenmişler)
-}
-
-
-void MainWindow::on_toolRenameButton_clicked()
-{
-    QModelIndexList selectedIndexes = ui->tableView->selectionModel()->selectedRows();
-    if(selectedIndexes.count() != 0)
-    {
-        // tek bir dosya ismi değiştirilecekse yerinde değişim yapılabilir.
-        if(selectedIndexes.count() == 1)
-        {
-            const QModelIndex index = ui->tableView->currentIndex();
-            if (index.isValid())
-            {
-                ui->tableView->edit(index);
-            }
-        }
-        else if(selectedIndexes.count() > 1)
-        {
-            // TODO(yunnsbz): todo.
-        }
-    }
-    else
-    {
-        // ilk tabloda seçilmemişse
-        selectedIndexes = ui->tableView_2->selectionModel()->selectedRows();
-        // tek bir dosya ismi değiştirilecekse yerinde değişim yapılabilir.
-        if(selectedIndexes.count() == 1)
-        {
-            const QModelIndex index = ui->tableView_2->currentIndex();
-            if (index.isValid())
-            {
-                ui->tableView_2->edit(index);
-            }
-        }
-        else if(selectedIndexes.count() > 1)
-        {
-            // TODO(yunnsbz): todo.
-        }
-    }
-}
-
