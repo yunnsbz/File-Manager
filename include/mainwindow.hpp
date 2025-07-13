@@ -64,6 +64,14 @@ public:
     void DeactivateDualPane();
     void DeactivateTreeView();
 
+    [[nodiscard]] auto getTabWidgetLeft() const -> QTabWidget* { return ui->tabWidget;}
+    [[nodiscard]] auto getTabWidgetRight() const -> QTabWidget*{ return ui->tabWidget_2;}
+    [[nodiscard]] auto getTabBarLeft() const -> QTabBar*{ return ui->tabWidget->tabBar();}
+    [[nodiscard]] auto getTabBarRight() const -> QTabBar*{ return ui->tabWidget_2->tabBar();}
+    [[nodiscard]] auto getTreeViewLeft() const -> QTreeView*{ return ui->FileTreeView;}
+    [[nodiscard]] auto getTreeViewRight() const -> QTreeView*{ return ui->FileTreeView_2;}
+    [[nodiscard]] auto getTableViewLeft() const -> QTableView*{ return ui->tableView;}
+    [[nodiscard]] auto getTableViewRight() const -> QTableView*{ return ui->tableView_2;}
 
 protected:
 
@@ -77,9 +85,9 @@ private:
 
 private slots:
     // tree
-    void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void on_FileTreeView_clicked(const QModelIndex &index);
     void on_FileTreeView_2_clicked(const QModelIndex &index);
+    void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
     // menu bar
     void on_actionExit_triggered();
@@ -87,17 +95,14 @@ private slots:
     void on_actionAbout_triggered();
     void on_actionColumn_View_triggered();
     void on_actionDual_Pane_View_triggered();
+    void on_actionSettings_triggered();
+
+    // column view
     void on_columnView_clicked(const QModelIndex &index);
 
     // spliter
     void on_splitter_splitterMoved(int pos, int index);
 
-    // tool bar
-    void on_toolUpButton_clicked();
-    void on_toolBackButton_clicked();
-    void on_toolForwardButton_clicked();
-    void on_lineEdit_returnPressed();
-    void on_toolSearchButton_clicked();
 
     void on_toolCmdButton_pressed();
 
@@ -111,20 +116,19 @@ private slots:
     void on_tableView_doubleClicked(const QModelIndex &index);
     void on_tableView_2_doubleClicked(const QModelIndex &index);
 
+    // tool bar
+    void on_toolUpButton_clicked();
+    void on_toolBackButton_clicked();
+    void on_toolForwardButton_clicked();
+    void on_lineEdit_returnPressed();
+    void on_toolSearchButton_clicked();
 
-
+    // tool bar operations
     void on_toolHistoryButton_clicked();
-
     void on_toolCopyButton_clicked();
-
     void on_toolPasteButton_clicked();
-
     void on_toolDelButton_clicked();
-
-    void on_actionSettings_triggered();
-
     void on_toolCutButton_clicked();
-
     void on_toolRenameButton_clicked();
 
 private:
