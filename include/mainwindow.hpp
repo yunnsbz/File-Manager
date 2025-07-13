@@ -24,6 +24,7 @@ class TreeManager;
 class FileModelOperations;
 class ThemeManger;
 class SettingsDialog;
+class FileOperationView;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -167,6 +168,8 @@ private:
 
     ApplicationStateHandler* m_appStateHandler;
     SettingsDialog* m_settingsDialog;
+
+    FileOperationView* m_fileOperationView;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
     bool isWorkingOnLeftPane{}; // TODO(fatpound): kod eklenecek

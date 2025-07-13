@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "FileOperationView.h"
 #include "SettingsDialog.h"
 #include "ThemeManager.h"
 #include "TabManager.h"
@@ -51,7 +52,8 @@ MainWindow::MainWindow(QWidget* parent)
     m_treeManagerRight(new TreeManager(ui->FileTreeView_2, m_fileModelOpRight, ui->tabWidget_2, this)),
     m_fileOpManager(new FileOperationManager(this)),
     m_appStateHandler(new ApplicationStateHandler(this)),
-    m_settingsDialog(new SettingsDialog(this))
+    m_settingsDialog(new SettingsDialog(this)),
+    m_fileOperationView(new FileOperationView(this))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
