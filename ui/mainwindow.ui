@@ -400,7 +400,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QSplitter" name="splitter">
+              <widget class="QSplitter" name="splitterLeft">
                <property name="orientation">
                 <enum>Qt::Orientation::Horizontal</enum>
                </property>
@@ -427,7 +427,7 @@
                  <bool>false</bool>
                 </attribute>
                </widget>
-               <widget class="QTableView" name="tableView">
+               <widget class="QTableView" name="tableViewLeft">
                 <property name="tabKeyNavigation">
                  <bool>false</bool>
                 </property>
@@ -537,7 +537,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QSplitter" name="splitter_2">
+              <widget class="QSplitter" name="splitterRight">
                <property name="orientation">
                 <enum>Qt::Orientation::Horizontal</enum>
                </property>
@@ -564,7 +564,7 @@
                  <bool>false</bool>
                 </attribute>
                </widget>
-               <widget class="QTableView" name="tableView_2">
+               <widget class="QTableView" name="tableViewRight">
                 <property name="tabKeyNavigation">
                  <bool>false</bool>
                 </property>

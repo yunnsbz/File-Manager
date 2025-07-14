@@ -74,8 +74,8 @@ public:
     [[nodiscard]] auto getTabBarRight()     const -> QTabBar*       { return ui->tabWidget_2->tabBar(); }
     [[nodiscard]] auto getTreeViewLeft()    const -> QTreeView*     { return ui->FileTreeView; }
     [[nodiscard]] auto getTreeViewRight()   const -> QTreeView*     { return ui->FileTreeView_2; }
-    [[nodiscard]] auto getTableViewLeft()   const -> QTableView*    { return ui->tableView; }
-    [[nodiscard]] auto getTableViewRight()  const -> QTableView*    { return ui->tableView_2; }
+    [[nodiscard]] auto getTableViewLeft()   const -> QTableView*    { return ui->tableViewLeft; }
+    [[nodiscard]] auto getTableViewRight()  const -> QTableView*    { return ui->tableViewRight; }
     [[nodiscard]] auto getStackedWidget()   const -> QStackedWidget*{ return ui->stackedWidget; }
 
     [[nodiscard]] auto getPasteButton()     const -> QToolButton*   { return ui->toolPasteButton; }
@@ -107,7 +107,6 @@ private:
         UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd);
     };
 
-
 private slots:
     // tree
     void on_FileTreeView_clicked(const QModelIndex &index);
@@ -118,7 +117,7 @@ private slots:
     void on_columnView_clicked(const QModelIndex &index);
 
     // spliter
-    void on_splitter_splitterMoved(int pos, int index);
+    void on_splitter_splitterLeftMoved(int pos, int index);
 
     // tab bar
     void on_tabWidget_tabBarClicked(int index);
@@ -127,8 +126,8 @@ private slots:
     void on_tabWidget_2_tabCloseRequested(int index);
 
     // table view
-    void on_tableView_doubleClicked(const QModelIndex &index);
-    void on_tableView_2_doubleClicked(const QModelIndex &index);
+    void on_tableViewLeft_doubleClicked(const QModelIndex &index);
+    void on_tableViewRight_doubleClicked(const QModelIndex &index);
 
     // nav buttons
     void on_toolUpButton_clicked();

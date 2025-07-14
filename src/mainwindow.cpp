@@ -47,8 +47,8 @@ MainWindow::MainWindow(QWidget* parent)
     m_menuManager(new ThemeManger(this)),
     m_tabManagerLeft(new TabManager(ui->tabWidget, false, this)),
     m_tabManagerRight(new TabManager(ui->tabWidget_2, true, this)),
-    m_tableManagerLeft(new TableManager(ui->tableView, m_fileModelOpLeft, this)),
-    m_tableManagerRight(new TableManager(ui->tableView_2, m_fileModelOpRight, this)),
+    m_tableManagerLeft(new TableManager(ui->tableViewLeft, m_fileModelOpLeft, this)),
+    m_tableManagerRight(new TableManager(ui->tableViewRight, m_fileModelOpRight, this)),
     m_treeManagerLeft(new TreeManager(ui->FileTreeView, m_fileModelOpLeft, ui->tabWidget, this)),
     m_treeManagerRight(new TreeManager(ui->FileTreeView_2, m_fileModelOpRight, ui->tabWidget_2, this)),
     m_fileOpManager(new FileOperationManager(this)),
@@ -71,12 +71,12 @@ MainWindow::MainWindow(QWidget* parent)
     ui->columnView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     // tree view daha küçük olmalı
-    ui->splitter->setSizes({100,400});
-    ui->splitter_2->setSizes({100,400});
+    ui->splitterLeft->setSizes({100,400});
+    ui->splitterRight->setSizes({100,400});
 
     // spliterlar ekranda sadece tree view olacak şekilde sürüklenmemeli
-    ui->splitter->setCollapsible(1,false);
-    ui->splitter_2->setCollapsible(1,false);
+    ui->splitterLeft->setCollapsible(1,false);
+    ui->splitterRight->setCollapsible(1,false);
 
     //remove search line edit for now
     ui->lineEdit_2->setMaximumWidth(0);
@@ -165,9 +165,9 @@ void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModel
     SetLabelText_(path);
 }
 
-void MainWindow::on_splitter_splitterMoved(int pos, int )
+void MainWindow::on_splitter_splitterLeftMoved(int pos, int )
 {
-    // TODO: this doesn't work for right pane
+    // TODO(yunus): this doesn't work for right pane
     if (pos < 10 && m_treeViewActive )
     {
         m_treeViewActive = false;
@@ -181,14 +181,14 @@ void MainWindow::on_splitter_splitterMoved(int pos, int )
 void MainWindow::DeactivateTreeView()
 {
     m_treeViewActive = false;
-    ui->splitter->setSizes({0,400});
-    ui->splitter_2->setSizes({0,400});
+    ui->splitterLeft->setSizes({0,400});
+    ui->splitterRight->setSizes({0,400});
 
     // sürüklemeyi devre dışı bırakma:
     for (int i = 0; i < 2; ++i)
     {
-        QSplitterHandle* handle = ui->splitter->handle(i);
-        QSplitterHandle* handle2 = ui->splitter_2->handle(i);
+        QSplitterHandle* handle = ui->splitterLeft->handle(i);
+        QSplitterHandle* handle2 = ui->splitterRight->handle(i);
         if (handle != nullptr && handle2 != nullptr)
         {
             handle->setEnabled(false);
@@ -196,20 +196,20 @@ void MainWindow::DeactivateTreeView()
         }
     }
 
-    ui->splitter->setHandleWidth(0);
-    ui->splitter_2->setHandleWidth(0);
+    ui->splitterLeft->setHandleWidth(0);
+    ui->splitterRight->setHandleWidth(0);
 }
 
 void MainWindow::ActivateTreeView()
 {
     m_treeViewActive = true;
-    ui->splitter->setSizes({100,400});
-    ui->splitter_2->setSizes({100,400});
+    ui->splitterLeft->setSizes({100,400});
+    ui->splitterRight->setSizes({100,400});
     //  ilk view'ın sağ kenarı ve ikinci view'ın sol kenarı olmak üzere iki handle olur:
     for (int i = 0; i < 2; ++i)
     {
-        QSplitterHandle* handle = ui->splitter->handle(i);
-        QSplitterHandle* handle2 = ui->splitter_2->handle(i);
+        QSplitterHandle* handle = ui->splitterLeft->handle(i);
+        QSplitterHandle* handle2 = ui->splitterRight->handle(i);
         if (handle != nullptr && handle2 != nullptr)
         {
             handle->setEnabled(true);
@@ -217,8 +217,8 @@ void MainWindow::ActivateTreeView()
         }
     }
 
-    ui->splitter->setHandleWidth(5);
-    ui->splitter_2->setHandleWidth(5);
+    ui->splitterLeft->setHandleWidth(5);
+    ui->splitterRight->setHandleWidth(5);
 }
 
 void MainWindow::updateNavButtons(int const tabIndex, bool forRightPane)
@@ -616,7 +616,7 @@ void MainWindow::on_FileTreeView_clicked(const QModelIndex &modelIndex)
     // girilen yer klasör ise table view set edilir:
     if (fileModel->hasChildren(modelIndex))
     {
-        ui->tableView->setRootIndex(modelIndex);
+        ui->tableViewLeft->setRootIndex(modelIndex);
     }
 
     // buton kontrolü:
@@ -637,7 +637,7 @@ void MainWindow::on_FileTreeView_2_clicked(const QModelIndex &modelIndex)
     // girilen yer klasör ise table view set edilir:
     if (fileModel->hasChildren(modelIndex))
     {
-        ui->tableView_2->setRootIndex(modelIndex);
+        ui->tableViewRight->setRootIndex(modelIndex);
     }
 
     // buton kontrolü:
@@ -648,7 +648,7 @@ void MainWindow::on_FileTreeView_2_clicked(const QModelIndex &modelIndex)
     m_isWorkingOnRightPane = true;
 }
 
-void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
+void MainWindow::on_tableViewLeft_doubleClicked(const QModelIndex &modelIndex)
 {
     const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
 
@@ -670,7 +670,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &modelIndex)
 
 }
 
-void MainWindow::on_tableView_2_doubleClicked(const QModelIndex &modelIndex)
+void MainWindow::on_tableViewRight_doubleClicked(const QModelIndex &modelIndex)
 {
     const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
 
