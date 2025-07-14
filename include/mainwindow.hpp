@@ -178,9 +178,6 @@ private:
     bool m_isWorkingOnLeftPane {};
     bool m_isWorkingOnRightPane {};
 
-    bool m_leftTabIsReset   = true;
-    bool m_rightTabIsReset  = true;
-
     bool m_treeViewActive   = true;
     bool m_dualPaneActive   = true;
     bool m_columnViewActive = false;

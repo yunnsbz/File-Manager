@@ -560,22 +560,17 @@ void MainWindow::on_tabWidgetLeft_tabCloseRequested(int index)
 
         m_tabManagerLeft->setPreviousLeftTabIndex(ui->tabWidgetLeft->currentIndex());
         SetTabContent(ui->tabWidgetLeft->currentIndex(), false);
+
+        const int tabIndex = getTabWidgetLeft()->currentIndex();
+        SetLabelText_(getFileModelOpLeft()->GetCurrentPath(tabIndex));
     }
     else
     {
         m_treeManagerLeft->setTreeToDefault();
         m_tableManagerLeft->SetTableToDefault();
 
-        m_leftTabIsReset = true;
-
-        if (m_rightTabIsReset)
-        {
-            SetLabelText_("\\\\");
-        }
-        else
-        {
-            SetLabelText_(m_fileModelOpRight->GetFilePath(m_fileModelOpRight->GetTabModelIndex(ui->tabWidgetRight->currentIndex())));
-        }
+        // fokus buraya geçtiğinden ve root dosya açıldığından adres text'i default olur:
+        SetLabelText_("\\\\");
     }
 }
 
@@ -603,22 +598,17 @@ void MainWindow::on_tabWidgetRight_tabCloseRequested(int index)
 
         m_tabManagerRight->setPreviousLeftTabIndex(ui->tabWidgetRight->currentIndex());
         SetTabContent(ui->tabWidgetRight->currentIndex(), true);
+
+        const int tabIndex = getTabWidgetRight()->currentIndex();
+        SetLabelText_(getFileModelOpRight()->GetCurrentPath(tabIndex));
     }
     else
     {
         m_treeManagerRight->setTreeToDefault();
         m_tableManagerRight->SetTableToDefault();
 
-        m_rightTabIsReset = true;
-
-        if (m_leftTabIsReset)
-        {
-            SetLabelText_("\\\\");
-        }
-        else
-        {
-            SetLabelText_(m_fileModelOpLeft->GetFilePath(m_fileModelOpLeft->GetTabModelIndex(ui->tabWidgetLeft->currentIndex())));
-        }
+        // fokus buraya geçtiğinden ve root dosya açıldığından adres text'i default olur:
+        SetLabelText_("\\\\");
     }
 }
 
@@ -637,9 +627,6 @@ void MainWindow::on_fileTreeViewLeft_clicked(const QModelIndex &modelIndex)
 
     // buton kontrolü:
     updateNavButtons(tabIndex, false);
-
-    m_leftTabIsReset = false;
-
 }
 
 void MainWindow::on_fileTreeViewRight_clicked(const QModelIndex &modelIndex)
@@ -656,8 +643,6 @@ void MainWindow::on_fileTreeViewRight_clicked(const QModelIndex &modelIndex)
 
     // buton kontrolü:
     updateNavButtons(tabIndex, true);
-
-    m_rightTabIsReset = false;
 }
 
 void MainWindow::on_tableViewLeft_doubleClicked(const QModelIndex &modelIndex)
@@ -675,8 +660,6 @@ void MainWindow::on_tableViewLeft_doubleClicked(const QModelIndex &modelIndex)
 
     const auto& path = static_cast<QFileSystemModel*>(ui->fileTreeViewLeft->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
-
-    m_leftTabIsReset = false;
 }
 
 void MainWindow::on_tableViewRight_doubleClicked(const QModelIndex &modelIndex)
@@ -694,8 +677,6 @@ void MainWindow::on_tableViewRight_doubleClicked(const QModelIndex &modelIndex)
 
     const auto& path = static_cast<QFileSystemModel*>(ui->fileTreeViewRight->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
-
-    m_rightTabIsReset = false;
 }
 
 void MainWindow::on_toolSearchButton_clicked()
