@@ -48,8 +48,7 @@ void TabManager::EnableNavWidget(bool enable)
      if(enable){
         cornerNavButtons->show();
         tabWidget_->setCornerWidget(cornerNavButtons, Qt::TopRightCorner);
-    }
-    else{
+    } else {
         tabWidget_->setCornerWidget(nullptr, Qt::TopRightCorner);
     }
 }
@@ -189,6 +188,8 @@ void TabManager::addNewTab()
     setPreviousLeftTabIndex(tabWidget_->count() - 1);
 
     mainWindow_->SetTabContent(tabWidget_->currentIndex(), m_forRightPane);
+
+    emit newtabAdded();
 }
 
 void TabManager::moveTabWidget(int index)

@@ -52,8 +52,8 @@ public slots:
     void addNewTab();
 
 
-protected:
-
+signals:
+    void newtabAdded();
 
 private:
     void SetNavButtonThemes();

@@ -61,14 +61,6 @@ MainWindow::MainWindow(QWidget* parent)
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
-    // get FileTreeView changes for command label
-    connect(
-        ui->fileTreeViewLeft->selectionModel(),
-        &QItemSelectionModel::currentChanged,
-        this,
-        &MainWindow::onTreeSelectionChanged
-    );
-
     ui->columnView->setModel(m_columnFileModel);
     ui->columnView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -89,18 +81,49 @@ MainWindow::MainWindow(QWidget* parent)
     // load and restore view:
     m_appStateHandler->RestoreViewState();
 
+    // get FileTreeView changes for command label
+    connect(
+        getTreeViewLeft()->selectionModel(),
+        &QItemSelectionModel::currentChanged,
+        this,
+        &MainWindow::onTreeLeftSelectionChanged
+    );
+    connect(
+        getTreeViewRight()->selectionModel(),
+        &QItemSelectionModel::currentChanged,
+        this,
+        &MainWindow::onTreeRightSelectionChanged
+    );
+
+    // tabWidget focus control
     connect(m_eventHandler, &EventHandler::tabLeftClicked, this, [this](){
         m_isWorkingOnLeftPane = true;
         m_isWorkingOnRightPane = false;
-        int tabIndex = ui->tabWidgetRight->currentIndex();
+        const int tabIndex = getTabWidgetLeft()->currentIndex();
         updateNavButtons(tabIndex, false);
+        SetLabelText_(getFileModelOpLeft()->GetCurrentPath(tabIndex));
     });
 
     connect(m_eventHandler, &EventHandler::tabRightClicked, this, [this](){
         m_isWorkingOnLeftPane = false;
         m_isWorkingOnRightPane = true;
-        int tabIndex = ui->tabWidgetRight->currentIndex();
+        const int tabIndex = getTabWidgetRight()->currentIndex();
         updateNavButtons(tabIndex, true);
+        SetLabelText_(getFileModelOpRight()->GetCurrentPath(tabIndex));
+    });
+
+    connect(m_eventHandler, &EventHandler::keyEvent_C, this, [this](){
+        ui->lineEdit->setFocus();
+    });
+
+    connect(m_tabManagerLeft, &TabManager::newtabAdded, this, [this](){
+        const int tabIndex = getTabWidgetLeft()->currentIndex();
+        SetLabelText_(getFileModelOpLeft()->GetCurrentPath(tabIndex));
+    });
+
+    connect(m_tabManagerRight, &TabManager::newtabAdded, this, [this](){
+        const int tabIndex = getTabWidgetRight()->currentIndex();
+        SetLabelText_(getFileModelOpRight()->GetCurrentPath(tabIndex));
     });
 }
 
@@ -132,35 +155,36 @@ void MainWindow::SetTabContent(int tabIndex, bool rightPane)
 void MainWindow::OnTabMoved(int toIndex, int fromIndex)
 {
     m_treeManagerLeft->swapExpandedPathsMap(toIndex, fromIndex);
-    m_fileModelOpLeft->swapTabModelIndexMap(toIndex, fromIndex);
-    m_fileModelOpLeft->swapTabHistoryModelIndex(toIndex, fromIndex);
+    getFileModelOpLeft()->swapTabModelIndexMap(toIndex, fromIndex);
+    getFileModelOpLeft()->swapTabHistoryModelIndex(toIndex, fromIndex);
 }
 
 void MainWindow::OnTabMoved2(int toIndex, int fromIndex)
 {
     m_treeManagerRight->swapExpandedPathsMap(toIndex, fromIndex);
-    m_fileModelOpRight->swapTabModelIndexMap(toIndex, fromIndex);
-    m_fileModelOpRight->swapTabHistoryModelIndex(toIndex, fromIndex);
+    getFileModelOpRight()->swapTabModelIndexMap(toIndex, fromIndex);
+    getFileModelOpRight()->swapTabHistoryModelIndex(toIndex, fromIndex);
 }
 
-void MainWindow::SetLabelText_(const QString& path)
+void MainWindow::SetLabelText_(QString path)
 {
+    if(path.isEmpty()) path = "\\\\";
     ui->label->setText(path);
 
     // label default size (in the ui editor) should be bigger than needed
     ui->label->setMinimumSize(ui->label->sizeHint());
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event)
+void MainWindow::onTreeLeftSelectionChanged(const QModelIndex& current, const QModelIndex&)
 {
-    if (event->key() == Qt::Key_C) {
-        ui->lineEdit->setFocus();
-    }
+    auto path = static_cast<QFileSystemModel*>(getTreeViewLeft()->model())->filePath(current);
+
+    SetLabelText_(path);
 }
 
-void MainWindow::onTreeSelectionChanged(const QModelIndex& current, const QModelIndex&)
+void MainWindow::onTreeRightSelectionChanged(const QModelIndex &current, const QModelIndex &)
 {
-    const auto& path = static_cast<QFileSystemModel*>(ui->fileTreeViewLeft->model())->filePath(current);
+    auto path = static_cast<QFileSystemModel*>(getTreeViewRight()->model())->filePath(current);
 
     SetLabelText_(path);
 }

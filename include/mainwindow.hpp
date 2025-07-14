@@ -109,9 +109,10 @@ private:
 
 private slots:
     // tree
+    void onTreeLeftSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
+    void onTreeRightSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void on_fileTreeViewLeft_clicked(const QModelIndex &index);
     void on_fileTreeViewRight_clicked(const QModelIndex &index);
-    void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
     // column view
     void on_columnView_clicked(const QModelIndex &index);
@@ -141,10 +142,7 @@ private slots:
     void on_toolCmdButton_pressed();
 
 private:
-    virtual void keyPressEvent(QKeyEvent* event) override;
-
-private:
-    void SetLabelText_(const QString& path);
+    void SetLabelText_(QString path);
 
 
 private:

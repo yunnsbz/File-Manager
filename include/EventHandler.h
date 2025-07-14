@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QApplication>
 #include <QWidget>
+#include <QEvent>
+#include <QKeyEvent>
+
 
 class EventHandler : public QObject {
     Q_OBJECT
@@ -18,6 +21,7 @@ public:
 signals:
     void tabLeftClicked();
     void tabRightClicked();
+    void keyEvent_C();
 
 protected:
     auto eventFilter(QObject* obj, QEvent* event) -> bool override{
@@ -30,13 +34,27 @@ protected:
             } else if (tabWidgetRight != nullptr && tabWidgetRight->isAncestorOf(w)) {
                 emit tabRightClicked();
             }
-        }
 
+            // reset ignores: (her hangi bir mouse tıklama eventi tuş ile fokus ignore'larını resetlemeli)
+            m_shouldIgnoreNextC = true;
+        }
+        if (event->type() == QEvent::KeyPress) {
+            auto keyEvent = static_cast<QKeyEvent*>(event);
+            if (keyEvent->key() == Qt::Key_C) {
+                if (m_shouldIgnoreNextC) {
+                    emit keyEvent_C();
+                    m_shouldIgnoreNextC = false;
+                    return true;
+                }
+            }
+        }
         return QObject::eventFilter(obj, event);
     }
 
 private:
     QWidget* tabWidgetLeft = nullptr;
     QWidget* tabWidgetRight = nullptr;
+
+    bool m_shouldIgnoreNextC = true;
 };
 #endif // EVENTHANDLER_H
