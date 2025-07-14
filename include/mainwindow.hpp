@@ -26,6 +26,7 @@ class ThemeManger;
 class SettingsDialog;
 class FileOperationView;
 class MenuBarView;
+class EventHandler;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -140,10 +141,7 @@ private slots:
     void on_toolCmdButton_pressed();
 
 private:
-    virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
-
     virtual void keyPressEvent(QKeyEvent* event) override;
-
 
 private:
     void SetLabelText_(const QString& path);
@@ -176,12 +174,11 @@ private:
     FileOperationView* m_fileOperationView;
     MenuBarView* m_menuBarView;
 
-    // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
-    bool isWorkingOnLeftPane {}; // TODO(fatpound): kod eklenecek
-    bool m_isWorkingOnRightPane {};
+    EventHandler* m_eventHandler;
 
-    bool m_isLeftPaneFocused {};
-    bool m_isRightPaneFocused {};
+    // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
+    bool m_isWorkingOnLeftPane {};
+    bool m_isWorkingOnRightPane {};
 
     bool m_leftTabIsReset   = true;
     bool m_rightTabIsReset  = true;

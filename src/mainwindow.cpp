@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "EventHandler.h"
 #include "FileOperationView.h"
 #include "MenuBarView.h"
 #include "SettingsDialog.h"
@@ -55,7 +56,8 @@ MainWindow::MainWindow(QWidget* parent)
     m_appStateHandler(new ApplicationStateHandler(this)),
     m_settingsDialog(new SettingsDialog(this)),
     m_fileOperationView(new FileOperationView(this)),
-    m_menuBarView(new MenuBarView(this))
+    m_menuBarView(new MenuBarView(this)),
+    m_eventHandler(new EventHandler(this, ui->tabWidgetLeft, ui->tabWidgetRight))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
@@ -87,7 +89,14 @@ MainWindow::MainWindow(QWidget* parent)
     // load and restore view:
     m_appStateHandler->RestoreViewState();
 
-    qApp->installEventFilter(this);
+    connect(m_eventHandler, &EventHandler::tabLeftClicked, this, [this](){
+        m_isWorkingOnLeftPane = true;
+        m_isWorkingOnRightPane = false;
+    });
+    connect(m_eventHandler, &EventHandler::tabRightClicked, this, [this](){
+        m_isWorkingOnLeftPane = false;
+        m_isWorkingOnRightPane = true;
+    });
 }
 
 MainWindow::~MainWindow()
@@ -98,33 +107,6 @@ MainWindow::~MainWindow()
 auto MainWindow::getUI() -> Ui::MainWindow*
 {
     return ui;
-}
-
-auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
-{
-    if (obj == ui->tabWidgetLeft && event->type() == QEvent::MouseButtonPress)
-    {
-        auto* mouseEvent = static_cast<QMouseEvent*>(event);
-
-        if (mouseEvent->button() == Qt::MiddleButton)
-        {
-            m_tabManagerLeft->addNewTab();
-            return true;
-        }
-    }
-
-    if (event->type() == QEvent::MouseButtonPress) {
-        auto* widget = qobject_cast<QWidget*>(obj);
-        if (widget == nullptr) return false;
-
-        if (ui->tabWidgetLeft->isAncestorOf(widget)) {
-            qDebug() << "TabLeft içindeki bir şey tıklandı.";
-        } else if (ui->tabWidgetRight->isAncestorOf(widget)) {
-            qDebug() << "TabRight içindeki bir şey tıklandı.";
-        }
-    }
-
-    return QMainWindow::eventFilter(obj, event);
 }
 
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
