@@ -68,12 +68,12 @@ public:
     void DeactivateTreeView();
     void DeactivateColumnView();
 
-    [[nodiscard]] auto getTabWidgetLeft()   const -> QTabWidget*    { return ui->tabWidget; }
-    [[nodiscard]] auto getTabWidgetRight()  const -> QTabWidget*    { return ui->tabWidget_2; }
-    [[nodiscard]] auto getTabBarLeft()      const -> QTabBar*       { return ui->tabWidget->tabBar(); }
-    [[nodiscard]] auto getTabBarRight()     const -> QTabBar*       { return ui->tabWidget_2->tabBar(); }
-    [[nodiscard]] auto getTreeViewLeft()    const -> QTreeView*     { return ui->FileTreeView; }
-    [[nodiscard]] auto getTreeViewRight()   const -> QTreeView*     { return ui->FileTreeView_2; }
+    [[nodiscard]] auto getTabWidgetLeft()   const -> QTabWidget*    { return ui->tabWidgetLeft; }
+    [[nodiscard]] auto getTabWidgetRight()  const -> QTabWidget*    { return ui->tabWidgetRight; }
+    [[nodiscard]] auto getTabBarLeft()      const -> QTabBar*       { return ui->tabWidgetLeft->tabBar(); }
+    [[nodiscard]] auto getTabBarRight()     const -> QTabBar*       { return ui->tabWidgetRight->tabBar(); }
+    [[nodiscard]] auto getTreeViewLeft()    const -> QTreeView*     { return ui->fileTreeViewLeft; }
+    [[nodiscard]] auto getTreeViewRight()   const -> QTreeView*     { return ui->fileTreeViewRight; }
     [[nodiscard]] auto getTableViewLeft()   const -> QTableView*    { return ui->tableViewLeft; }
     [[nodiscard]] auto getTableViewRight()  const -> QTableView*    { return ui->tableViewRight; }
     [[nodiscard]] auto getStackedWidget()   const -> QStackedWidget*{ return ui->stackedWidget; }
@@ -109,21 +109,21 @@ private:
 
 private slots:
     // tree
-    void on_FileTreeView_clicked(const QModelIndex &index);
-    void on_FileTreeView_2_clicked(const QModelIndex &index);
+    void on_fileTreeViewLeft_clicked(const QModelIndex &index);
+    void on_fileTreeViewRight_clicked(const QModelIndex &index);
     void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
     // column view
     void on_columnView_clicked(const QModelIndex &index);
 
     // spliter
-    void on_splitter_splitterLeftMoved(int pos, int index);
+    void on_splitterLeft_splitterMoved(int pos, int index);
 
     // tab bar
-    void on_tabWidget_tabBarClicked(int index);
-    void on_tabWidget_2_tabBarClicked(int index);
-    void on_tabWidget_tabCloseRequested(int index);
-    void on_tabWidget_2_tabCloseRequested(int index);
+    void on_tabWidgetLeft_tabBarClicked(int index);
+    void on_tabWidgetRight_tabBarClicked(int index);
+    void on_tabWidgetLeft_tabCloseRequested(int index);
+    void on_tabWidgetRight_tabCloseRequested(int index);
 
     // table view
     void on_tableViewLeft_doubleClicked(const QModelIndex &index);
