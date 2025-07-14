@@ -92,10 +92,15 @@ MainWindow::MainWindow(QWidget* parent)
     connect(m_eventHandler, &EventHandler::tabLeftClicked, this, [this](){
         m_isWorkingOnLeftPane = true;
         m_isWorkingOnRightPane = false;
+        int tabIndex = ui->tabWidgetRight->currentIndex();
+        updateNavButtons(tabIndex, false);
     });
+
     connect(m_eventHandler, &EventHandler::tabRightClicked, this, [this](){
         m_isWorkingOnLeftPane = false;
         m_isWorkingOnRightPane = true;
+        int tabIndex = ui->tabWidgetRight->currentIndex();
+        updateNavButtons(tabIndex, true);
     });
 }
 
@@ -372,15 +377,15 @@ void MainWindow::ForwardButtonOnClick(bool OnRightPane)
 
 void MainWindow::on_toolUpButton_clicked()
 {
-    upperFolderOnClick(m_isWorkingOnRightPane);
+    upperFolderOnClick(isWorkingOnRightPane());
 }
 void MainWindow::on_toolBackButton_clicked()
 {
-    BackButtonOnClick(m_isWorkingOnRightPane);
+    BackButtonOnClick(isWorkingOnRightPane());
 }
 void MainWindow::on_toolForwardButton_clicked()
 {
-    ForwardButtonOnClick(m_isWorkingOnRightPane);
+    ForwardButtonOnClick(isWorkingOnRightPane());
 }
 
 
@@ -489,8 +494,6 @@ void MainWindow::on_tabWidgetLeft_tabBarClicked(int tabIndex)
     }
 
     SetLabelText_(m_fileModelOpLeft->GetCurrentPath(tabIndex));
-
-    m_isWorkingOnRightPane = false;
 }
 
 void MainWindow::on_tabWidgetRight_tabBarClicked(int tabIndex)
@@ -507,8 +510,6 @@ void MainWindow::on_tabWidgetRight_tabBarClicked(int tabIndex)
     }
 
     SetLabelText_(m_fileModelOpRight->GetCurrentPath(tabIndex));
-
-    m_isWorkingOnRightPane = true;
 }
 
 void MainWindow::on_tabWidgetLeft_tabCloseRequested(int index)
@@ -552,8 +553,6 @@ void MainWindow::on_tabWidgetLeft_tabCloseRequested(int index)
             SetLabelText_(m_fileModelOpRight->GetFilePath(m_fileModelOpRight->GetTabModelIndex(ui->tabWidgetRight->currentIndex())));
         }
     }
-    m_isWorkingOnRightPane = false;
-
 }
 
 void MainWindow::on_tabWidgetRight_tabCloseRequested(int index)
@@ -597,8 +596,6 @@ void MainWindow::on_tabWidgetRight_tabCloseRequested(int index)
             SetLabelText_(m_fileModelOpLeft->GetFilePath(m_fileModelOpLeft->GetTabModelIndex(ui->tabWidgetLeft->currentIndex())));
         }
     }
-    m_isWorkingOnRightPane = true;
-
 }
 
 
@@ -619,8 +616,6 @@ void MainWindow::on_fileTreeViewLeft_clicked(const QModelIndex &modelIndex)
 
     m_leftTabIsReset = false;
 
-    m_isWorkingOnRightPane = false;
-
 }
 
 void MainWindow::on_fileTreeViewRight_clicked(const QModelIndex &modelIndex)
@@ -639,8 +634,6 @@ void MainWindow::on_fileTreeViewRight_clicked(const QModelIndex &modelIndex)
     updateNavButtons(tabIndex, true);
 
     m_rightTabIsReset = false;
-
-    m_isWorkingOnRightPane = true;
 }
 
 void MainWindow::on_tableViewLeft_doubleClicked(const QModelIndex &modelIndex)
@@ -660,9 +653,6 @@ void MainWindow::on_tableViewLeft_doubleClicked(const QModelIndex &modelIndex)
     SetLabelText_(path);
 
     m_leftTabIsReset = false;
-
-    m_isWorkingOnRightPane = false;
-
 }
 
 void MainWindow::on_tableViewRight_doubleClicked(const QModelIndex &modelIndex)
@@ -682,9 +672,6 @@ void MainWindow::on_tableViewRight_doubleClicked(const QModelIndex &modelIndex)
     SetLabelText_(path);
 
     m_rightTabIsReset = false;
-
-    m_isWorkingOnRightPane = true;
-
 }
 
 void MainWindow::on_toolSearchButton_clicked()
