@@ -86,6 +86,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     // load and restore view:
     m_appStateHandler->RestoreViewState();
+
+    qApp->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -107,7 +109,18 @@ auto MainWindow::eventFilter(QObject* obj, QEvent* event) -> bool
         if (mouseEvent->button() == Qt::MiddleButton)
         {
             m_tabManagerLeft->addNewTab();
-            return true; // event işlendiyse true dön
+            return true;
+        }
+    }
+
+    if (event->type() == QEvent::MouseButtonPress) {
+        auto* widget = qobject_cast<QWidget*>(obj);
+        if (widget == nullptr) return false;
+
+        if (ui->tabWidgetLeft->isAncestorOf(widget)) {
+            qDebug() << "TabLeft içindeki bir şey tıklandı.";
+        } else if (ui->tabWidgetRight->isAncestorOf(widget)) {
+            qDebug() << "TabRight içindeki bir şey tıklandı.";
         }
     }
 

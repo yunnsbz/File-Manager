@@ -46,7 +46,6 @@ public:
     auto operator = (MainWindow&&) noexcept -> MainWindow& = delete;
     ~MainWindow() override;
 
-
 public:
     auto getUI() -> Ui::MainWindow*;
 
@@ -143,7 +142,7 @@ private slots:
 private:
     virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
 
-    virtual void keyPressEvent(QKeyEvent* event) override; // şimdilik mainWİdget'da bazı ögelere focus için kullanılıyor
+    virtual void keyPressEvent(QKeyEvent* event) override;
 
 
 private:
@@ -178,8 +177,11 @@ private:
     MenuBarView* m_menuBarView;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
-    bool isWorkingOnLeftPane{}; // TODO(fatpound): kod eklenecek
-    bool m_isWorkingOnRightPane{};
+    bool isWorkingOnLeftPane {}; // TODO(fatpound): kod eklenecek
+    bool m_isWorkingOnRightPane {};
+
+    bool m_isLeftPaneFocused {};
+    bool m_isRightPaneFocused {};
 
     bool m_leftTabIsReset   = true;
     bool m_rightTabIsReset  = true;
@@ -188,7 +190,7 @@ private:
     bool m_dualPaneActive   = true;
     bool m_columnViewActive = false;
 
-    bool m_searchOn{};
+    bool m_searchOn {};
 };
 
 #endif // MAINWINDOW_H
