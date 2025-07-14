@@ -112,9 +112,10 @@ private:
     };
 
 private slots:
-    // tree
     void onTreeLeftSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void onTreeRightSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
+
+    // tree
     void on_fileTreeViewLeft_clicked(const QModelIndex &index);
     void on_fileTreeViewRight_clicked(const QModelIndex &index);
 

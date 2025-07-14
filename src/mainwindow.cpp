@@ -23,7 +23,6 @@
 #include <QScrollBar>
 #include <QPropertyAnimation>
 #include <QScrollArea>
-#include <QMessageBox>
 #include <QItemSelectionModel>
 #include <QAbstractItemModel>
 #include <QSplitterHandle>
@@ -106,7 +105,6 @@ MainWindow::MainWindow(QWidget* parent)
         updateNavButtons(tabIndex, false);
         SetLabelText_(getFileModelOpLeft()->GetCurrentPath(tabIndex));
     });
-
     connect(m_eventHandler, &EventHandler::tabRightClicked, this, [this](){
         m_isWorkingOnLeftPane = false;
         m_isWorkingOnRightPane = true;
@@ -115,15 +113,16 @@ MainWindow::MainWindow(QWidget* parent)
         SetLabelText_(getFileModelOpRight()->GetCurrentPath(tabIndex));
     });
 
+    // command line focus handling
     connect(m_eventHandler, &EventHandler::keyEvent_C, this, [this](){
         ui->lineEdit->setFocus();
     });
 
+    // adding new tab changes address label
     connect(m_tabManagerLeft, &TabManager::newtabAdded, this, [this](){
         const int tabIndex = getTabWidgetLeft()->currentIndex();
         SetLabelText_(getFileModelOpLeft()->GetCurrentPath(tabIndex));
     });
-
     connect(m_tabManagerRight, &TabManager::newtabAdded, this, [this](){
         const int tabIndex = getTabWidgetRight()->currentIndex();
         SetLabelText_(getFileModelOpRight()->GetCurrentPath(tabIndex));
@@ -172,9 +171,7 @@ void MainWindow::OnTabMoved2(int toIndex, int fromIndex)
 void MainWindow::SetLabelText_(QString path)
 {
     if(path.isEmpty())
-    {
         path = "\\\\";
-    }
 
     ui->label->setText(path);
 
