@@ -27,7 +27,10 @@ protected:
     auto eventFilter(QObject* obj, QEvent* event) -> bool override{
         if (event->type() == QEvent::MouseButtonPress) {
             QWidget* w = qobject_cast<QWidget*>(obj);
-            if (w == nullptr) return false;
+            if (w == nullptr)
+            {
+                return false;
+            }
 
             if (tabWidgetLeft != nullptr && tabWidgetLeft->isAncestorOf(w)) {
                 emit tabLeftClicked();

@@ -5,6 +5,7 @@
 #include <QPixmap>
 #include <QPalette>
 #include <QColor>
+#include <QApplication>
 
 ThemeManger::ThemeManger(QObject *parent)
     :

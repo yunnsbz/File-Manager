@@ -64,11 +64,11 @@ private:
     MainWindow* mainWindow_;
     QTabWidget* tabWidget_;
 
-    QWidget* cornerNavButtons;
+    QWidget* cornerNavButtons{};
 
-    QToolButton* backTabButton;
-    QToolButton* forwTabButton;
-    QToolButton* upTabButton;
+    QToolButton* backTabButton{};
+    QToolButton* forwTabButton{};
+    QToolButton* upTabButton{};
 
     bool m_forRightPane;
 

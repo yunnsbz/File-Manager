@@ -19,7 +19,7 @@ public:
     void SetTableContent(int tabIndex);
     void navigateToFolder(int tabIndex, QModelIndex firstColumnIndex);
     void SetColumnResize();
-    void openMediaWindow(const QString);
+    void openMediaWindow(QString);
 
 protected:
 

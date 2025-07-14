@@ -8,6 +8,9 @@
 #include <QTimer>
 #include <QThread>
 #include <QProgressDialog>
+#include <QtLogging>
+
+#include <utility>
 
 FileOperationManager::FileOperationManager(QObject * parent)
     :

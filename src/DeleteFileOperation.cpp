@@ -19,7 +19,7 @@ void DeleteFileOperation::start()
     {
         const auto& path = m_op_files_[i];
 
-        QFileInfo info(path);
+        const QFileInfo info(path);
 
         if (info.isDir())
         {

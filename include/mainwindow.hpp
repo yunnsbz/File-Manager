@@ -3,8 +3,6 @@
 
 #include "ui_mainwindow.h"
 
-#include "FileOperationManager.h"
-
 #include <QMainWindow>
 #include <QObject>
 #include <QFileSystemModel>
@@ -15,8 +13,14 @@
 #include <QKeyEvent>
 #include <QList>
 #include <QToolButton>
+#include <QTabWidget>
+#include <QTabBar>
+#include <QTreeView>
+#include <QTableView>
+#include <QStackedWidget>
 
 class ApplicationStateHandler;
+class FileOperationManager;
 class TabManager;
 class ToolBarManager;
 class TableManager;

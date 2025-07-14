@@ -3,8 +3,11 @@
 #include "SettingsDialog.h"
 #include "mainwindow.hpp"
 
+#include <QAction>
 #include <QDialog>
 #include <QDialogButtonBox>
+#include <QLabel>
+#include <QVBoxLayout>
 
 MenuBarView::MenuBarView(QObject *parent)
     :

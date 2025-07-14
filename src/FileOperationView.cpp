@@ -1,8 +1,14 @@
-
 #include "FileOperationView.h"
 #include "FileModelOperations.h"
+#include "FileOperationManager.h"
 #include "mainwindow.hpp"
+
+#include <QToolButton>
 #include <QMessageBox>
+#include <QModelIndexList>
+#include <QString>
+#include <QList>
+#include <QtLogging>
 
 FileOperationView::FileOperationView(QObject *parent)
     :
@@ -44,7 +50,7 @@ void FileOperationView::onDelButtonClicked()
 {
     QList<QString> srcList;
 
-    QModelIndexList selectedIndexes = (! m_mainWindow->isWorkingOnRightPane())
+    const QModelIndexList selectedIndexes = (! m_mainWindow->isWorkingOnRightPane())
             ? m_mainWindow->getTableViewLeft()->selectionModel()->selectedRows()
             : m_mainWindow->getTableViewRight()->selectionModel()->selectedRows()
             ;

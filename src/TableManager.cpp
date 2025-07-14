@@ -14,7 +14,10 @@
 #include <QVideoWidget>
 #include <QBoxLayout>
 #include <QLabel>
-
+#include <QStringList>
+#include <QFileInfo>
+#include <QVector>
+#include <QWidget>
 
 TableManager::TableManager(QTableView* tableView, FileModelOperations* fileModelOp, QObject *parent)
     :

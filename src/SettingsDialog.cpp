@@ -2,6 +2,8 @@
 #include "ui/ui_settingsdialog.h"
 
 #include <QFile>
+#include <QApplication>
+#include <QTreeWidgetItem>
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
@@ -62,7 +64,7 @@ void SettingsDialog::on_pushButton_clicked()
 void SettingsDialog::onSettingItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* /*previous*/) {
     if (!current) return;
 
-    QString settingsName = current->text(0);
+    const QString settingsName = current->text(0);
 
     // TODO (yunnsbz): change this to enum and switch case
 

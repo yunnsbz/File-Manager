@@ -1,5 +1,6 @@
 #include "mainwindow.hpp"
 #include "EventHandler.h"
+#include "FileOperationManager.h"
 #include "FileOperationView.h"
 #include "MenuBarView.h"
 #include "SettingsDialog.h"
@@ -12,6 +13,7 @@
 #include "ApplicationStateHandler.h"
 
 #include <QAbstractButton>
+#include <QAbstractItemView>
 #include <QDesktopServices>
 #include <QToolButton>
 #include <QMouseEvent>
@@ -30,6 +32,7 @@
 #include <QFrame>
 #include <QHBoxLayout>
 #include <QIcon>
+#include <QDir>
 
 MainWindow::UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
 {
@@ -168,7 +171,11 @@ void MainWindow::OnTabMoved2(int toIndex, int fromIndex)
 
 void MainWindow::SetLabelText_(QString path)
 {
-    if(path.isEmpty()) path = "\\\\";
+    if(path.isEmpty())
+    {
+        path = "\\\\";
+    }
+
     ui->label->setText(path);
 
     // label default size (in the ui editor) should be bigger than needed
