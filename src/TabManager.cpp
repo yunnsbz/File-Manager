@@ -12,15 +12,14 @@
 
 FM_BEGIN_NAMESPACE
 
-TabManager::TabManager(QTabWidget* tabWidget, QTreeView* treeView, QTableView* tableView, bool forRightPane, QObject* parent)
+TabManager::TabManager(QTabWidget* tabWidget, QTreeView* treeView, QTableView* tableView, QObject* parent)
     :
     QObject(parent),
     mainWindow_(static_cast<MainWindow*>(parent)),
     tabWidget_(tabWidget),
     m_fileModelOp(new FileModelOperations()),
     m_tableManager(new TableManager(tabWidget, tableView, m_fileModelOp, this)),
-    m_treeManager(new TreeManager(treeView, m_fileModelOp, tabWidget, this)),
-    m_forRightPane(forRightPane)
+    m_treeManager(new TreeManager(treeView, m_fileModelOp, tabWidget, this))
 {
     // sekmelerin sürüklenmesi/yer değiştirmesi hareketlerini algılamak için:
     connect(tabWidget->tabBar(), &QTabBar::tabMoved, this, &TabManager::onTabMoved);
@@ -111,9 +110,9 @@ void TabManager::SetCornerNavButtons()
     layout->addWidget(forwTabButton);
     layout->addWidget(upTabButton);
 
-    connect(upTabButton, &QToolButton::clicked, this, [this]{mainWindow_->upperFolderOnClick(m_forRightPane);});
-    connect(forwTabButton, &QToolButton::clicked, this, [this]{mainWindow_->ForwardButtonOnClick(m_forRightPane);});
-    connect(backTabButton, &QToolButton::clicked, this, [this]{mainWindow_->BackButtonOnClick(m_forRightPane);});
+    connect(upTabButton, &QToolButton::clicked, this, [this]{mainWindow_->upperFolderOnClick();});
+    connect(forwTabButton, &QToolButton::clicked, this, [this]{mainWindow_->ForwardButtonOnClick();});
+    connect(backTabButton, &QToolButton::clicked, this, [this]{mainWindow_->BackButtonOnClick();});
 }
 
 void TabManager::SetNavButtonThemes()

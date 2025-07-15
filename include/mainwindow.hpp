@@ -60,12 +60,12 @@ public:
     /**
      * m_isWorkingOnRightPane değeri doğru bir şekilde set edilmeden çağırılmamalıdır.
      */
-    void updateNavButtons(const int tabIndex);
+    void updateNavButtons(int const tabIndex);
 
     // nav buttons:
-    void upperFolderOnClick(bool OnRightPane);
-    void BackButtonOnClick(bool OnRightPane);
-    void ForwardButtonOnClick(bool OnRightPane);
+    void upperFolderOnClick();
+    void BackButtonOnClick();
+    void ForwardButtonOnClick();
     void ScrollColumn(int direction);
 
     void ActivateDualPane();

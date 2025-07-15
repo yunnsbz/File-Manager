@@ -31,6 +31,7 @@
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QDir>
+#include <utility>
 
 FM_BEGIN_NAMESPACE
 
@@ -46,8 +47,8 @@ MainWindow::MainWindow(QWidget* parent)
     m_ui_mgr_(ui, this),
     m_toolBarManager(new ToolBarManager(ui->toolBar, this)),
     m_menuManager(new ThemeManger(this)),
-    m_tabManagerLeft(new TabManager(ui->tabWidgetLeft, ui->fileTreeViewLeft, ui->tableViewLeft, false, this)),
-    m_tabManagerRight(new TabManager(ui->tabWidgetRight, ui->fileTreeViewRight, ui->tableViewRight, true, this)),
+    m_tabManagerLeft(new TabManager(ui->tabWidgetLeft, ui->fileTreeViewLeft, ui->tableViewLeft, this)),
+    m_tabManagerRight(new TabManager(ui->tabWidgetRight, ui->fileTreeViewRight, ui->tableViewRight, this)),
     m_columnManager(new ColumnManager(ui->columnView, this)),
     m_fileOpManager(new FileOperationManager(this)),
     m_appStateHandler(new ApplicationStateHandler(this)),
@@ -112,12 +113,12 @@ MainWindow::MainWindow(QWidget* parent)
 
     connect(m_tabManagerLeft, &TabManager::tabChanged, this, [this](int tabIndex, QString filePath){
         updateNavButtons(tabIndex);
-        SetLabelText_(filePath);
+        SetLabelText_(std::move(filePath));
     });
 
     connect(m_tabManagerRight, &TabManager::tabChanged, this, [this](int tabIndex, QString filePath){
         updateNavButtons(tabIndex);
-        SetLabelText_(filePath);
+        SetLabelText_(std::move(filePath));
     });
 }
 
@@ -212,11 +213,11 @@ void MainWindow::ActivateTreeView()
     ui->splitterRight->setHandleWidth(5);
 }
 
-void MainWindow::updateNavButtons(const int tabIndex)
+void MainWindow::updateNavButtons(int const tabIndex)
 {
     if(isWorkingOnRightPane())
     {
-        auto fileModelOp = m_tabManagerRight->getFileModelOp();
+        auto* fileModelOp = m_tabManagerRight->getFileModelOp();
 
         const bool backButtonEnable = !fileModelOp->IsBackHistoryEmpty(tabIndex);
         const bool forwardButtonEnable = !fileModelOp->IsForwardHistoryEmpty(tabIndex);
@@ -236,7 +237,7 @@ void MainWindow::updateNavButtons(const int tabIndex)
     }
     else
     {
-        auto fileModelOp = m_tabManagerLeft->getFileModelOp();
+        auto* fileModelOp = m_tabManagerLeft->getFileModelOp();
 
         const bool backButtonEnable = !fileModelOp->IsBackHistoryEmpty(tabIndex);
         const bool forwardButtonEnable = !fileModelOp->IsForwardHistoryEmpty(tabIndex);
@@ -256,11 +257,11 @@ void MainWindow::updateNavButtons(const int tabIndex)
     }
 }
 
-void MainWindow::upperFolderOnClick(bool OnRightPane)
+void MainWindow::upperFolderOnClick()
 {
-    if(OnRightPane)
+    if(isWorkingOnRightPane())
     {
-        auto fileModelOp = m_tabManagerRight->getFileModelOp();
+        auto* fileModelOp = m_tabManagerRight->getFileModelOp();
 
         const auto tabIndex = getTabWidgetRight()->currentIndex();
 
@@ -276,7 +277,7 @@ void MainWindow::upperFolderOnClick(bool OnRightPane)
     }
     else
     {
-        auto fileModelOp = m_tabManagerLeft->getFileModelOp();
+        auto* fileModelOp = m_tabManagerLeft->getFileModelOp();
 
         const auto tabIndex = getTabWidgetLeft()->currentIndex();
 
@@ -292,9 +293,9 @@ void MainWindow::upperFolderOnClick(bool OnRightPane)
     }
 }
 
-void MainWindow::BackButtonOnClick(bool OnRightPane)
+void MainWindow::BackButtonOnClick()
 {
-    if(OnRightPane){
+    if(isWorkingOnRightPane()){
         const auto tabIndex = getTabWidgetRight()->currentIndex();
 
         m_tabManagerRight->getFileModelOp()->OnBackButtonClicked(tabIndex);
@@ -339,9 +340,9 @@ void MainWindow::ScrollColumn(int direction)
                 );
 }
 
-void MainWindow::ForwardButtonOnClick(bool OnRightPane)
+void MainWindow::ForwardButtonOnClick()
 {
-    if(OnRightPane){
+    if(isWorkingOnRightPane()){
         const auto tabIndex = getTabWidgetRight()->currentIndex();
 
         m_tabManagerRight->getFileModelOp()->OnForwardButtonClicked(tabIndex);
@@ -370,21 +371,21 @@ void MainWindow::ForwardButtonOnClick(bool OnRightPane)
 
 void MainWindow::on_toolUpButton_clicked()
 {
-    upperFolderOnClick(isWorkingOnRightPane());
+    upperFolderOnClick();
 }
 void MainWindow::on_toolBackButton_clicked()
 {
-    BackButtonOnClick(isWorkingOnRightPane());
+    BackButtonOnClick();
 }
 void MainWindow::on_toolForwardButton_clicked()
 {
-    ForwardButtonOnClick(isWorkingOnRightPane());
+    ForwardButtonOnClick();
 }
 
 
 void MainWindow::on_lineEdit_returnPressed()
 {
-    auto fileModelOp = m_tabManagerLeft->getFileModelOp();
+    auto* fileModelOp = m_tabManagerLeft->getFileModelOp();
 
     auto path = fileModelOp->GetFilePath(fileModelOp->GetTabModelIndex(getTabWidgetRight()->currentIndex()));
 
