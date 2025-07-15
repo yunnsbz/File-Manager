@@ -122,10 +122,12 @@ MainWindow::MainWindow(QWidget* parent)
     connect(m_tabManagerLeft, &TabManager::newtabAdded, this, [this](){
         const int tabIndex = getTabWidgetLeft()->currentIndex();
         SetLabelText_(getFileModelOpLeft()->GetCurrentPath(tabIndex));
+        updateNavButtons(tabIndex);
     });
     connect(m_tabManagerRight, &TabManager::newtabAdded, this, [this](){
         const int tabIndex = getTabWidgetRight()->currentIndex();
         SetLabelText_(getFileModelOpRight()->GetCurrentPath(tabIndex));
+        updateNavButtons(tabIndex);
     });
 }
 
@@ -575,6 +577,10 @@ void MainWindow::on_tabWidgetLeft_tabCloseRequested(int index)
 
         // fokus buraya geçtiğinden ve root dosya açıldığından adres text'i default olur:
         SetLabelText_("\\\\");
+
+        // navigasyon sıfırlaması
+        m_fileModelOpLeft->RemoveTabModelIndex(index);
+        updateNavButtons(ui->tabWidgetLeft->currentIndex());
     }
 }
 
@@ -613,6 +619,10 @@ void MainWindow::on_tabWidgetRight_tabCloseRequested(int index)
 
         // fokus buraya geçtiğinden ve root dosya açıldığından adres text'i default olur:
         SetLabelText_("\\\\");
+
+        // navigasyon sıfırlaması
+        m_fileModelOpLeft->RemoveTabModelIndex(index);
+        updateNavButtons(ui->tabWidgetLeft->currentIndex());
     }
 }
 
