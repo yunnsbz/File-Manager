@@ -32,6 +32,7 @@ FM_BEGIN_NAMESPACE
 class ApplicationStateHandler;
 class FileOperationManager;
 class TabManager;
+class ColumnManager;
 class FileModelOperations;
 class ToolBarManager;
 class ThemeManger;
@@ -117,9 +118,6 @@ private slots:
     void onTreeLeftSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void onTreeRightSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
-    // column view
-    void on_columnView_clicked(const QModelIndex &index);
-
     // spliter
     void on_splitterLeft_splitterMoved(int pos, int index);
 
@@ -143,13 +141,12 @@ private:
 
     UIManager m_ui_mgr_;
 
-    QFileSystemModel* m_columnFileModel;
-
     ToolBarManager* m_toolBarManager;
     ThemeManger* m_menuManager;
 
     TabManager* m_tabManagerLeft;
     TabManager* m_tabManagerRight;
+    ColumnManager* m_columnManager;
 
     FileOperationManager* m_fileOpManager;
 

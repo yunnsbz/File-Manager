@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "ColumnManager.h"
 #include "EventHandler.h"
 #include "FileModelOperations.h"
 #include "FileOperationManager.h"
@@ -43,11 +44,11 @@ MainWindow::MainWindow(QWidget* parent)
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_ui_mgr_(ui, this),
-    //m_columnFileModel(m_fileModelOpLeft->GetFileModel()),
     m_toolBarManager(new ToolBarManager(ui->toolBar, this)),
     m_menuManager(new ThemeManger(this)),
     m_tabManagerLeft(new TabManager(ui->tabWidgetLeft, ui->fileTreeViewLeft, ui->tableViewLeft, false, this)),
     m_tabManagerRight(new TabManager(ui->tabWidgetRight, ui->fileTreeViewRight, ui->tableViewRight, true, this)),
+    m_columnManager(new ColumnManager(ui->columnView, this)),
     m_fileOpManager(new FileOperationManager(this)),
     m_appStateHandler(new ApplicationStateHandler(this)),
     m_settingsDialog(new SettingsDialog(this)),
@@ -56,9 +57,6 @@ MainWindow::MainWindow(QWidget* parent)
     m_eventHandler(new EventHandler(this, ui->tabWidgetLeft, ui->tabWidgetRight))
 {
     setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
-
-    ui->columnView->setModel(m_columnFileModel);
-    ui->columnView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     // tree view daha küçük olmalı
     ui->splitterLeft->setSizes({100,400});
@@ -512,15 +510,6 @@ void MainWindow::on_toolSearchButton_clicked()
 
             ui->lineEdit_2->setFocus();
         }
-    }
-}
-
-void MainWindow::on_columnView_clicked(const QModelIndex &index)
-{
-    if (!m_columnFileModel->hasChildren(index))
-    {
-        const QString filePath = m_columnFileModel->filePath(index);
-        QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
     }
 }
 

@@ -60,6 +60,8 @@ qt_add_executable(File-Manager
     .clang-tidy
     include/EventHandler.h
     include/FM_Macros.hpp
+    include/ColumnManager.h
+    src/ColumnManager.cpp
 )
 
 qt_add_resources(RESOURCE_SOURCES
