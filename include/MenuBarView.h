@@ -3,6 +3,9 @@
 
 #include <QObject>
 
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
+
 class MainWindow;
 
 class MenuBarView : public QObject
@@ -24,4 +27,5 @@ private:
 
 };
 
+FM_END_NAMESPACE
 #endif // MENUBARVIEW_H

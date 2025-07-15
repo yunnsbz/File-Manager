@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QSettings>
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
 
 class MainWindow;
 
@@ -34,4 +36,5 @@ private:
     static constexpr const char* SettingName_ViewState = "view_state";
 };
 
+FM_END_NAMESPACE
 #endif // APPLICATIONSTATEHANDLER_H

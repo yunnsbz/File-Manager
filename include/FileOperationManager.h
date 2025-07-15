@@ -12,6 +12,9 @@
 #include <QMap>
 #include <QSet>
 
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
+
 class MainWindow;
 
 class FileOperationManager : public QObject
@@ -72,4 +75,6 @@ private slots:
     void onFinished(const QString &info);
 };
 
+
+FM_END_NAMESPACE
 #endif // FILEOPERATIONMANAGER_H

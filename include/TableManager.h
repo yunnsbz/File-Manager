@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QTableView>
 
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
+
 class FileModelOperations;
 
 class TableManager : public QObject
@@ -29,5 +32,7 @@ private:
 
     QTableView* tableView_;
 };
+
+FM_END_NAMESPACE
 
 #endif // TABLEMANAGER_H

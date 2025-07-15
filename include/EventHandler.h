@@ -6,7 +6,8 @@
 #include <QWidget>
 #include <QEvent>
 #include <QKeyEvent>
-
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
 
 class EventHandler : public QObject {
     Q_OBJECT
@@ -60,4 +61,6 @@ private:
 
     bool m_shouldIgnoreNextC = true;
 };
+
+FM_END_NAMESPACE
 #endif // EVENTHANDLER_H

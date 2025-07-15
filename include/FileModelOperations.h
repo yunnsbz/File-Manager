@@ -8,6 +8,9 @@
 #include <QMap>
 #include <QList>
 #include <QDir>
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
+
 /**
  * file model ile alakalı tüm fonksiyonları barındırır
  */
@@ -51,4 +54,6 @@ private:
     QMap<int, QList<QModelIndex>> TabForwardHistoryModelIndex;
 
 };
+
+FM_END_NAMESPACE
 #endif // FILEMODELOPERATIONS_H

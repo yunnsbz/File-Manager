@@ -2,6 +2,9 @@
 #define THEMEMANAGER_H
 
 #include <QObject>
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
+
 
 class MainWindow;
 
@@ -18,4 +21,5 @@ private:
 
 };
 
+FM_END_NAMESPACE
 #endif // THEMEMANAGER_H

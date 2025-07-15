@@ -19,6 +19,9 @@
 #include <QTableView>
 #include <QStackedWidget>
 
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
+
 class ApplicationStateHandler;
 class FileOperationManager;
 class TabManager;
@@ -193,5 +196,7 @@ private:
 
     bool m_searchOn {};
 };
+
+FM_END_NAMESPACE
 
 #endif // MAINWINDOW_H

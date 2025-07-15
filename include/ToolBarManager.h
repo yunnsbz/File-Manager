@@ -3,7 +3,8 @@
 
 #include <QObject>
 #include <QHBoxLayout>
-
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
 class MainWindow;
 
 class ToolBarManager : public QObject
@@ -26,5 +27,5 @@ private:
     MainWindow* mainWindow_;
 };
 
-
+FM_END_NAMESPACE
 #endif // TOOLBARMANAGER_H

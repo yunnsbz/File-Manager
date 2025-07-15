@@ -5,7 +5,8 @@
 #include <QWidget>
 #include <QString>
 #include <QTreeWidget>
-
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
 namespace Ui {
 class SettingsDialog;
 }
@@ -30,4 +31,5 @@ private:
     bool tabCloseButtonOld{};
 };
 
+FM_END_NAMESPACE
 #endif // SETTINGSDIALOG_H

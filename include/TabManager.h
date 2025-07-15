@@ -12,6 +12,9 @@
 #include <QPixmap>
 #include <QSplitter>
 
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
+
 class QFileSystemModel;
 class MainWindow;
 
@@ -82,5 +85,5 @@ private:
     int m_persistentPreviousLeftTabIndex = 0;
 };
 
-
+FM_END_NAMESPACE
 #endif // TABMANAGER_H
