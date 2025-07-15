@@ -11,9 +11,9 @@ class MainWindow;
 enum class ViewStates : char
 {
     DUAL_PANE,
-    DUAL_PANE_W_TREE,
-    SINGLE_TABLE,
-    SINGLE_TABLE_W_TREE,
+    DUAL_PANE_WITH_TREE,
+    SINGLE_PANE,
+    SINGLE_PANE_WITH_TREE,
     COLUMN_VIEW
 };
 
