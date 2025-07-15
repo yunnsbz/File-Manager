@@ -40,8 +40,8 @@ TabManager::TabManager(QTabWidget* tabWidget, QTreeView* treeView, QTableView* t
     });
 
     connect(m_tableManager, &TableManager::tableDoubleClicked, this, [this](const QModelIndex &modelIndex){
+        // TODO(yunnsbz): remove sync-with-tableView feature here
         const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
-
         m_treeManager->expandTreeView(firstColumnIndex);
 
         const int tabIndex = m_tabWidget_->currentIndex();
