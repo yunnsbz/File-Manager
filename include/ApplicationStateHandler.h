@@ -31,7 +31,7 @@ public:
 
 
 private:
-    MainWindow* mainWindow_;
+    MainWindow* m_mainWindow_;
 
     static constexpr const char* SettingName_ViewState = "view_state";
 };

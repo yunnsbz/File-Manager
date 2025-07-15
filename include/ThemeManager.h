@@ -17,7 +17,7 @@ public:
     static bool isDarkTheme();
 
 private:
-    MainWindow* mainWindow;
+    MainWindow* m_mainWindow;
 
 };
 

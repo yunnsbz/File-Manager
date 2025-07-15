@@ -11,11 +11,11 @@ FM_BEGIN_NAMESPACE
 TreeManager::TreeManager(QTreeView* treeView, FileModelOperations* fileModelOp, QTabWidget* tabWidget, QObject* parent)
     :
     QObject(parent),
-    fileModelOp_(fileModelOp),
-    tabWidget_(tabWidget),
-    treeView_(treeView)
+    m_fileModelOp_(fileModelOp),
+    m_tabWidget_(tabWidget),
+    m_treeView_(treeView)
 {
-    auto* fileModel = fileModelOp->GetFileModel();
+    auto* fileModel = fileModelOp->getFileModel();
     treeView->setModel(fileModel);
     treeView->setRootIndex(fileModel->index(fileModel->rootPath()));
 
@@ -28,114 +28,114 @@ TreeManager::TreeManager(QTreeView* treeView, FileModelOperations* fileModelOp, 
 
     // tree view açılma ve kapanma durumlarında değişiklikleri tabContents içine kaydetmeliyiz:
     connect(treeView, &QTreeView::expanded, fileModelOp, [=, this](const QModelIndex &index) {
-        const QString& path = fileModelOp->GetFilePath(index);
-        const int currentTab = tabWidget_->currentIndex();
-        if(!ExpandedPathsMap[currentTab].contains(path))
+        const QString& path = fileModelOp->getFilePath(index);
+        const int currentTab = m_tabWidget_->currentIndex();
+        if(!m_expandedPathsMap[currentTab].contains(path))
         {
-            ExpandedPathsMap[currentTab].append(path);
+            m_expandedPathsMap[currentTab].append(path);
         }
     });
 
     connect(treeView, &QTreeView::collapsed, fileModelOp, [=, this](const QModelIndex &index) {
-        const QString& path = fileModelOp->GetFilePath(index);
-        const int currentTab = tabWidget_->currentIndex();
-        ExpandedPathsMap[currentTab].removeOne(path);
+        const QString& path = fileModelOp->getFilePath(index);
+        const int currentTab = m_tabWidget_->currentIndex();
+        m_expandedPathsMap[currentTab].removeOne(path);
     });
 }
 
 void TreeManager::setTreeToDefault()
 {
-    auto* fileModel = fileModelOp_->GetFileModel();
+    auto* fileModel = m_fileModelOp_->getFileModel();
     fileModel->setRootPath("");
     const QModelIndex index = fileModel->index(fileModel->rootPath());
-    treeView_->setRootIndex(index);
-    treeView_->collapseAll();
+    m_treeView_->setRootIndex(index);
+    m_treeView_->collapseAll();
 }
 
-void TreeManager::CollapseAll_noSig()
+void TreeManager::collapseAll_noSig()
 {
     // collapse all dediğimde collapse sinyallerinin çalışmasını engellemek için
-    treeView_->blockSignals(true);   // Tüm sinyalleri kapat
-    treeView_->collapseAll();
-    treeView_->blockSignals(false); // Tüm sinyalleri aç
+    m_treeView_->blockSignals(true);   // Tüm sinyalleri kapat
+    m_treeView_->collapseAll();
+    m_treeView_->blockSignals(false); // Tüm sinyalleri aç
 }
 
-void TreeManager::SetTreeContent(int tabIndex)
+void TreeManager::setTreeContent(int tabIndex)
 {
     // set tree view content:
-    if(ExpandedPathsMap[tabIndex].isEmpty())
+    if(m_expandedPathsMap[tabIndex].isEmpty())
     {
         setTreeToDefault();
         return;
     }
 
-    CollapseAll_noSig();
+    collapseAll_noSig();
 
-    for (const auto &path : ExpandedPathsMap[tabIndex])
+    for (const auto &path : m_expandedPathsMap[tabIndex])
     {
-        const QModelIndex index = fileModelOp_->GetFileIndex(path);
+        const QModelIndex index = m_fileModelOp_->getFileIndex(path);
         if (index.isValid() && index.model() != nullptr)
         {
-            treeView_->expand(index);
+            m_treeView_->expand(index);
         }
     }
 }
 
 void TreeManager::navigateToFolder(const QModelIndex &modelIndex, int tabIndex)
 {
-    auto *fileModel = fileModelOp_->GetFileModel();
+    auto *fileModel = m_fileModelOp_->getFileModel();
     if (fileModel->hasChildren(modelIndex))
     {
-        fileModelOp_->SetTabModelIndex(tabIndex, modelIndex);
+        m_fileModelOp_->setTabModelIndex(tabIndex, modelIndex);
     }
 
     // single click tree expanding and collapsing:
-    if (treeView_->isExpanded(modelIndex))
+    if (m_treeView_->isExpanded(modelIndex))
     {
-        treeView_->collapse(modelIndex);
+        m_treeView_->collapse(modelIndex);
     }
     else
     {
-        treeView_->expand(modelIndex);
+        m_treeView_->expand(modelIndex);
     }
 }
 
 void TreeManager::removeTabExpandedPaths(int tabIndex)
 {
-    ExpandedPathsMap.remove(tabIndex);
+    m_expandedPathsMap.remove(tabIndex);
 
     // sekmeden sonra gelenlerin map key'leri (tabIndex'leri) bir geriye alınır:
-    auto keys = ExpandedPathsMap.keys();
+    auto keys = m_expandedPathsMap.keys();
     std::ranges::sort(keys); // sıralanmazsa yanlış sekmenin üzerine yazabilir
     for(auto _tabIndex : keys)
     {
         if(_tabIndex > tabIndex)
         {
-            auto content = ExpandedPathsMap[_tabIndex];
-            ExpandedPathsMap.remove(_tabIndex);
-            ExpandedPathsMap[_tabIndex-1] = content;
+            auto content = m_expandedPathsMap[_tabIndex];
+            m_expandedPathsMap.remove(_tabIndex);
+            m_expandedPathsMap[_tabIndex-1] = content;
         }
     }
 }
 
 void TreeManager::swapExpandedPathsMap(int toIndex, int fromIndex)
 {
-    const auto temp = ExpandedPathsMap.value(fromIndex);
-    ExpandedPathsMap[fromIndex] = ExpandedPathsMap.value(toIndex);
-    ExpandedPathsMap[toIndex] = temp;
+    const auto temp = m_expandedPathsMap.value(fromIndex);
+    m_expandedPathsMap[fromIndex] = m_expandedPathsMap.value(toIndex);
+    m_expandedPathsMap[toIndex] = temp;
 }
 
-void TreeManager::ExpandTreeView(const QModelIndex &modelIndex)
+void TreeManager::expandTreeView(const QModelIndex &modelIndex)
 {
-    auto* fileModel = fileModelOp_->GetFileModel();
+    auto* fileModel = m_fileModelOp_->getFileModel();
     if(fileModel->hasChildren(modelIndex)){
-        treeView_->expand(modelIndex);
+        m_treeView_->expand(modelIndex);
     }
 }
 
 void TreeManager::onTreeViewClicked(const QModelIndex &modelIndex)
 {
-    int const tabIndex = tabWidget_->currentIndex();
+    int const tabIndex = m_tabWidget_->currentIndex();
     navigateToFolder(modelIndex, tabIndex);
 
     emit treeViewClicked(modelIndex);

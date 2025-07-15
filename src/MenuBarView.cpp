@@ -27,7 +27,7 @@ MenuBarView::MenuBarView(QObject *parent)
 void MenuBarView::onColumnViewTriggered()
 {
     if(m_mainWindow->getStackedWidget()->currentIndex() == 1){
-        m_mainWindow->DeactivateColumnView();
+        m_mainWindow->deactivateColumnView();
         if(m_mainWindow->isDualPaneActive()){
             if(m_mainWindow->isTreeViewActive()){
                 ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_WITH_TREE);
@@ -46,7 +46,7 @@ void MenuBarView::onColumnViewTriggered()
         }
     }
     else{
-        m_mainWindow->ActivateColumnView();
+        m_mainWindow->activateColumnView();
         ApplicationStateHandler::SetCurrentViewState(ViewStates::COLUMN_VIEW);
     }
 }
@@ -60,7 +60,7 @@ void MenuBarView::onTreeViewTriggered()
 {
     if (m_mainWindow->isTreeViewActive())
     {
-        m_mainWindow->DeactivateTreeView();
+        m_mainWindow->deactivateTreeView();
 
         // save state update
         if(m_mainWindow->isDualPaneActive()){
@@ -72,7 +72,7 @@ void MenuBarView::onTreeViewTriggered()
     }
     else
     {
-        m_mainWindow->ActivateTreeView();
+        m_mainWindow->activateTreeView();
 
         // save state update
         if(m_mainWindow->isDualPaneActive()){
@@ -96,7 +96,7 @@ void MenuBarView::onDualPaneViewTriggered()
     {
         if (m_mainWindow->isDualPaneActive())
         {
-            m_mainWindow->DeactivateDualPane();
+            m_mainWindow->deactivateDualPane();
 
             // save state update
             if(m_mainWindow->isTreeViewActive())
@@ -106,7 +106,7 @@ void MenuBarView::onDualPaneViewTriggered()
         }
         else
         {
-            m_mainWindow->ActivateDualPane();
+            m_mainWindow->activateDualPane();
 
             // save state update
             if(m_mainWindow->isTreeViewActive())
@@ -117,10 +117,10 @@ void MenuBarView::onDualPaneViewTriggered()
     }
     else{
         // if column view is active the deactivate it and open dual pane
-        m_mainWindow->DeactivateColumnView();
+        m_mainWindow->deactivateColumnView();
 
         // column'dan çıktıktan sonra dual pane açılmalı:
-        m_mainWindow->ActivateDualPane();
+        m_mainWindow->activateDualPane();
     }
 }
 

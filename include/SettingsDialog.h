@@ -21,7 +21,7 @@ public:
     explicit SettingsDialog(QWidget *parent = nullptr);
     ~SettingsDialog() override;
 
-    static void SetOldButtonStyle(bool buttonStyle);
+    static void setOldButtonStyle(bool buttonStyle);
 
     void onSettingItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* /*previous*/);
 

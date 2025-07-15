@@ -21,7 +21,7 @@ SettingsDialog::~SettingsDialog()
     delete ui;
 }
 
-void SettingsDialog::SetOldButtonStyle(bool buttonStyle)
+void SettingsDialog::setOldButtonStyle(bool buttonStyle)
 {
     if(buttonStyle){
         // style:
@@ -52,7 +52,7 @@ void SettingsDialog::SetOldButtonStyle(bool buttonStyle)
 
 void SettingsDialog::on_pushButton_clicked()
 {
-    SetOldButtonStyle(tabCloseButtonOld);
+    setOldButtonStyle(tabCloseButtonOld);
 
     if(tabCloseButtonOld)
     {

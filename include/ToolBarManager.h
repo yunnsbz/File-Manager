@@ -14,17 +14,13 @@ class ToolBarManager : public QObject
 public:
     explicit ToolBarManager(QHBoxLayout* toolBar, QObject* parent);
 
-    void SetBackButtonEnabled(bool enabled);
-    void SetForwardButtonEnabled(bool enabled);
-    void SetUpButtonEnabled(bool enabled);
-
-
-protected:
-
+    void setBackButtonEnabled(bool enabled);
+    void setForwardButtonEnabled(bool enabled);
+    void setUpButtonEnabled(bool enabled);
 
 private:
-    QHBoxLayout* toolBar_;
-    MainWindow* mainWindow_;
+    QHBoxLayout* m_toolBar_;
+    MainWindow* m_mainWindow_;
 };
 
 FM_END_NAMESPACE

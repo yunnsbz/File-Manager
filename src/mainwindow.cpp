@@ -96,14 +96,14 @@ MainWindow::MainWindow(QWidget* parent)
         m_isWorkingOnRightPane = false;
         const int tabIndex = getTabWidgetLeft()->currentIndex();
         updateNavButtons(tabIndex);
-        SetLabelText_(m_tabManagerLeft->getFileModelOp()->GetCurrentPath(tabIndex));
+        SetLabelText_(m_tabManagerLeft->getFileModelOp()->getCurrentPath(tabIndex));
     });
     connect(m_eventHandler, &EventHandler::tabRightClicked, this, [this](){
         m_isWorkingOnLeftPane = false;
         m_isWorkingOnRightPane = true;
         const int tabIndex = getTabWidgetRight()->currentIndex();
         updateNavButtons(tabIndex);
-        SetLabelText_(m_tabManagerRight->getFileModelOp()->GetCurrentPath(tabIndex));
+        SetLabelText_(m_tabManagerRight->getFileModelOp()->getCurrentPath(tabIndex));
     });
 
     // command line focus handling
@@ -123,8 +123,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     //nav buttons:
     connect(ui->toolUpButton, &QToolButton::clicked, this, &MainWindow::upperFolderOnClick);
-    connect(ui->toolBackButton, &QToolButton::clicked, this, &MainWindow::BackButtonOnClick);
-    connect(ui->toolForwardButton, &QToolButton::clicked, this, &MainWindow::ForwardButtonOnClick);
+    connect(ui->toolBackButton, &QToolButton::clicked, this, &MainWindow::backButtonOnClick);
+    connect(ui->toolForwardButton, &QToolButton::clicked, this, &MainWindow::forwardButtonOnClick);
 }
 
 MainWindow::~MainWindow()
@@ -175,7 +175,7 @@ void MainWindow::on_splitterLeft_splitterMoved(int pos, int )
     }
 }
 
-void MainWindow::DeactivateTreeView()
+void MainWindow::deactivateTreeView()
 {
     m_treeViewActive = false;
     ui->splitterLeft->setSizes({0,400});
@@ -197,7 +197,7 @@ void MainWindow::DeactivateTreeView()
     ui->splitterRight->setHandleWidth(0);
 }
 
-void MainWindow::ActivateTreeView()
+void MainWindow::activateTreeView()
 {
     m_treeViewActive = true;
     ui->splitterLeft->setSizes({100,400});
@@ -224,19 +224,19 @@ void MainWindow::updateNavButtons(int const tabIndex)
     {
         auto* fileModelOp = m_tabManagerRight->getFileModelOp();
 
-        const bool backButtonEnable = !fileModelOp->IsBackHistoryEmpty(tabIndex);
-        const bool forwardButtonEnable = !fileModelOp->IsForwardHistoryEmpty(tabIndex);
+        const bool backButtonEnable = !fileModelOp->isBackHistoryEmpty(tabIndex);
+        const bool forwardButtonEnable = !fileModelOp->isForwardHistoryEmpty(tabIndex);
 
-        m_toolBarManager->SetBackButtonEnabled(backButtonEnable);
-        m_toolBarManager->SetForwardButtonEnabled(forwardButtonEnable);
+        m_toolBarManager->setBackButtonEnabled(backButtonEnable);
+        m_toolBarManager->setForwardButtonEnabled(forwardButtonEnable);
 
-        const QModelIndex currentIndex = fileModelOp->GetTabModelIndex(tabIndex);
-        const QString currentPath = fileModelOp->GetFilePath(currentIndex);
+        const QModelIndex currentIndex = fileModelOp->getTabModelIndex(tabIndex);
+        const QString currentPath = fileModelOp->getFilePath(currentIndex);
 
         // Eğer current path boş ise daha yukarı çıkılamıyordur.
         const bool upEnable = (currentPath != "");
 
-        m_toolBarManager->SetUpButtonEnabled(upEnable);
+        m_toolBarManager->setUpButtonEnabled(upEnable);
 
         m_tabManagerRight->updateNavButtons(backButtonEnable, forwardButtonEnable, upEnable);
     }
@@ -244,19 +244,19 @@ void MainWindow::updateNavButtons(int const tabIndex)
     {
         auto* fileModelOp = m_tabManagerLeft->getFileModelOp();
 
-        const bool backButtonEnable = !fileModelOp->IsBackHistoryEmpty(tabIndex);
-        const bool forwardButtonEnable = !fileModelOp->IsForwardHistoryEmpty(tabIndex);
+        const bool backButtonEnable = !fileModelOp->isBackHistoryEmpty(tabIndex);
+        const bool forwardButtonEnable = !fileModelOp->isForwardHistoryEmpty(tabIndex);
 
-        m_toolBarManager->SetBackButtonEnabled(backButtonEnable);
-        m_toolBarManager->SetForwardButtonEnabled(forwardButtonEnable);
+        m_toolBarManager->setBackButtonEnabled(backButtonEnable);
+        m_toolBarManager->setForwardButtonEnabled(forwardButtonEnable);
 
-        const QModelIndex currentIndex = fileModelOp->GetTabModelIndex(tabIndex);
-        const QString currentPath = fileModelOp->GetFilePath(currentIndex);
+        const QModelIndex currentIndex = fileModelOp->getTabModelIndex(tabIndex);
+        const QString currentPath = fileModelOp->getFilePath(currentIndex);
 
         // Eğer current path boş ise daha yukarı çıkılamıyordur.
         const bool upEnable = (currentPath != "");
 
-        m_toolBarManager->SetUpButtonEnabled(upEnable);
+        m_toolBarManager->setUpButtonEnabled(upEnable);
 
         m_tabManagerLeft->updateNavButtons(backButtonEnable, forwardButtonEnable, upEnable);
     }
@@ -270,12 +270,12 @@ void MainWindow::upperFolderOnClick()
 
         const auto tabIndex = getTabWidgetRight()->currentIndex();
 
-        auto parentIndex = fileModelOp->GetFileModel()->parent(fileModelOp->GetTabModelIndex(tabIndex));
+        auto parentIndex = fileModelOp->getFileModel()->parent(fileModelOp->getTabModelIndex(tabIndex));
 
-        fileModelOp->SetTabModelIndex(tabIndex, parentIndex);
+        fileModelOp->setTabModelIndex(tabIndex, parentIndex);
         //TODO(yunus): tree back onClick missing
 
-        m_tabManagerRight->SetTabContent(tabIndex);
+        m_tabManagerRight->setTabContent(tabIndex);
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
@@ -286,48 +286,48 @@ void MainWindow::upperFolderOnClick()
 
         const auto tabIndex = getTabWidgetLeft()->currentIndex();
 
-        auto parentIndex = fileModelOp->GetFileModel()->parent(fileModelOp->GetTabModelIndex(tabIndex));
+        auto parentIndex = fileModelOp->getFileModel()->parent(fileModelOp->getTabModelIndex(tabIndex));
 
-        fileModelOp->SetTabModelIndex(tabIndex, parentIndex);
+        fileModelOp->setTabModelIndex(tabIndex, parentIndex);
         //TODO(yunus): tree back onClick missing
 
-        m_tabManagerLeft->SetTabContent(tabIndex);
+        m_tabManagerLeft->setTabContent(tabIndex);
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
     }
 }
 
-void MainWindow::BackButtonOnClick()
+void MainWindow::backButtonOnClick()
 {
     if(isWorkingOnRightPane()){
         const auto tabIndex = getTabWidgetRight()->currentIndex();
 
-        m_tabManagerRight->getFileModelOp()->OnBackButtonClicked(tabIndex);
+        m_tabManagerRight->getFileModelOp()->onBackButtonClicked(tabIndex);
         //TODO(yunus): tree back onClick missing
 
-        m_tabManagerRight->SetTabContent(tabIndex);
+        m_tabManagerRight->setTabContent(tabIndex);
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
     }
     else if(m_columnViewActive){
-        ScrollColumn(-1);
+        scrollColumnView(-1);
     }
     else{
         const auto tabIndex = getTabWidgetLeft()->currentIndex();
 
-        m_tabManagerLeft->getFileModelOp()->OnBackButtonClicked(tabIndex);
+        m_tabManagerLeft->getFileModelOp()->onBackButtonClicked(tabIndex);
         //TODO(yunus): tree back onClick missing
 
-        m_tabManagerLeft->SetTabContent(tabIndex);
+        m_tabManagerLeft->setTabContent(tabIndex);
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
     }
 }
 
-void MainWindow::ScrollColumn(int direction)
+void MainWindow::scrollColumnView(int direction)
 {
     const QList<QAbstractItemView*> columns = ui->columnView->findChildren<QAbstractItemView*>();
 
@@ -345,29 +345,29 @@ void MainWindow::ScrollColumn(int direction)
                 );
 }
 
-void MainWindow::ForwardButtonOnClick()
+void MainWindow::forwardButtonOnClick()
 {
     if(isWorkingOnRightPane()){
         const auto tabIndex = getTabWidgetRight()->currentIndex();
 
-        m_tabManagerRight->getFileModelOp()->OnForwardButtonClicked(tabIndex);
+        m_tabManagerRight->getFileModelOp()->onForwardButtonClicked(tabIndex);
         //tree back onClick missing
 
-        m_tabManagerRight->SetTabContent(tabIndex);
+        m_tabManagerRight->setTabContent(tabIndex);
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
     }
     else if(m_columnViewActive){
-        ScrollColumn(1);
+        scrollColumnView(1);
     }
     else{
         const auto tabIndex = getTabWidgetLeft()->currentIndex();
 
-        m_tabManagerLeft->getFileModelOp()->OnForwardButtonClicked(tabIndex);
+        m_tabManagerLeft->getFileModelOp()->onForwardButtonClicked(tabIndex);
         //tree back onClick missing
 
-        m_tabManagerLeft->SetTabContent(tabIndex);
+        m_tabManagerLeft->setTabContent(tabIndex);
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
@@ -378,7 +378,7 @@ void MainWindow::on_lineEdit_returnPressed()
 {
     auto* fileModelOp = m_tabManagerLeft->getFileModelOp();
 
-    auto path = fileModelOp->GetFilePath(fileModelOp->GetTabModelIndex(getTabWidgetRight()->currentIndex()));
+    auto path = fileModelOp->getFilePath(fileModelOp->getTabModelIndex(getTabWidgetRight()->currentIndex()));
 
     if (path.isEmpty())
     {
@@ -404,7 +404,7 @@ void MainWindow::on_toolCmdButton_pressed()
 }
 
 
-void MainWindow::ActivateDualPane()
+void MainWindow::activateDualPane()
 {
     m_dualPaneActive = true;
     ui->splitter_dualPane->setChildrenCollapsible(true);
@@ -426,11 +426,11 @@ void MainWindow::ActivateDualPane()
     //TODO(yunus): table resize implementasyonunu güncelle
     //m_tableManagerLeft->SetColumnResize();
 
-    m_tabManagerLeft->EnableNavWidget(true);
-    m_tabManagerRight->EnableNavWidget(true);
+    m_tabManagerLeft->enableNavWidget(true);
+    m_tabManagerRight->enableNavWidget(true);
 }
 
-void MainWindow::DeactivateDualPane()
+void MainWindow::deactivateDualPane()
 {
     m_dualPaneActive = false;
     ui->splitter_dualPane->setChildrenCollapsible(true);
@@ -451,11 +451,11 @@ void MainWindow::DeactivateDualPane()
     //TODO(yunus): table resize implementasyonunu güncelle
     //m_tableManagerLeft->SetColumnResize();
 
-    m_tabManagerLeft->EnableNavWidget(false);
-    m_tabManagerRight->EnableNavWidget(false);
+    m_tabManagerLeft->enableNavWidget(false);
+    m_tabManagerRight->enableNavWidget(false);
 }
 
-void MainWindow::DeactivateColumnView()
+void MainWindow::deactivateColumnView()
 {
     m_columnViewActive = false;
     getStackedWidget()->setCurrentIndex(0);
@@ -471,12 +471,12 @@ auto MainWindow::getFileModelOpRight() const ->FileModelOperations*
     return m_tabManagerRight->getFileModelOp();
 }
 
-void MainWindow::ActivateColumnView()
+void MainWindow::activateColumnView()
 {
     m_columnViewActive = true;
     getStackedWidget()->setCurrentIndex(1);
-    m_toolBarManager->SetBackButtonEnabled(true);
-    m_toolBarManager->SetForwardButtonEnabled(true);
+    m_toolBarManager->setBackButtonEnabled(true);
+    m_toolBarManager->setForwardButtonEnabled(true);
 }
 
 void MainWindow::on_toolSearchButton_clicked()

@@ -64,16 +64,16 @@ public:
 
     // nav buttons:
     void upperFolderOnClick();
-    void BackButtonOnClick();
-    void ForwardButtonOnClick();
-    void ScrollColumn(int direction);
+    void backButtonOnClick();
+    void forwardButtonOnClick();
+    void scrollColumnView(int direction);
 
-    void ActivateDualPane();
-    void ActivateTreeView();
-    void ActivateColumnView();
-    void DeactivateDualPane();
-    void DeactivateTreeView();
-    void DeactivateColumnView();
+    void activateDualPane();
+    void activateTreeView();
+    void activateColumnView();
+    void deactivateDualPane();
+    void deactivateTreeView();
+    void deactivateColumnView();
 
     [[nodiscard]] auto getTabWidgetLeft()   const -> QTabWidget*    { return ui->tabWidgetLeft; }
     [[nodiscard]] auto getTabWidgetRight()  const -> QTabWidget*    { return ui->tabWidgetRight; }

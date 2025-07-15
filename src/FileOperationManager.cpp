@@ -17,13 +17,13 @@ FM_BEGIN_NAMESPACE
 FileOperationManager::FileOperationManager(QObject * parent)
     :
     QObject(parent),
-    mainWindow_(static_cast<MainWindow*>(parent))
+    m_mainWindow_(static_cast<MainWindow*>(parent))
 {
 
 };
 
 
-void FileOperationManager::DeleteOperation(QList<QString> srcList)
+void FileOperationManager::deleteOperation(QList<QString> srcList)
 {
     auto* op = new DeleteFileOperation(std::move(srcList));
 
@@ -60,12 +60,12 @@ void FileOperationManager::DeleteOperation(QList<QString> srcList)
     thread->start();
 }
 
-void FileOperationManager::MoveOperation(QString dst){
+void FileOperationManager::moveOperation(QString dst){
 
-    if(!copiedPaths.empty())
+    if(!m_copiedPaths.empty())
     {
         // kesme, kopyalama yada taşıma işlemi
-        auto* op = new MoveFileOperation(copiedPaths, std::move(dst), isFilesSelectedToCut);
+        auto* op = new MoveFileOperation(m_copiedPaths, std::move(dst), m_isFilesSelectedToCut);
 
         auto* thread = new QThread(this);
         op->moveToThread(thread);
@@ -103,32 +103,32 @@ void FileOperationManager::MoveOperation(QString dst){
 
         thread->start();
 
-        copiedPaths.clear();
+        m_copiedPaths.clear();
     }
 }
 
 void FileOperationManager::addToCut(const QString& src)
 {
     // eğer öncesinde copy için eklenmişlerse listeyi boşalt. aynı anda hem kesme hem de kopyalama yapılmayacak
-    if(!isFilesSelectedToCut)
+    if(!m_isFilesSelectedToCut)
     {
-        copiedPaths.clear();
+        m_copiedPaths.clear();
     }
 
-    isFilesSelectedToCut = true;
-    copiedPaths.insert(src);
+    m_isFilesSelectedToCut = true;
+    m_copiedPaths.insert(src);
 }
 
 void FileOperationManager::addToCopy(const QString& src)
 {
     // eğer öncesinde kesme işlemi için liste doldurulmuşsa listeyi boşalt. aynı anda hem kesme hem de kopyalama yapılmayacak
-    if(isFilesSelectedToCut)
+    if(m_isFilesSelectedToCut)
     {
-        copiedPaths.clear();
+        m_copiedPaths.clear();
     }
 
-    isFilesSelectedToCut = false;
-    copiedPaths.insert(src);
+    m_isFilesSelectedToCut = false;
+    m_copiedPaths.insert(src);
 }
 
 

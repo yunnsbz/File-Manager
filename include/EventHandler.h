@@ -14,7 +14,7 @@ class EventHandler : public QObject {
 
 public:
     explicit EventHandler(QObject* parent = nullptr, QWidget* tabLeft = nullptr, QWidget* tabRight = nullptr)
-        : QObject(parent), tabWidgetLeft(tabLeft), tabWidgetRight(tabRight)
+        : QObject(parent), m_tabWidgetLeft(tabLeft), m_tabWidgetRight(tabRight)
     {
         qApp->installEventFilter(this);
     }
@@ -33,9 +33,9 @@ protected:
                 return false;
             }
 
-            if (tabWidgetLeft != nullptr && tabWidgetLeft->isAncestorOf(w)) {
+            if (m_tabWidgetLeft != nullptr && m_tabWidgetLeft->isAncestorOf(w)) {
                 emit tabLeftClicked();
-            } else if (tabWidgetRight != nullptr && tabWidgetRight->isAncestorOf(w)) {
+            } else if (m_tabWidgetRight != nullptr && m_tabWidgetRight->isAncestorOf(w)) {
                 emit tabRightClicked();
             }
 
@@ -56,9 +56,10 @@ protected:
     }
 
 private:
-    QWidget* tabWidgetLeft = nullptr;
-    QWidget* tabWidgetRight = nullptr;
+    QWidget* m_tabWidgetLeft = nullptr;
+    QWidget* m_tabWidgetRight = nullptr;
 
+    // şu anda c harfine basıldığında adres line edit'ine odaklanılıyor ama ilk basışta c harfini yazdırmamak içn bir ignore mekanizması kullanılır
     bool m_shouldIgnoreNextC = true;
 };
 

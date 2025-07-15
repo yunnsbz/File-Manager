@@ -5,7 +5,7 @@ FM_BEGIN_NAMESPACE
 
 ApplicationStateHandler::ApplicationStateHandler(QObject *parent)
     :
-    mainWindow_(static_cast<MainWindow*>(parent))
+    m_mainWindow_(static_cast<MainWindow*>(parent))
 {
 
 }
@@ -19,23 +19,23 @@ void ApplicationStateHandler::RestoreViewState()
     switch (currentTheme)
     {
     case ViewStates::SINGLE_PANE_WITH_TREE:
-        mainWindow_->ActivateTreeView();
-        mainWindow_->DeactivateDualPane();
+        m_mainWindow_->activateTreeView();
+        m_mainWindow_->deactivateDualPane();
         break;
     case ViewStates::SINGLE_PANE:
-        mainWindow_->DeactivateTreeView();
-        mainWindow_->DeactivateDualPane();
+        m_mainWindow_->deactivateTreeView();
+        m_mainWindow_->deactivateDualPane();
         break;
     case ViewStates::DUAL_PANE_WITH_TREE:
-        mainWindow_->ActivateTreeView();
-        mainWindow_->ActivateDualPane();
+        m_mainWindow_->activateTreeView();
+        m_mainWindow_->activateDualPane();
         break;
     case ViewStates::DUAL_PANE:
-        mainWindow_->DeactivateTreeView();
-        mainWindow_->ActivateDualPane();
+        m_mainWindow_->deactivateTreeView();
+        m_mainWindow_->activateDualPane();
         break;
     case ViewStates::COLUMN_VIEW:
-        mainWindow_->ActivateColumnView();
+        m_mainWindow_->activateColumnView();
         break;
     }
 }

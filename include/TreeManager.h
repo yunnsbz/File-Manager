@@ -24,12 +24,12 @@ public:
 
 public:
     void setTreeToDefault();
-    void SetTreeContent(int tabIndex);
+    void setTreeContent(int tabIndex);
 
     void navigateToFolder(const QModelIndex &modelIndex, int tabIndex);
     void removeTabExpandedPaths(int tabIndex);
     void swapExpandedPathsMap(int toIndex, int fromIndex);
-    void ExpandTreeView(const QModelIndex &index);
+    void expandTreeView(const QModelIndex &index);
 
 signals:
     void treeViewClicked(const QModelIndex &index);
@@ -39,16 +39,16 @@ private slots:
 
 private:
     // sinyal oluşturmadan ağacın tüm dallarını kapat
-    void CollapseAll_noSig();
+    void collapseAll_noSig();
 
 private:
-    FileModelOperations* fileModelOp_;
-    QTabWidget* tabWidget_;
-    QTreeView* treeView_;
+    FileModelOperations* m_fileModelOp_;
+    QTabWidget* m_tabWidget_;
+    QTreeView* m_treeView_;
 
 
     // treeView için her sekmede açılmış yolları tutar:
-    QMap<int, QList<QString>> ExpandedPathsMap;
+    QMap<int, QList<QString>> m_expandedPathsMap;
 };
 
 FM_END_NAMESPACE

@@ -21,15 +21,15 @@ void MoveFileOperation::start()
 {
     // dosyalar kaynaktan kaldırılacaksa (kesme işlemi)
     if(m_op_should_remove_){
-        CutFilesOperation();
+        cutFilesOperation();
     }
     else{
-        CopyFilesOperation();
+        copyFilesOperation();
     }
 }
 
 
-void MoveFileOperation::CutFilesOperation()
+void MoveFileOperation::cutFilesOperation()
 {
     QList<QString> fileList = m_op_files_src.values(); // QSet → QList (sıralı)
     const auto totalFiles = fileList.size();
@@ -79,7 +79,7 @@ void MoveFileOperation::CutFilesOperation()
     emit finished("moved (cut) files.");
 }
 
-void MoveFileOperation::CopyFilesOperation()
+void MoveFileOperation::copyFilesOperation()
 {
     QList<QString> fileList = m_op_files_src.values(); // QSet → QList (sıralı)
     const auto totalFiles = fileList.size();

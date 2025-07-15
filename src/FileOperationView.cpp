@@ -31,7 +31,7 @@ void FileOperationView::onCopyButtonClicked()
     if(selectedIndexes.count() != 0)
     {
         for (const QModelIndex &index : selectedIndexes) {
-            const QString filePath = m_mainWindow->getFileModelOpLeft()->GetFileModel()->filePath(index);
+            const QString filePath = m_mainWindow->getFileModelOpLeft()->getFileModel()->filePath(index);
             qDebug()<< "path added to copy (left table):" << filePath;
             m_mainWindow->getFileOpManager()->addToCopy(filePath);
         }
@@ -41,7 +41,7 @@ void FileOperationView::onCopyButtonClicked()
         // ilk tabloda seçilmemişse
         selectedIndexes = m_mainWindow->getTableViewRight()->selectionModel()->selectedRows();
         for (const QModelIndex &index : selectedIndexes) {
-            const QString filePath = m_mainWindow->getFileModelOpRight()->GetFileModel()->filePath(index);
+            const QString filePath = m_mainWindow->getFileModelOpRight()->getFileModel()->filePath(index);
             qDebug()<< "path added to copy (right table): " << filePath;
             m_mainWindow->getFileOpManager()->addToCopy(filePath);
         }
@@ -62,9 +62,9 @@ void FileOperationView::onDelButtonClicked()
         // seçili dosyaları al (sağ yada sol pane)
         for (const QModelIndex& index : selectedIndexes) {
         if(m_mainWindow->isWorkingOnRightPane())
-            srcList.append(m_mainWindow->getFileModelOpRight()->GetFileModel()->filePath(index));
+            srcList.append(m_mainWindow->getFileModelOpRight()->getFileModel()->filePath(index));
         else
-            srcList.append(m_mainWindow->getFileModelOpLeft()->GetFileModel()->filePath(index));
+            srcList.append(m_mainWindow->getFileModelOpLeft()->getFileModel()->filePath(index));
         }
 
         const QString text = QString("Seçili %1 dosyayı silmek üzeresiniz. Emin misiniz?")
@@ -79,7 +79,7 @@ void FileOperationView::onDelButtonClicked()
             );
 
         if(reply == QMessageBox::Yes){
-            m_mainWindow->getFileOpManager()->DeleteOperation(srcList);
+            m_mainWindow->getFileOpManager()->deleteOperation(srcList);
         }
     }
 }
@@ -129,7 +129,7 @@ void FileOperationView::onCutButtonClicked()
     if(selectedIndexes.count() != 0)
     {
         for (const QModelIndex &index : selectedIndexes) {
-            const QString filePath = m_mainWindow->getFileModelOpLeft()->GetFileModel()->filePath(index);
+            const QString filePath = m_mainWindow->getFileModelOpLeft()->getFileModel()->filePath(index);
             qDebug()<< "path added to cut (left table):" << filePath;
             m_mainWindow->getFileOpManager()->addToCut(filePath);
         }
@@ -139,7 +139,7 @@ void FileOperationView::onCutButtonClicked()
         // ilk tabloda seçilmemişse
         selectedIndexes = m_mainWindow->getTableViewRight()->selectionModel()->selectedRows();
         for (const QModelIndex &index : selectedIndexes) {
-            const QString filePath = m_mainWindow->getFileModelOpRight()->GetFileModel()->filePath(index);
+            const QString filePath = m_mainWindow->getFileModelOpRight()->getFileModel()->filePath(index);
             qDebug()<< "path added to cut (right table): " << filePath;
             m_mainWindow->getFileOpManager()->addToCut(filePath);
         }
@@ -151,13 +151,13 @@ void FileOperationView::onCutButtonClicked()
 void FileOperationView::onPasteButtonClicked()
 {
     if(m_mainWindow->isWorkingOnRightPane()){
-        m_mainWindow->getFileOpManager()->MoveOperation(
-                    m_mainWindow->getFileModelOpRight()->GetCurrentPath(
+        m_mainWindow->getFileOpManager()->moveOperation(
+                    m_mainWindow->getFileModelOpRight()->getCurrentPath(
                         m_mainWindow->getTabWidgetRight()->currentIndex()));
     }
     else{
-        m_mainWindow->getFileOpManager()->MoveOperation(
-                    m_mainWindow->getFileModelOpLeft()->GetCurrentPath(
+        m_mainWindow->getFileOpManager()->moveOperation(
+                    m_mainWindow->getFileModelOpLeft()->getCurrentPath(
                         m_mainWindow->getTabWidgetLeft()->currentIndex()));
     }
 }

@@ -27,10 +27,9 @@ public:
     // void undoLast();
     // geçmişten bir işlem seçip geri almak içindir. void undo(QVariantMap params);
 
-    void DeleteOperation(QList<QString> src);
-    // void MoveOperation(QList<QString> src, QString dst);
+    void deleteOperation(QList<QString> src);
 
-    void MoveOperation(QString dst);
+    void moveOperation(QString dst);
 
     // copyalananları birden fazla yolun her birine yapıştırır.
     // void PasteOperationMultiple(QList<QString> destinations);
@@ -55,19 +54,19 @@ protected:
 
 
 private:
-    MainWindow* mainWindow_;
+    MainWindow* m_mainWindow_;
 
-    QList<QVariantMap> operationHistory;
+    QList<QVariantMap> m_operationHistory;
 
     // string key girdisinde snake case kullanılır
-    QMap<QString, IFileOperation*> operationMap;
-    QVariantMap currentOperation;
+    QMap<QString, IFileOperation*> m_operationMap;
+    QVariantMap m_currentOperation;
 
     // data for copied or cuted file paths: used for pasteOperation. it will be cleared after using
-    QSet<QString> copiedPaths;
+    QSet<QString> m_copiedPaths;
 
     // kesme işlemi için kullanılır. eğer true ise move işlemi copyaladığı dosyaları kaynaktan siler.
-    bool isFilesSelectedToCut = false;
+    bool m_isFilesSelectedToCut = false;
 
 private slots:
     void onProgress(int percent);

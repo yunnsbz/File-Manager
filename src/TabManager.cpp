@@ -15,8 +15,8 @@ FM_BEGIN_NAMESPACE
 TabManager::TabManager(QTabWidget* tabWidget, QTreeView* treeView, QTableView* tableView, QObject* parent)
     :
     QObject(parent),
-    mainWindow_(static_cast<MainWindow*>(parent)),
-    tabWidget_(tabWidget),
+    m_mainWindow_(static_cast<MainWindow*>(parent)),
+    m_tabWidget_(tabWidget),
     m_fileModelOp(new FileModelOperations()),
     m_tableManager(new TableManager(tabWidget, tableView, m_fileModelOp, this)),
     m_treeManager(new TreeManager(treeView, m_fileModelOp, tabWidget, this))
@@ -28,24 +28,24 @@ TabManager::TabManager(QTabWidget* tabWidget, QTreeView* treeView, QTableView* t
 
     // tree view'deki değişiklikleri al:
     connect(m_treeManager, &TreeManager::treeViewClicked, this, [this](const QModelIndex &modelIndex){
-        auto* fileModel = getFileModelOp()->GetFileModel();
+        auto* fileModel = getFileModelOp()->getFileModel();
         // girilen yer klasör ise table view set edilir:
         if (fileModel->hasChildren(modelIndex))
         {
             m_tableManager->setRootIndex(modelIndex);
         }
-        const int tabIndex = tabWidget_->currentIndex();
-        const QString path  = getFileModelOp()->GetCurrentPath(tabIndex);
+        const int tabIndex = m_tabWidget_->currentIndex();
+        const QString path  = getFileModelOp()->getCurrentPath(tabIndex);
         emit tabChanged(tabIndex, path);
     });
 
     connect(m_tableManager, &TableManager::tableDoubleClicked, this, [this](const QModelIndex &modelIndex){
         const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
 
-        m_treeManager->ExpandTreeView(firstColumnIndex);
+        m_treeManager->expandTreeView(firstColumnIndex);
 
-        const int tabIndex = tabWidget_->currentIndex();
-        const QString path  = getFileModelOp()->GetCurrentPath(tabIndex);
+        const int tabIndex = m_tabWidget_->currentIndex();
+        const QString path  = getFileModelOp()->getCurrentPath(tabIndex);
         emit tabChanged(tabIndex, path);
     });
 
@@ -53,9 +53,9 @@ TabManager::TabManager(QTabWidget* tabWidget, QTreeView* treeView, QTableView* t
     // should change the first tab default name
     tabWidget->tabBar()->setTabText(0,"new tab");
 
-    SetCornerNavButtons();
+    setCornerNavButtons();
 
-    SetAddTabButton();
+    setAddTabButton();
 
     tabWidget->installEventFilter(this);
 
@@ -63,59 +63,59 @@ TabManager::TabManager(QTabWidget* tabWidget, QTreeView* treeView, QTableView* t
     updateNavButtons(false, false, false);
 }
 
-void TabManager::SetAddTabButton()
+void TabManager::setAddTabButton()
 {
     auto* addTabButton = new QToolButton();
     addTabButton->setObjectName("add-tab-button");
     addTabButton->setText("+");
-    tabWidget_->setCornerWidget(addTabButton, Qt::TopLeftCorner);
-    EnableNavWidget(true);
+    m_tabWidget_->setCornerWidget(addTabButton, Qt::TopLeftCorner);
+    enableNavWidget(true);
 
     // add button onClick:
     connect(addTabButton, &QToolButton::clicked, this, &TabManager::addNewTab);
 }
 
-void TabManager::EnableNavWidget(bool enable)
+void TabManager::enableNavWidget(bool enable)
 {
      if(enable){
-        cornerNavButtons->show();
-        tabWidget_->setCornerWidget(cornerNavButtons, Qt::TopRightCorner);
+        m_cornerNavButtons->show();
+        m_tabWidget_->setCornerWidget(m_cornerNavButtons, Qt::TopRightCorner);
     } else {
-        tabWidget_->setCornerWidget(nullptr, Qt::TopRightCorner);
+        m_tabWidget_->setCornerWidget(nullptr, Qt::TopRightCorner);
     }
 }
 
 void TabManager::updateNavButtons(bool BackEnable, bool ForwardEnable, bool UpEnabled)
 {
-    backTabButton->setEnabled(BackEnable);
-    forwTabButton->setEnabled(ForwardEnable);
-    upTabButton->setEnabled(UpEnabled);
+    m_backTabButton->setEnabled(BackEnable);
+    m_forwTabButton->setEnabled(ForwardEnable);
+    m_upTabButton->setEnabled(UpEnabled);
 }
 
-void TabManager::SetCornerNavButtons()
+void TabManager::setCornerNavButtons()
 {
-    cornerNavButtons = new QWidget;
-    cornerNavButtons->setObjectName("cornerNavButtons");
-    auto *layout = new QHBoxLayout(cornerNavButtons);
+    m_cornerNavButtons = new QWidget;
+    m_cornerNavButtons->setObjectName("cornerNavButtons");
+    auto *layout = new QHBoxLayout(m_cornerNavButtons);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    backTabButton = new QToolButton();
-    forwTabButton = new QToolButton();
-    upTabButton = new QToolButton();
+    m_backTabButton = new QToolButton();
+    m_forwTabButton = new QToolButton();
+    m_upTabButton = new QToolButton();
 
-    SetNavButtonThemes();
+    setNavButtonThemes();
 
     // adding nav buttons to a parent widget
-    layout->addWidget(backTabButton);
-    layout->addWidget(forwTabButton);
-    layout->addWidget(upTabButton);
+    layout->addWidget(m_backTabButton);
+    layout->addWidget(m_forwTabButton);
+    layout->addWidget(m_upTabButton);
 
-    connect(upTabButton, &QToolButton::clicked, this, [this]{mainWindow_->upperFolderOnClick();});
-    connect(forwTabButton, &QToolButton::clicked, this, [this]{mainWindow_->ForwardButtonOnClick();});
-    connect(backTabButton, &QToolButton::clicked, this, [this]{mainWindow_->BackButtonOnClick();});
+    connect(m_upTabButton, &QToolButton::clicked, this, [this]{m_mainWindow_->upperFolderOnClick();});
+    connect(m_forwTabButton, &QToolButton::clicked, this, [this]{m_mainWindow_->forwardButtonOnClick();});
+    connect(m_backTabButton, &QToolButton::clicked, this, [this]{m_mainWindow_->backButtonOnClick();});
 }
 
-void TabManager::SetNavButtonThemes()
+void TabManager::setNavButtonThemes()
 {
     const bool isDarkTheme = ThemeManger::isDarkTheme();
     // tool button disable olma durumunda otomatik renk değişikliği için
@@ -123,28 +123,28 @@ void TabManager::SetNavButtonThemes()
         QIcon icon;
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_left_white.svg"), QIcon::Normal, QIcon::Off);
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_left_gray.svg"), QIcon::Disabled, QIcon::Off);
-        backTabButton->setIcon(icon);
+        m_backTabButton->setIcon(icon);
 
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_right_white.svg"), QIcon::Normal, QIcon::Off);
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_right_gray.svg"), QIcon::Disabled, QIcon::Off);
-        forwTabButton->setIcon(icon);
+        m_forwTabButton->setIcon(icon);
 
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_up_white.svg"), QIcon::Normal, QIcon::Off);
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_up_gray.svg"), QIcon::Disabled, QIcon::Off);
-        upTabButton->setIcon(icon);
+        m_upTabButton->setIcon(icon);
     } else {
         QIcon icon;
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_left_black.svg"), QIcon::Normal, QIcon::Off);
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_left_gray.svg"), QIcon::Disabled, QIcon::Off);
-        backTabButton->setIcon(icon);
+        m_backTabButton->setIcon(icon);
 
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_right_black.svg"), QIcon::Normal, QIcon::Off);
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_right_gray.svg"), QIcon::Disabled, QIcon::Off);
-        forwTabButton->setIcon(icon);
+        m_forwTabButton->setIcon(icon);
 
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_up_black.svg"), QIcon::Normal, QIcon::Off);
         icon.addPixmap(QPixmap(":/resources/img/arrow_circle_up_gray.svg"), QIcon::Disabled, QIcon::Off);
-        upTabButton->setIcon(icon);
+        m_upTabButton->setIcon(icon);
     }
 }
 
@@ -174,9 +174,9 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
     }
 }
 
-auto TabManager::GetPreviousSplitter()
+auto TabManager::getPreviousSplitter() const -> QSplitter*
 {
-    return tabWidget_->widget(m_previousLeftTabIndex)->findChild<QSplitter*>();
+    return m_tabWidget_->widget(m_previousLeftTabIndex)->findChild<QSplitter*>();
 }
 
 auto TabManager::_getPreviousLeftTabIndex() const -> int
@@ -197,7 +197,7 @@ void TabManager::setPreviousLeftTabIndex(int value)
 
 void TabManager::addNewTab()
 {
-    auto* currentSplitter = GetPreviousSplitter();
+    auto* currentSplitter = getPreviousSplitter();
 
     if (currentSplitter == nullptr)
     {
@@ -209,16 +209,16 @@ void TabManager::addNewTab()
     layout->addWidget(currentSplitter);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    tabWidget_->addTab(newTabWidget, "new tab");
-    tabWidget_->setCurrentIndex(tabWidget_->count() - 1);
+    m_tabWidget_->addTab(newTabWidget, "new tab");
+    m_tabWidget_->setCurrentIndex(m_tabWidget_->count() - 1);
 
-    setPreviousLeftTabIndex(tabWidget_->count() - 1);
+    setPreviousLeftTabIndex(m_tabWidget_->count() - 1);
 
-    const int tabIndex = tabWidget_->currentIndex();
+    const int tabIndex = m_tabWidget_->currentIndex();
 
-    SetTabContent(tabIndex);
+    setTabContent(tabIndex);
 
-    const QString path  = getFileModelOp()->GetCurrentPath(tabIndex);
+    const QString path  = getFileModelOp()->getCurrentPath(tabIndex);
     emit tabChanged(tabIndex, path);
 }
 
@@ -230,18 +230,18 @@ void TabManager::onTabBarClicked(int tabIndex)
         tabIndex != -1)
     {
         moveTabWidget(tabIndex);
-        SetTabContent(tabIndex);
+        setTabContent(tabIndex);
     }
-    const QString path  = getFileModelOp()->GetCurrentPath(tabIndex);
+    const QString path  = getFileModelOp()->getCurrentPath(tabIndex);
     emit tabChanged(tabIndex, path);
 }
 
 void TabManager::onTabClosed(int index)
 {
-    if (tabWidget_->count() > 1)
+    if (m_tabWidget_->count() > 1)
     {
         // move widget before closing current tab:
-        if (tabWidget_->currentIndex() == index)
+        if (m_tabWidget_->currentIndex() == index)
         {
             if (index >= 1)
             {
@@ -253,28 +253,28 @@ void TabManager::onTabClosed(int index)
             }
         }
 
-        tabWidget_->removeTab(index);
+        m_tabWidget_->removeTab(index);
 
         m_treeManager->removeTabExpandedPaths(index);
-        m_fileModelOp->RemoveTabModelIndex(index);
+        m_fileModelOp->removeTabModelIndex(index);
 
-        setPreviousLeftTabIndex(tabWidget_->currentIndex());
-        SetTabContent(tabWidget_->currentIndex());
+        setPreviousLeftTabIndex(m_tabWidget_->currentIndex());
+        setTabContent(m_tabWidget_->currentIndex());
 
-        const int newTabIndex = tabWidget_->currentIndex();
-        const QString path  = getFileModelOp()->GetCurrentPath(newTabIndex);
+        const int newTabIndex = m_tabWidget_->currentIndex();
+        const QString path  = getFileModelOp()->getCurrentPath(newTabIndex);
         emit tabChanged(newTabIndex, path);
     }
     else
     {
         m_treeManager->setTreeToDefault();
-        m_tableManager->SetTableToDefault();
+        m_tableManager->setTableToDefault();
 
         // navigasyon sıfırlaması
-        m_fileModelOp->RemoveTabModelIndex(index);
+        m_fileModelOp->removeTabModelIndex(index);
 
-        const int newTabIndex = tabWidget_->currentIndex();
-        const QString path  = getFileModelOp()->GetCurrentPath(newTabIndex);
+        const int newTabIndex = m_tabWidget_->currentIndex();
+        const QString path  = getFileModelOp()->getCurrentPath(newTabIndex);
         emit tabChanged(newTabIndex, path);
     }
 }
@@ -283,7 +283,7 @@ void TabManager::moveTabWidget(int index)
 {
     // sekme içerisini kopyalamak yerine taşıyarak sekmeler arasında geçiş yaparız
 
-    auto* currentSplitter = GetPreviousSplitter();
+    auto* currentSplitter = getPreviousSplitter();
 
     if (currentSplitter == nullptr)
     {
@@ -300,18 +300,18 @@ void TabManager::moveTabWidget(int index)
     layout->setContentsMargins(0, 0, 0, 0);
 
     // Yeni sekmeyi oluştur
-    tabWidget_->insertTab(index, newTabWidget, tabWidget_->tabText(index));
-    tabWidget_->removeTab(index + 1); // eski widget'ı kaldır
-    tabWidget_->setCurrentIndex(index);
+    m_tabWidget_->insertTab(index, newTabWidget, m_tabWidget_->tabText(index));
+    m_tabWidget_->removeTab(index + 1); // eski widget'ı kaldır
+    m_tabWidget_->setCurrentIndex(index);
 
     setPreviousLeftTabIndex(index);
 }
 
 // sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
-void TabManager::SetTabContent(int tabIndex)
+void TabManager::setTabContent(int tabIndex)
 {
-    m_tableManager->SetTableContent(tabIndex);
-    m_treeManager->SetTreeContent(tabIndex);
+    m_tableManager->setTableContent(tabIndex);
+    m_treeManager->setTreeContent(tabIndex);
 }
 
 FM_END_NAMESPACE

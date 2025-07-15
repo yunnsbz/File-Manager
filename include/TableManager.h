@@ -24,10 +24,10 @@ private slots:
     void onTableDoubleClicked(const QModelIndex &modelIndex);
 
 public:
-    void SetTableToDefault();
-    void SetTableContent(int tabIndex);
+    void setTableToDefault();
+    void setTableContent(int tabIndex);
     void navigateToFolder(int tabIndex, QModelIndex firstColumnIndex);
-    void SetColumnResize();
+    void setColumnResize();
     void openMediaWindow(QString);
 
     void setRootIndex(QModelIndex modelIndex);
@@ -35,9 +35,9 @@ public:
 private:
     QTabWidget* m_tabWidget;
 
-    FileModelOperations* fileModelOp_;
+    FileModelOperations* m_fileModelOp_;
 
-    QTableView* tableView_;
+    QTableView* m_tableView_;
 
 };
 
