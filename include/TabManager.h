@@ -17,13 +17,16 @@
 FM_BEGIN_NAMESPACE
 
 class MainWindow;
+class TableManager;
+class TreeManager;
+class FileModelOperations;
 
 class TabManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent);
+    explicit TabManager(QTabWidget* tabWidget, QTreeView* treeView, QTableView* tableView, bool forRightPane, QObject* parent);
 
     void moveTabWidget(int index);
     void onTabCloseRequested(int index);
@@ -32,16 +35,17 @@ public:
     // getters:
     auto GetPreviousSplitter();
     // yeni sekmeye geçiş yapıldığı anda önceki sekmeyi gösterir:
-    [[nodiscard]]
-    auto _getPreviousLeftTabIndex() const -> int;
+    [[nodiscard]] auto _getPreviousLeftTabIndex()           const -> int;
 
     // yeni sekmeye geçiş tamamlandıktan sonra önceki sekmeyi gösterir:
-    [[nodiscard]]
-    auto getPersistentPreviousLeftTabIndex() const -> int;
+    [[nodiscard]] auto getPersistentPreviousLeftTabIndex()  const -> int;
+
+    [[nodiscard]] auto getFileModelOp() const -> FileModelOperations*   { return m_fileModelOp; }
 
     // auto tabCount() const -> int;
 
     // setters:
+    void SetTabContent(int tabIndex);
     void setPreviousLeftTabIndex(int value);
     // void addTab(const QString& title);
     // void removeTab(int index);
@@ -53,10 +57,12 @@ public:
 public slots:
     void onTabMoved(int toIndex, int fromIndex);
     void addNewTab();
+    void onTabBarClicked(int tabIndex);
+    void onTabClosed(int tabIndex);
 
 
 signals:
-    void newtabAdded();
+    void tabChanged(int ChangedTabIndex, QString ChangedFilePath);
 
 private:
     void SetNavButtonThemes();
@@ -67,7 +73,13 @@ private:
     MainWindow* mainWindow_;
     QTabWidget* tabWidget_;
 
+    FileModelOperations* m_fileModelOp;
+
+    TableManager* m_tableManager;
+    TreeManager* m_treeManager;
+
     QWidget* cornerNavButtons{};
+
 
     QToolButton* backTabButton{};
     QToolButton* forwTabButton{};

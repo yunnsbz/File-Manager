@@ -1,6 +1,6 @@
 #include "FileOperationView.h"
-#include "FileModelOperations.h"
 #include "FileOperationManager.h"
+#include "FileModelOperations.h"
 #include "mainwindow.hpp"
 
 #include <QToolButton>

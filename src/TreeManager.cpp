@@ -4,7 +4,6 @@
 #include "mainwindow.hpp"
 
 #include <QTableView>
-
 #include <algorithm>
 
 FM_BEGIN_NAMESPACE
@@ -24,6 +23,8 @@ TreeManager::TreeManager(QTreeView* treeView, FileModelOperations* fileModelOp, 
     treeView->hideColumn(1);
     treeView->hideColumn(2);
     treeView->hideColumn(3);
+
+    connect(treeView, &QTreeView::clicked, this, &TreeManager::onTreeViewClicked);
 
     // tree view açılma ve kapanma durumlarında değişiklikleri tabContents içine kaydetmeliyiz:
     connect(treeView, &QTreeView::expanded, fileModelOp, [=, this](const QModelIndex &index) {
@@ -130,6 +131,14 @@ void TreeManager::ExpandTreeView(const QModelIndex &modelIndex)
     if(fileModel->hasChildren(modelIndex)){
         treeView_->expand(modelIndex);
     }
+}
+
+void TreeManager::onTreeViewClicked(const QModelIndex &modelIndex)
+{
+    int const tabIndex = tabWidget_->currentIndex();
+    navigateToFolder(modelIndex, tabIndex);
+
+    emit treeViewClicked(modelIndex);
 }
 
 FM_END_NAMESPACE

@@ -31,6 +31,11 @@ public:
     void swapExpandedPathsMap(int toIndex, int fromIndex);
     void ExpandTreeView(const QModelIndex &index);
 
+signals:
+    void treeViewClicked(const QModelIndex &index);
+
+private slots:
+    void onTreeViewClicked(const QModelIndex &index);
 
 private:
     // sinyal oluşturmadan ağacın tüm dallarını kapat
@@ -47,5 +52,4 @@ private:
 };
 
 FM_END_NAMESPACE
-
 #endif // TREEMANAGER_H

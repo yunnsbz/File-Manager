@@ -1,7 +1,10 @@
 #include "TabManager.h"
+#include "FileModelOperations.h"
+#include "TreeManager.h"
 #include "mainwindow.hpp"
 #include "ToolBarManager.h"
 #include "ThemeManager.h"
+#include "TableManager.h"
 
 #include <QToolButton>
 #include <QTabBar>
@@ -9,15 +12,44 @@
 
 FM_BEGIN_NAMESPACE
 
-TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent)
+TabManager::TabManager(QTabWidget* tabWidget, QTreeView* treeView, QTableView* tableView, bool forRightPane, QObject* parent)
     :
     QObject(parent),
     mainWindow_(static_cast<MainWindow*>(parent)),
     tabWidget_(tabWidget),
+    m_fileModelOp(new FileModelOperations()),
+    m_tableManager(new TableManager(tabWidget, tableView, m_fileModelOp, this)),
+    m_treeManager(new TreeManager(treeView, m_fileModelOp, tabWidget, this)),
     m_forRightPane(forRightPane)
 {
     // sekmelerin sürüklenmesi/yer değiştirmesi hareketlerini algılamak için:
     connect(tabWidget->tabBar(), &QTabBar::tabMoved, this, &TabManager::onTabMoved);
+    connect(tabWidget->tabBar(), &QTabBar::tabBarClicked, this, &TabManager::onTabBarClicked);
+    connect(tabWidget->tabBar(), &QTabBar::tabCloseRequested, this, &TabManager::onTabClosed);
+
+    // tree view'deki değişiklikleri al:
+    connect(m_treeManager, &TreeManager::treeViewClicked, this, [this](const QModelIndex &modelIndex){
+        auto* fileModel = getFileModelOp()->GetFileModel();
+        // girilen yer klasör ise table view set edilir:
+        if (fileModel->hasChildren(modelIndex))
+        {
+            m_tableManager->setRootIndex(modelIndex);
+        }
+        const int tabIndex = tabWidget_->currentIndex();
+        const QString path  = getFileModelOp()->GetCurrentPath(tabIndex);
+        emit tabChanged(tabIndex, path);
+    });
+
+    connect(m_tableManager, &TableManager::tableDoubleClicked, this, [this](const QModelIndex &modelIndex){
+        const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
+
+        m_treeManager->ExpandTreeView(firstColumnIndex);
+
+        const int tabIndex = tabWidget_->currentIndex();
+        const QString path  = getFileModelOp()->GetCurrentPath(tabIndex);
+        emit tabChanged(tabIndex, path);
+    });
+
 
     // should change the first tab default name
     tabWidget->tabBar()->setTabText(0,"new tab");
@@ -126,14 +158,9 @@ void TabManager::onTabMoved(int toIndex, int fromIndex)
         return;
     }
 
-    if (m_forRightPane)
-    {
-        mainWindow_->OnTabMoved2(toIndex, fromIndex);
-    }
-    else
-    {
-        mainWindow_->OnTabMoved(toIndex, fromIndex);
-    }
+    m_treeManager->swapExpandedPathsMap(toIndex, fromIndex);
+    getFileModelOp()->swapTabModelIndexMap(toIndex, fromIndex);
+    getFileModelOp()->swapTabHistoryModelIndex(toIndex, fromIndex);
 
     // if lastLeftTabIndex is the one moved it should register
     if (fromIndex == m_previousLeftTabIndex)
@@ -188,9 +215,69 @@ void TabManager::addNewTab()
 
     setPreviousLeftTabIndex(tabWidget_->count() - 1);
 
-    mainWindow_->SetTabContent(tabWidget_->currentIndex(), m_forRightPane);
+    const int tabIndex = tabWidget_->currentIndex();
 
-    emit newtabAdded();
+    SetTabContent(tabIndex);
+
+    const QString path  = getFileModelOp()->GetCurrentPath(tabIndex);
+    emit tabChanged(tabIndex, path);
+}
+
+void TabManager::onTabBarClicked(int tabIndex)
+{
+    // Aynı sekmeye tıklanmadıysa
+    if (tabIndex != _getPreviousLeftTabIndex()
+        &&
+        tabIndex != -1)
+    {
+        moveTabWidget(tabIndex);
+        SetTabContent(tabIndex);
+    }
+    const QString path  = getFileModelOp()->GetCurrentPath(tabIndex);
+    emit tabChanged(tabIndex, path);
+}
+
+void TabManager::onTabClosed(int index)
+{
+    if (tabWidget_->count() > 1)
+    {
+        // move widget before closing current tab:
+        if (tabWidget_->currentIndex() == index)
+        {
+            if (index >= 1)
+            {
+                moveTabWidget(index - 1);
+            }
+            else
+            {
+                moveTabWidget(index + 1);
+            }
+        }
+
+        tabWidget_->removeTab(index);
+
+        m_treeManager->removeTabExpandedPaths(index);
+        m_fileModelOp->RemoveTabModelIndex(index);
+
+        setPreviousLeftTabIndex(tabWidget_->currentIndex());
+        SetTabContent(tabWidget_->currentIndex());
+
+        const int newTabIndex = tabWidget_->currentIndex();
+        const QString path  = getFileModelOp()->GetCurrentPath(newTabIndex);
+        emit tabChanged(newTabIndex, path);
+    }
+    else
+    {
+        m_treeManager->setTreeToDefault();
+        m_tableManager->SetTableToDefault();
+
+        // navigasyon sıfırlaması
+        m_fileModelOp->RemoveTabModelIndex(index);
+
+        const int newTabIndex = tabWidget_->currentIndex();
+        const QString path  = getFileModelOp()->GetCurrentPath(newTabIndex);
+        emit tabChanged(newTabIndex, path);
+    }
 }
 
 void TabManager::moveTabWidget(int index)
@@ -219,6 +306,13 @@ void TabManager::moveTabWidget(int index)
     tabWidget_->setCurrentIndex(index);
 
     setPreviousLeftTabIndex(index);
+}
+
+// sekme içerisindeki view'ların en son hangi dosya açıksa onu tekrar açması
+void TabManager::SetTabContent(int tabIndex)
+{
+    m_tableManager->SetTableContent(tabIndex);
+    m_treeManager->SetTreeContent(tabIndex);
 }
 
 FM_END_NAMESPACE

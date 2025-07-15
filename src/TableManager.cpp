@@ -21,9 +21,10 @@
 
 FM_BEGIN_NAMESPACE
 
-TableManager::TableManager(QTableView* tableView, FileModelOperations* fileModelOp, QObject *parent)
+TableManager::TableManager(QTabWidget* tabWidget, QTableView* tableView, FileModelOperations* fileModelOp, QObject *parent)
     :
     QObject(parent),
+    m_tabWidget(tabWidget),
     fileModelOp_(fileModelOp),
     tableView_(tableView)
 {
@@ -32,6 +33,17 @@ TableManager::TableManager(QTableView* tableView, FileModelOperations* fileModel
     SetColumnResize();
     tableView->verticalHeader()->setDefaultSectionSize(10);
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    connect(tableView, &QTableView::doubleClicked, this, &TableManager::onTableDoubleClicked);
+}
+
+void TableManager::onTableDoubleClicked(const QModelIndex &modelIndex)
+{
+    const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
+
+    navigateToFolder(m_tabWidget->currentIndex(), firstColumnIndex);
+
+    emit tableDoubleClicked(modelIndex);
 }
 
 void TableManager::SetTableToDefault()
@@ -149,6 +161,11 @@ void TableManager::openMediaWindow(const QString filePath)
     window->setWindowTitle("Playing: " + fi.fileName());
     window->resize(640, 480);
     window->show();
+}
+
+void TableManager::setRootIndex(QModelIndex modelIndex)
+{
+    tableView_->setRootIndex(modelIndex);
 }
 
 FM_END_NAMESPACE

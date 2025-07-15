@@ -32,10 +32,8 @@ FM_BEGIN_NAMESPACE
 class ApplicationStateHandler;
 class FileOperationManager;
 class TabManager;
-class ToolBarManager;
-class TableManager;
-class TreeManager;
 class FileModelOperations;
+class ToolBarManager;
 class ThemeManger;
 class SettingsDialog;
 class FileOperationView;
@@ -57,10 +55,6 @@ public:
 
 public:
     auto getUI() -> Ui::MainWindow*;
-
-    void SetTabContent(int tabIndex, bool rightPane);
-    void OnTabMoved(int toIndex, int fromIndex);
-    void OnTabMoved2(int toIndex, int fromIndex);
 
     /**
      * m_isWorkingOnRightPane değeri doğru bir şekilde set edilmeden çağırılmamalıdır.
@@ -108,10 +102,10 @@ public:
     [[nodiscard]] auto isDualPaneActive()       const -> bool       { return m_dualPaneActive; }
     [[nodiscard]] auto isColumnViewActive()     const -> bool       { return m_columnViewActive; }
 
-    [[nodiscard]] auto getFileModelOpLeft()     const -> FileModelOperations*   { return m_fileModelOpLeft; }
-    [[nodiscard]] auto getFileModelOpRight()    const -> FileModelOperations*   { return m_fileModelOpRight; }
     [[nodiscard]] auto getFileOpManager()       const -> FileOperationManager*  { return m_fileOpManager; }
     [[nodiscard]] auto getSettingsWindow()      const -> SettingsDialog*        { return m_settingsDialog; }
+    [[nodiscard]] auto getFileModelOpLeft()     const -> FileModelOperations*;
+    [[nodiscard]] auto getFileModelOpRight()    const -> FileModelOperations*;
 
 private:
     struct UIManager final
@@ -123,25 +117,11 @@ private slots:
     void onTreeLeftSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void onTreeRightSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
-    // tree
-    void on_fileTreeViewLeft_clicked(const QModelIndex &index);
-    void on_fileTreeViewRight_clicked(const QModelIndex &index);
-
     // column view
     void on_columnView_clicked(const QModelIndex &index);
 
     // spliter
     void on_splitterLeft_splitterMoved(int pos, int index);
-
-    // tab bar
-    void on_tabWidgetLeft_tabBarClicked(int index);
-    void on_tabWidgetRight_tabBarClicked(int index);
-    void on_tabWidgetLeft_tabCloseRequested(int index);
-    void on_tabWidgetRight_tabCloseRequested(int index);
-
-    // table view
-    void on_tableViewLeft_doubleClicked(const QModelIndex &index);
-    void on_tableViewRight_doubleClicked(const QModelIndex &index);
 
     // nav buttons
     void on_toolUpButton_clicked();
@@ -163,8 +143,6 @@ private:
 
     UIManager m_ui_mgr_;
 
-    FileModelOperations* m_fileModelOpLeft;
-    FileModelOperations* m_fileModelOpRight;
     QFileSystemModel* m_columnFileModel;
 
     ToolBarManager* m_toolBarManager;
@@ -172,10 +150,6 @@ private:
 
     TabManager* m_tabManagerLeft;
     TabManager* m_tabManagerRight;
-    TableManager* m_tableManagerLeft;
-    TableManager* m_tableManagerRight;
-    TreeManager* m_treeManagerLeft;
-    TreeManager* m_treeManagerRight;
 
     FileOperationManager* m_fileOpManager;
 

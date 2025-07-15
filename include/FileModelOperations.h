@@ -21,7 +21,6 @@ class FileModelOperations : public QObject
 public:
     FileModelOperations();
 
-
 public:
     auto GetFileModel()                         -> QFileSystemModel*;
     auto GetTabModelIndex(int tabIndex)         -> QModelIndex;
