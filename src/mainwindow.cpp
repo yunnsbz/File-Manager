@@ -120,6 +120,11 @@ MainWindow::MainWindow(QWidget* parent)
         updateNavButtons(tabIndex);
         SetLabelText_(std::move(filePath));
     });
+
+    //nav buttons:
+    connect(ui->toolUpButton, &QToolButton::clicked, this, &MainWindow::upperFolderOnClick);
+    connect(ui->toolBackButton, &QToolButton::clicked, this, &MainWindow::BackButtonOnClick);
+    connect(ui->toolForwardButton, &QToolButton::clicked, this, &MainWindow::ForwardButtonOnClick);
 }
 
 MainWindow::~MainWindow()
@@ -368,20 +373,6 @@ void MainWindow::ForwardButtonOnClick()
         updateNavButtons(tabIndex);
     }
 }
-
-void MainWindow::on_toolUpButton_clicked()
-{
-    upperFolderOnClick();
-}
-void MainWindow::on_toolBackButton_clicked()
-{
-    BackButtonOnClick();
-}
-void MainWindow::on_toolForwardButton_clicked()
-{
-    ForwardButtonOnClick();
-}
-
 
 void MainWindow::on_lineEdit_returnPressed()
 {

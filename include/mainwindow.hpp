@@ -121,11 +121,6 @@ private slots:
     // spliter
     void on_splitterLeft_splitterMoved(int pos, int index);
 
-    // nav buttons
-    void on_toolUpButton_clicked();
-    void on_toolBackButton_clicked();
-    void on_toolForwardButton_clicked();
-
     // other buttons
     void on_lineEdit_returnPressed();
     void on_toolSearchButton_clicked();
