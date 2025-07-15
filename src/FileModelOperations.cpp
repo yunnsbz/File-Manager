@@ -73,6 +73,9 @@ void FileModelOperations::RemoveTabModelIndex(int tabIndex)
             TabModelIndexMap[_tabIndex-1] = content;
         }
     }
+
+    TabBackHistoryModelIndex.remove(tabIndex);
+    TabForwardHistoryModelIndex.remove(tabIndex);
 }
 
 void FileModelOperations::swapTabModelIndexMap(int toIndex, int fromIndex)

@@ -575,6 +575,10 @@ void MainWindow::on_tabWidgetLeft_tabCloseRequested(int index)
 
         // fokus buraya geçtiğinden ve root dosya açıldığından adres text'i default olur:
         SetLabelText_("\\\\");
+
+        // navigasyon sıfırlaması
+        m_fileModelOpLeft->RemoveTabModelIndex(index);
+        updateNavButtons(ui->tabWidgetLeft->currentIndex());
     }
 }
 
@@ -613,6 +617,10 @@ void MainWindow::on_tabWidgetRight_tabCloseRequested(int index)
 
         // fokus buraya geçtiğinden ve root dosya açıldığından adres text'i default olur:
         SetLabelText_("\\\\");
+
+        // navigasyon sıfırlaması
+        m_fileModelOpLeft->RemoveTabModelIndex(index);
+        updateNavButtons(ui->tabWidgetLeft->currentIndex());
     }
 }
 
