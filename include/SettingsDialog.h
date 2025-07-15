@@ -5,10 +5,13 @@
 #include <QWidget>
 #include <QString>
 #include <QTreeWidget>
+#include <FM_Macros.hpp>
 
 namespace Ui {
 class SettingsDialog;
 }
+
+FM_BEGIN_NAMESPACE
 
 class SettingsDialog : public QDialog
 {
@@ -18,7 +21,7 @@ public:
     explicit SettingsDialog(QWidget *parent = nullptr);
     ~SettingsDialog() override;
 
-    static void SetOldButtonStyle(bool buttonStyle);
+    static void setOldButtonStyle(bool buttonStyle);
 
     void onSettingItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* /*previous*/);
 
@@ -30,4 +33,5 @@ private:
     bool tabCloseButtonOld{};
 };
 
+FM_END_NAMESPACE
 #endif // SETTINGSDIALOG_H

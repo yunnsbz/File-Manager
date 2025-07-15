@@ -31,6 +31,8 @@ qt_add_executable(File-Manager
     src/DeleteFileOperation.cpp
     src/ApplicationStateHandler.cpp
     src/MoveFileOperation.cpp
+    src/FileOperationView.cpp
+    src/MenuBarView.cpp
 
     include/mainwindow.hpp
     include/TabManager.h
@@ -44,6 +46,8 @@ qt_add_executable(File-Manager
     include/DeleteFileOperation.h
     include/ApplicationStateHandler.h
     include/MoveFileOperation.h
+    include/FileOperationView.h
+    include/MenuBarView.h
 
 
     ui/MainWindow.ui
@@ -54,6 +58,10 @@ qt_add_executable(File-Manager
 
     .clang-format
     .clang-tidy
+    include/EventHandler.h
+    include/FM_Macros.hpp
+    include/ColumnManager.h
+    src/ColumnManager.cpp
 )
 
 qt_add_resources(RESOURCE_SOURCES

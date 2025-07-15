@@ -3,15 +3,17 @@
 
 #include <QObject>
 #include <QSettings>
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
 
 class MainWindow;
 
 enum class ViewStates : char
 {
     DUAL_PANE,
-    DUAL_PANE_W_TREE,
-    SINGLE_TABLE,
-    SINGLE_TABLE_W_TREE,
+    DUAL_PANE_WITH_TREE,
+    SINGLE_PANE,
+    SINGLE_PANE_WITH_TREE,
     COLUMN_VIEW
 };
 
@@ -29,9 +31,10 @@ public:
 
 
 private:
-    MainWindow* mainWindow_;
+    MainWindow* m_mainWindow_;
 
     static constexpr const char* SettingName_ViewState = "view_state";
 };
 
+FM_END_NAMESPACE
 #endif // APPLICATIONSTATEHANDLER_H

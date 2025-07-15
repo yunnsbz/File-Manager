@@ -5,14 +5,17 @@
 #include <QPixmap>
 #include <QPalette>
 #include <QColor>
+#include <QApplication>
+
+FM_BEGIN_NAMESPACE
 
 ThemeManger::ThemeManger(QObject *parent)
     :
     QObject(parent),
-    mainWindow(static_cast<MainWindow*>(parent))
+    m_mainWindow(static_cast<MainWindow*>(parent))
 {
     const bool DarkTheme = isDarkTheme();
-    auto* ui = mainWindow->getUI();
+    auto* ui = m_mainWindow->getUI();
 
     // cihaz temasını bulup menü ikonlarının ona göre beyaz yada siyah olarak değiştir:
     if (DarkTheme) {
@@ -57,3 +60,5 @@ bool ThemeManger::isDarkTheme() {
 
     return brightness < 128; // 0-255; 128'den düşükse koyu temadır
 }
+
+FM_END_NAMESPACE

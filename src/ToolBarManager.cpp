@@ -4,29 +4,33 @@
 
 #include <QStyle>
 
+FM_BEGIN_NAMESPACE
+
 ToolBarManager::ToolBarManager(QHBoxLayout* toolBar, QObject* parent)
     :
     QObject(parent),
-    toolBar_(toolBar),
-    mainWindow_(static_cast<MainWindow*>(parent))
+    m_toolBar_(toolBar),
+    m_mainWindow_(static_cast<MainWindow*>(parent))
 {
     // uygulama ilk açıldığında back ve forward history boş olur bu yüzden butonlar disable edilir.
-    mainWindow_->getUI()->toolBackButton->setDisabled(true);
-    mainWindow_->getUI()->toolForwardButton->setDisabled(true);
-    mainWindow_->getUI()->toolUpButton->setDisabled(true);
+    m_mainWindow_->getUI()->toolBackButton->setDisabled(true);
+    m_mainWindow_->getUI()->toolForwardButton->setDisabled(true);
+    m_mainWindow_->getUI()->toolUpButton->setDisabled(true);
 }
 
-void ToolBarManager::SetBackButtonEnabled(bool enabled)
+void ToolBarManager::setBackButtonEnabled(bool enabled)
 {
-    mainWindow_->getUI()->toolBackButton->setEnabled(enabled);
+    m_mainWindow_->getUI()->toolBackButton->setEnabled(enabled);
 }
 
-void ToolBarManager::SetForwardButtonEnabled(bool enabled)
+void ToolBarManager::setForwardButtonEnabled(bool enabled)
 {
-    mainWindow_->getUI()->toolForwardButton->setEnabled(enabled);
+    m_mainWindow_->getUI()->toolForwardButton->setEnabled(enabled);
 }
 
-void ToolBarManager::SetUpButtonEnabled(bool enabled)
+void ToolBarManager::setUpButtonEnabled(bool enabled)
 {
-    mainWindow_->getUI()->toolUpButton->setEnabled(enabled);
+    m_mainWindow_->getUI()->toolUpButton->setEnabled(enabled);
 }
+
+FM_END_NAMESPACE

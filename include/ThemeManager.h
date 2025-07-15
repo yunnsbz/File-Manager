@@ -2,6 +2,9 @@
 #define THEMEMANAGER_H
 
 #include <QObject>
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
+
 
 class MainWindow;
 
@@ -14,8 +17,9 @@ public:
     static bool isDarkTheme();
 
 private:
-    MainWindow* mainWindow;
+    MainWindow* m_mainWindow;
 
 };
 
+FM_END_NAMESPACE
 #endif // THEMEMANAGER_H

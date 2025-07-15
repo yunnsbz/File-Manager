@@ -10,6 +10,8 @@
 #include <QString>
 #include <QWidget>
 #include <QList>
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
 
 class MoveFileOperation : public IFileOperation
 {
@@ -24,8 +26,8 @@ public:
 
     bool copyDirectoryRecursively(const QString &srcPath, const QString &destPath);
 
-    void CutFilesOperation();
-    void CopyFilesOperation();
+    void cutFilesOperation();
+    void copyFilesOperation();
 
     
 protected:
@@ -37,5 +39,5 @@ private:
 
     bool m_op_should_remove_;
 };
-
+FM_END_NAMESPACE
 #endif // MOVEFILEOPERATION_H

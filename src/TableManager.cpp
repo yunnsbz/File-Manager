@@ -14,46 +14,63 @@
 #include <QVideoWidget>
 #include <QBoxLayout>
 #include <QLabel>
+#include <QStringList>
+#include <QFileInfo>
+#include <QVector>
+#include <QWidget>
 
+FM_BEGIN_NAMESPACE
 
-TableManager::TableManager(QTableView* tableView, FileModelOperations* fileModelOp, QObject *parent)
+TableManager::TableManager(QTabWidget* tabWidget, QTableView* tableView, FileModelOperations* fileModelOp, QObject *parent)
     :
     QObject(parent),
-    fileModelOp_(fileModelOp),
-    tableView_(tableView)
+    m_tabWidget(tabWidget),
+    m_fileModelOp_(fileModelOp),
+    m_tableView_(tableView)
 {
-    auto* fileModel = fileModelOp_->GetFileModel();
+    auto* fileModel = m_fileModelOp_->getFileModel();
     tableView->setModel(fileModel);
-    SetColumnResize();
+    setColumnResize();
     tableView->verticalHeader()->setDefaultSectionSize(10);
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    connect(tableView, &QTableView::doubleClicked, this, &TableManager::onTableDoubleClicked);
 }
 
-void TableManager::SetTableToDefault()
+void TableManager::onTableDoubleClicked(const QModelIndex &modelIndex)
 {
-    auto* fileModel = fileModelOp_->GetFileModel();
+    const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
+
+    navigateToFolder(m_tabWidget->currentIndex(), firstColumnIndex);
+
+    emit tableDoubleClicked(modelIndex);
+}
+
+void TableManager::setTableToDefault()
+{
+    auto* fileModel = m_fileModelOp_->getFileModel();
     fileModel->setRootPath("");
     const QModelIndex index = fileModel->index(fileModel->rootPath());
-    tableView_->setRootIndex(index);
+    m_tableView_->setRootIndex(index);
 }
 
-void TableManager::SetTableContent(int tabIndex)
+void TableManager::setTableContent(int tabIndex)
 {
     // set table view content:
-    auto index = fileModelOp_->GetTabModelIndex(tabIndex);
+    auto index = m_fileModelOp_->getTabModelIndex(tabIndex);
 
     if (!index.isValid())
     {
-        SetTableToDefault();
+        setTableToDefault();
         return;
     }
 
-    tableView_->setRootIndex(index);
+    m_tableView_->setRootIndex(index);
 }
 
 void TableManager::navigateToFolder(int tabIndex, QModelIndex firstColumnIndex)
 {
-    auto* fileModel = fileModelOp_->GetFileModel();
+    auto* fileModel = m_fileModelOp_->getFileModel();
     if (!fileModel->hasChildren(firstColumnIndex))
     {
         const QString filePath = fileModel->filePath(firstColumnIndex);
@@ -74,29 +91,29 @@ void TableManager::navigateToFolder(int tabIndex, QModelIndex firstColumnIndex)
     }
     else
     {
-        tableView_->setRootIndex(firstColumnIndex);
-        fileModelOp_->SetTabModelIndex(tabIndex,firstColumnIndex);
+        m_tableView_->setRootIndex(firstColumnIndex);
+        m_fileModelOp_->setTabModelIndex(tabIndex,firstColumnIndex);
     }
 }
 
-void TableManager::SetColumnResize()
+void TableManager::setColumnResize()
 {
-    QHeaderView* header = tableView_->horizontalHeader();
+    QHeaderView* header = m_tableView_->horizontalHeader();
 
     // Stretch ile başlangıç yerleşimi. bu işlem interactive modu kapatır. aşağıda tekrar açılacak
     header->setSectionResizeMode(QHeaderView::Stretch);
-    tableView_->resizeColumnsToContents();
+    m_tableView_->resizeColumnsToContents();
 
     // Tablonun güncellenmesini bekle
     QTimer::singleShot(0, this, [this]() {
-        auto* header1 = tableView_->horizontalHeader();
-        const int columnCount = tableView_->model()->columnCount();
+        auto* header1 = m_tableView_->horizontalHeader();
+        const int columnCount = m_tableView_->model()->columnCount();
 
         // stretch değerlerini kaydet:
         QVector<int> widths;
         for (int i = 0; i < columnCount; ++i)
         {
-            widths.append(tableView_->columnWidth(i));
+            widths.append(m_tableView_->columnWidth(i));
         }
         // Kullanıcının sütun genişliklerini değiştirebilmesi için Interactive moda geç (stretch değerlerini değiştirir)
         for (int i = 0; i < columnCount; ++i)
@@ -106,7 +123,7 @@ void TableManager::SetColumnResize()
         // Stretch'te belirlenmiş genişlikleri geri uygula:
         for (int i = 0; i < columnCount; ++i)
         {
-            tableView_->setColumnWidth(i, widths[i]);
+            m_tableView_->setColumnWidth(i, widths[i]);
         }
     });
 }
@@ -146,5 +163,9 @@ void TableManager::openMediaWindow(const QString filePath)
     window->show();
 }
 
+void TableManager::setRootIndex(QModelIndex modelIndex)
+{
+    m_tableView_->setRootIndex(modelIndex);
+}
 
-
+FM_END_NAMESPACE

@@ -329,7 +329,7 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="page">
+      <widget class="QWidget" name="pageMainView">
        <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
         <property name="spacing">
          <number>0</number>
@@ -363,7 +363,7 @@
           <property name="childrenCollapsible">
            <bool>false</bool>
           </property>
-          <widget class="QTabWidget" name="tabWidget">
+          <widget class="QTabWidget" name="tabWidgetLeft">
            <property name="tabShape">
             <enum>QTabWidget::TabShape::Rounded</enum>
            </property>
@@ -400,14 +400,14 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QSplitter" name="splitter">
+              <widget class="QSplitter" name="splitterLeft">
                <property name="orientation">
                 <enum>Qt::Orientation::Horizontal</enum>
                </property>
                <property name="handleWidth">
                 <number>4</number>
                </property>
-               <widget class="QTreeView" name="FileTreeView">
+               <widget class="QTreeView" name="fileTreeViewLeft">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -427,7 +427,7 @@
                  <bool>false</bool>
                 </attribute>
                </widget>
-               <widget class="QTableView" name="tableView">
+               <widget class="QTableView" name="tableViewLeft">
                 <property name="tabKeyNavigation">
                  <bool>false</bool>
                 </property>
@@ -497,7 +497,7 @@
             </layout>
            </widget>
           </widget>
-          <widget class="QTabWidget" name="tabWidget_2">
+          <widget class="QTabWidget" name="tabWidgetRight">
            <property name="enabled">
             <bool>true</bool>
            </property>
@@ -537,14 +537,14 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QSplitter" name="splitter_2">
+              <widget class="QSplitter" name="splitterRight">
                <property name="orientation">
                 <enum>Qt::Orientation::Horizontal</enum>
                </property>
                <property name="handleWidth">
                 <number>4</number>
                </property>
-               <widget class="QTreeView" name="FileTreeView_2">
+               <widget class="QTreeView" name="fileTreeViewRight">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -564,7 +564,7 @@
                  <bool>false</bool>
                 </attribute>
                </widget>
-               <widget class="QTableView" name="tableView_2">
+               <widget class="QTableView" name="tableViewRight">
                 <property name="tabKeyNavigation">
                  <bool>false</bool>
                 </property>
@@ -638,7 +638,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_2">
+      <widget class="QWidget" name="pageColumnView">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <property name="spacing">
          <number>0</number>

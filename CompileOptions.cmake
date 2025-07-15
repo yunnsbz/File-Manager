@@ -5,6 +5,8 @@
 ##        My Default Compiler Options        ##
 ##*******************************************##
 
+if (NOT TARGET CompileOptions)
+
 add_library (CompileOptions INTERFACE)
 add_library (FatCxx::CompileOptions ALIAS CompileOptions)
 
@@ -35,8 +37,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
 
         ## Preprocessor definitions
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFATLIB_BUILDING_ON_WINDOWS=0>
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFATLIB_BUILDING_ON_WINDOWS=1>
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFATLIB_BUILDING_ON_WINDOWS -D_UNICODE -DUNICODE -DSTRICT -DNOMINMAX>
 
 
         ## Configuration-specific
@@ -46,14 +47,23 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
             -Werror
 
             -DIN_DEBUG
+            $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -D_DEBUG>
         >
         $<$<CONFIG:Release>:
             -O3
 
-            -DIN_RELEASE
-
             -march=native
+
+            -DIN_RELEASE
+            $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DNDEBUG>
         >
+    )
+
+    target_link_libraries(CompileOptions INTERFACE
+        ##################################
+
+        ## Standard library
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -lstdc++exp>
     )
 
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -64,6 +74,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
         ## Active warnings
         -Weverything
+        -Wpedantic
 
 
         ## Inactive warnings
@@ -82,8 +93,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
 
         ## Preprocessor definitions
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFATLIB_BUILDING_ON_WINDOWS=0>
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFATLIB_BUILDING_ON_WINDOWS=1>
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFATLIB_BUILDING_ON_WINDOWS -D_UNICODE -DUNICODE -DSTRICT -DNOMINMAX>
 
 
         ## Configuration-specific
@@ -93,13 +103,15 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
             -Werror
 
             -DIN_DEBUG
+            $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -D_DEBUG>
         >
         $<$<CONFIG:Release>:
             -O3
 
-            -DIN_RELEASE
-
             -march=native
+
+            -DIN_RELEASE
+            $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DNDEBUG>
         >
 
 
@@ -126,8 +138,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
 
 
         ## Preprocessor definitions
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Linux>:   -DFATLIB_BUILDING_ON_WINDOWS=0>
-        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFATLIB_BUILDING_ON_WINDOWS=1>
+        $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DFATLIB_BUILDING_ON_WINDOWS -D_UNICODE -DUNICODE -DSTRICT -DNOMINMAX>
 
 
         ## Configuration-specific
@@ -138,11 +149,13 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
             -Werror
 
             -DIN_DEBUG
+            $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -D_DEBUG>
         >
         $<$<CONFIG:Release>:
             -O2
 
             -DIN_RELEASE
+            $<$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>: -DNDEBUG>
         >
     )
 
@@ -177,6 +190,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         /wd4061 # Not all enum identifiers of an Enum (class) are handled by a switch statement (When there is a default case)
         /wd4062 # Not all enum identifiers of an Enum (class) are handled by a switch statement (When there is NOT a default case)
         /wd4324 # structure was padded due to alignment specifier
+        /wd4464 # relative include path contains '..'
         /wd4514 # Unreferenced inline function has been removed
         /wd4820 # n bytes padding added after construct MyClass
         /wd5045 # Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
@@ -184,12 +198,12 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
 
         ## Preprocessor definitions
-        /DFATLIB_BUILDING_WITH_MSVC=1
-        /DFATLIB_BUILDING_ON_WINDOWS=1
-        /DNOMINMAX
-        /DSTRICT
+        /DFATLIB_BUILDING_WITH_MSVC
+        /DFATLIB_BUILDING_ON_WINDOWS
         /D_UNICODE
         /DUNICODE
+        /DSTRICT
+        /DNOMINMAX
 
 
         ## Configuration-specific
@@ -201,7 +215,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
             /wd4710 # Function not inlined
             /wd4711 # Function selected for inline expansion
 
-            /DIN_DEBUG=1
+            /DIN_DEBUG
+            /D_DEBUG
         >
         $<$<CONFIG:Release>:
             /O2
@@ -211,7 +226,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
             /GF  # String pooling
             /GL  # Whole-program optimization
 
-            /DIN_RELEASE=1
+            /DIN_RELEASE
+            /DNDEBUG
 
 
             ## Advanced Options
@@ -224,4 +240,11 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         >
     )
 
+    target_link_options(CompileOptions INTERFACE
+        ##################################
+        /ERRORREPORT:NONE # Don't report internal linker errors
+    )
+
 endif ()
+
+endif()

@@ -6,6 +6,9 @@
 #include <QFileInfo>
 #include <QList>
 
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
+
 class IFileOperation : public QObject
 {
     Q_OBJECT
@@ -29,4 +32,5 @@ signals:
     void finished(const QString &operation);
 };
 
+FM_END_NAMESPACE
 #endif // IFILEOPERATION_H

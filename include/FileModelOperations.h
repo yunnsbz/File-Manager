@@ -8,7 +8,12 @@
 #include <QMap>
 #include <QList>
 #include <QDir>
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
 
+/**
+ * file model ile alakalı tüm fonksiyonları barındırır
+ */
 class FileModelOperations : public QObject
 {
     Q_OBJECT
@@ -16,37 +21,39 @@ class FileModelOperations : public QObject
 public:
     FileModelOperations();
 
-
 public:
-    auto GetFileModel() -> QFileSystemModel*;
-    auto GetTabModelIndex(int tabIndex) -> QModelIndex;
-    void SetTabModelIndex(int tabIndex, QModelIndex modelIndex);
-    auto GetFilePath(QModelIndex modelIndex) -> QString;
-    auto GetCurrentPath(int tabIndex) -> QString;
-    auto GetFileIndex(const QString& path) -> QModelIndex;
+    auto getFileModel()                         -> QFileSystemModel*;
+    auto getTabModelIndex(int tabIndex)         -> QModelIndex;
+    auto getFilePath(QModelIndex modelIndex)    -> QString;
+    auto getCurrentPath(int tabIndex)           -> QString;
+    auto getFileIndex(const QString& path)      -> QModelIndex;
 
-    auto IsBackHistoryEmpty(int tabIndex) -> bool;
-    auto IsForwardHistoryEmpty(int tabIndex) -> bool;
+    void setTabModelIndex(int tabIndex, QModelIndex modelIndex);
 
-    void RemoveTabModelIndex(int tabIndex);
+    auto isBackHistoryEmpty(int tabIndex)       -> bool;
+    auto isForwardHistoryEmpty(int tabIndex)    -> bool;
+
+    void removeTabModelIndex(int tabIndex);
     void swapTabModelIndexMap(int toIndex, int fromIndex);
     void swapTabHistoryModelIndex(int toIndex, int fromIndex);
 
-    void OnBackButtonClicked(int tabIndex);
-    void OnForwardButtonClicked(int tabIndex);
+    void onBackButtonClicked(int tabIndex);
+    void onForwardButtonClicked(int tabIndex);
 
 
 protected:
 
 
 private:
-    QFileSystemModel* fileModel;
+    QFileSystemModel* m_fileModel;
 
-    QMap<int, QModelIndex> TabModelIndexMap;
+    QMap<int, QModelIndex> m_tabModelIndexMap;
 
     // her sekmeye özel olarak ileri ve geri butonları için file modelin index değerlerini turar
-    QMap<int, QList<QModelIndex>> TabBackHistoryModelIndex;
-    QMap<int, QList<QModelIndex>> TabForwardHistoryModelIndex;
+    QMap<int, QList<QModelIndex>> m_tabBackHistoryModelIndex;
+    QMap<int, QList<QModelIndex>> m_tabForwardHistoryModelIndex;
 
 };
+
+FM_END_NAMESPACE
 #endif // FILEMODELOPERATIONS_H

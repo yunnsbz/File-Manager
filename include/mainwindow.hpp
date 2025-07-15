@@ -3,8 +3,6 @@
 
 #include "ui_mainwindow.h"
 
-#include "FileOperationManager.h"
-
 #include <QMainWindow>
 #include <QObject>
 #include <QFileSystemModel>
@@ -14,21 +12,34 @@
 #include <QString>
 #include <QKeyEvent>
 #include <QList>
+#include <QToolButton>
+#include <QTabWidget>
+#include <QTabBar>
+#include <QTreeView>
+#include <QTableView>
+#include <QStackedWidget>
 
-class ApplicationStateHandler;
-class TabManager;
-class ToolBarManager;
-class TableManager;
-class TreeManager;
-class FileModelOperations;
-class ThemeManger;
-class SettingsDialog;
+#include <FM_Macros.hpp>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
 }
 QT_END_NAMESPACE
+
+FM_BEGIN_NAMESPACE
+
+class ApplicationStateHandler;
+class FileOperationManager;
+class TabManager;
+class ColumnManager;
+class FileModelOperations;
+class ToolBarManager;
+class ThemeManger;
+class SettingsDialog;
+class FileOperationView;
+class MenuBarView;
+class EventHandler;
 
 class MainWindow : public QMainWindow
 {
@@ -43,30 +54,59 @@ public:
     auto operator = (MainWindow&&) noexcept -> MainWindow& = delete;
     ~MainWindow() override;
 
-
 public:
     auto getUI() -> Ui::MainWindow*;
 
-    void SetTabContent(int tabIndex, bool rightPane);
-    void OnTabMoved(int toIndex, int fromIndex);
-    void OnTabMoved2(int toIndex, int fromIndex);
-    void updateNavButtons(int tabIndex, bool forRightPane);
+    /**
+     * m_isWorkingOnRightPane değeri doğru bir şekilde set edilmeden çağırılmamalıdır.
+     */
+    void updateNavButtons(int const tabIndex);
 
     // nav buttons:
-    void upperFolderOnClick(bool OnRightPane);
-    void BackButtonOnClick(bool OnRightPane);
-    void ForwardButtonOnClick(bool OnRightPane);
-    void ScrollColumn(int direction);
+    void upperFolderOnClick();
+    void backButtonOnClick();
+    void forwardButtonOnClick();
+    void scrollColumnView(int direction);
 
-    void ActivateDualPane();
-    void ActivateTreeView();
-    void ActivateColumnView();
-    void DeactivateDualPane();
-    void DeactivateTreeView();
+    void activateDualPane();
+    void activateTreeView();
+    void activateColumnView();
+    void deactivateDualPane();
+    void deactivateTreeView();
+    void deactivateColumnView();
 
+    [[nodiscard]] auto getTabWidgetLeft()   const -> QTabWidget*    { return ui->tabWidgetLeft; }
+    [[nodiscard]] auto getTabWidgetRight()  const -> QTabWidget*    { return ui->tabWidgetRight; }
+    [[nodiscard]] auto getTabBarLeft()      const -> QTabBar*       { return ui->tabWidgetLeft->tabBar(); }
+    [[nodiscard]] auto getTabBarRight()     const -> QTabBar*       { return ui->tabWidgetRight->tabBar(); }
+    [[nodiscard]] auto getTreeViewLeft()    const -> QTreeView*     { return ui->fileTreeViewLeft; }
+    [[nodiscard]] auto getTreeViewRight()   const -> QTreeView*     { return ui->fileTreeViewRight; }
+    [[nodiscard]] auto getTableViewLeft()   const -> QTableView*    { return ui->tableViewLeft; }
+    [[nodiscard]] auto getTableViewRight()  const -> QTableView*    { return ui->tableViewRight; }
+    [[nodiscard]] auto getStackedWidget()   const -> QStackedWidget*{ return ui->stackedWidget; }
 
-protected:
+    [[nodiscard]] auto getPasteButton()     const -> QToolButton*   { return ui->toolPasteButton; }
+    [[nodiscard]] auto getCutButton()       const -> QToolButton*   { return ui->toolCutButton; }
+    [[nodiscard]] auto getCopyButton()      const -> QToolButton*   { return ui->toolCopyButton; }
+    [[nodiscard]] auto getDeleteButton()    const -> QToolButton*   { return ui->toolDelButton; }
+    [[nodiscard]] auto getRenameButton()    const -> QToolButton*   { return ui->toolRenameButton; }
 
+    [[nodiscard]] auto getActionAbout()         const -> QAction*   { return ui->actionAbout; }
+    [[nodiscard]] auto getActionColumnView()    const -> QAction*   { return ui->actionColumn_View; }
+    [[nodiscard]] auto getActionDualPaneView()  const -> QAction*   { return ui->actionDual_Pane_View; }
+    [[nodiscard]] auto getActionTreeView()      const -> QAction*   { return ui->actionTree_View; }
+    [[nodiscard]] auto getActionExit()          const -> QAction*   { return ui->actionExit; }
+    [[nodiscard]] auto getActionSettings()      const -> QAction*   { return ui->actionSettings; }
+
+    [[nodiscard]] auto isWorkingOnRightPane()   const -> bool       { return m_isWorkingOnRightPane; }
+    [[nodiscard]] auto isTreeViewActive()       const -> bool       { return m_treeViewActive; }
+    [[nodiscard]] auto isDualPaneActive()       const -> bool       { return m_dualPaneActive; }
+    [[nodiscard]] auto isColumnViewActive()     const -> bool       { return m_columnViewActive; }
+
+    [[nodiscard]] auto getFileOpManager()       const -> FileOperationManager*  { return m_fileOpManager; }
+    [[nodiscard]] auto getSettingsWindow()      const -> SettingsDialog*        { return m_settingsDialog; }
+    [[nodiscard]] auto getFileModelOpLeft()     const -> FileModelOperations*;
+    [[nodiscard]] auto getFileModelOpRight()    const -> FileModelOperations*;
 
 private:
     struct UIManager final
@@ -74,104 +114,56 @@ private:
         UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd);
     };
 
-
 private slots:
-    // tree
-    void onTreeSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
-    void on_FileTreeView_clicked(const QModelIndex &index);
-    void on_FileTreeView_2_clicked(const QModelIndex &index);
-
-    // menu bar
-    void on_actionExit_triggered();
-    void on_actionTree_View_triggered();
-    void on_actionAbout_triggered();
-    void on_actionColumn_View_triggered();
-    void on_actionDual_Pane_View_triggered();
-    void on_columnView_clicked(const QModelIndex &index);
+    void onTreeLeftSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
+    void onTreeRightSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
 
     // spliter
-    void on_splitter_splitterMoved(int pos, int index);
+    void on_splitterLeft_splitterMoved(int pos, int index);
 
-    // tool bar
-    void on_toolUpButton_clicked();
-    void on_toolBackButton_clicked();
-    void on_toolForwardButton_clicked();
+    // other buttons
     void on_lineEdit_returnPressed();
     void on_toolSearchButton_clicked();
-
+    void on_toolHistoryButton_clicked();
     void on_toolCmdButton_pressed();
 
-    // tab bar
-    void on_tabWidget_tabBarClicked(int index);
-    void on_tabWidget_2_tabBarClicked(int index);
-    void on_tabWidget_tabCloseRequested(int index);
-    void on_tabWidget_2_tabCloseRequested(int index);
-
-    // table view
-    void on_tableView_doubleClicked(const QModelIndex &index);
-    void on_tableView_2_doubleClicked(const QModelIndex &index);
-
-
-
-    void on_toolHistoryButton_clicked();
-
-    void on_toolCopyButton_clicked();
-
-    void on_toolPasteButton_clicked();
-
-    void on_toolDelButton_clicked();
-
-    void on_actionSettings_triggered();
-
-    void on_toolCutButton_clicked();
-
-    void on_toolRenameButton_clicked();
-
 private:
-    virtual auto eventFilter(QObject* obj, QEvent* event) -> bool override;
-
-    virtual void keyPressEvent(QKeyEvent* event) override; // şimdilik mainWİdget'da bazı ögelere focus için kullanılıyor
+    void SetLabelText_(QString path);
 
 
 private:
-    void SetLabelText_(const QString& path);
-
-
-private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
 
     UIManager m_ui_mgr_;
 
-    FileModelOperations* fileModelOp;
-    FileModelOperations* fileModelOp2;
-    QFileSystemModel* columnFileModel;
+    ToolBarManager* m_toolBarManager;
+    ThemeManger* m_menuManager;
 
-    ToolBarManager* toolBarManager;
-    ThemeManger* menuManager;
+    TabManager* m_tabManagerLeft;
+    TabManager* m_tabManagerRight;
+    ColumnManager* m_columnManager;
 
-    TabManager* tabManager;
-    TabManager* tabManager2;
-    TableManager* tableManager;
-    TableManager* tableManager2;
-    TreeManager* treeManager;
-    TreeManager* treeManager2;
+    FileOperationManager* m_fileOpManager;
 
-    FileOperationManager* FileOpManager;
+    ApplicationStateHandler* m_appStateHandler;
+    SettingsDialog* m_settingsDialog;
 
-    ApplicationStateHandler* AppStateHandler;
-    SettingsDialog* settingsDialog;
+    FileOperationView* m_fileOperationView;
+    MenuBarView* m_menuBarView;
+
+    EventHandler* m_eventHandler;
 
     // history butonlarının hangi tabWidget için çalıştığını belirtmek için kullanılır.
-    bool isWorkingOnLeftPane{}; // TODO(fatpound): kod eklenecek
-    bool isWorkingOnRightPane{};
+    bool m_isWorkingOnLeftPane {};
+    bool m_isWorkingOnRightPane {};
 
-    bool leftTabIsReset_  = true;
-    bool rightTabIsReset_ = true;
+    bool m_treeViewActive   = true;
+    bool m_dualPaneActive   = true;
+    bool m_columnViewActive = false;
 
-    bool treeViewActive = true;
-    bool dualPaneActive = true;
-    bool ColumnViewActive{};
-
-    bool searchOn{};
+    bool m_searchOn {};
 };
+
+FM_END_NAMESPACE
+
 #endif // MAINWINDOW_H

@@ -5,6 +5,8 @@
 
 #include <utility>
 
+FM_BEGIN_NAMESPACE
+
 DeleteFileOperation::DeleteFileOperation(QList<QString> files, QObject* parent)
     :
     IFileOperation(parent),
@@ -19,7 +21,7 @@ void DeleteFileOperation::start()
     {
         const auto& path = m_op_files_[i];
 
-        QFileInfo info(path);
+        const QFileInfo info(path);
 
         if (info.isDir())
         {
@@ -45,3 +47,5 @@ void DeleteFileOperation::start()
 
     emit finished("deleted files.");
 }
+
+FM_END_NAMESPACE

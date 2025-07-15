@@ -12,65 +12,75 @@
 #include <QPixmap>
 #include <QSplitter>
 
-class QFileSystemModel;
+#include <FM_Macros.hpp>
+
+FM_BEGIN_NAMESPACE
+
 class MainWindow;
+class TableManager;
+class TreeManager;
+class FileModelOperations;
 
 class TabManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent);
+    explicit TabManager(QTabWidget* tabWidget, QTreeView* treeView, QTableView* tableView, QObject* parent);
 
     void moveTabWidget(int index);
     void onTabCloseRequested(int index);
     void onTabClicked(int index);
 
     // getters:
-    auto GetPreviousSplitter();
+    auto getPreviousSplitter() const -> QSplitter*;
     // yeni sekmeye geçiş yapıldığı anda önceki sekmeyi gösterir:
-    [[nodiscard]]
-    auto _getPreviousLeftTabIndex() const -> int;
+    [[nodiscard]] auto _getPreviousLeftTabIndex()           const -> int;
 
     // yeni sekmeye geçiş tamamlandıktan sonra önceki sekmeyi gösterir:
-    [[nodiscard]]
-    auto getPersistentPreviousLeftTabIndex() const -> int;
+    [[nodiscard]] auto getPersistentPreviousLeftTabIndex()  const -> int;
+
+    [[nodiscard]] auto getFileModelOp() const -> FileModelOperations*   { return m_fileModelOp; }
 
     // auto tabCount() const -> int;
 
     // setters:
+    void setTabContent(int tabIndex);
     void setPreviousLeftTabIndex(int value);
     // void addTab(const QString& title);
     // void removeTab(int index);
 
-    void EnableNavWidget(bool enable);
+    void enableNavWidget(bool enable);
     void updateNavButtons(bool BackEnable, bool ForwardEnable, bool UpEnabled);
-
 
 public slots:
     void onTabMoved(int toIndex, int fromIndex);
     void addNewTab();
+    void onTabBarClicked(int tabIndex);
+    void onTabClosed(int tabIndex);
 
-
-protected:
-
-
-private:
-    void SetNavButtonThemes();
-    void SetCornerNavButtons();
-    void SetAddTabButton();
+signals:
+    void tabChanged(int ChangedTabIndex, QString ChangedFilePath);
 
 private:
-    MainWindow* mainWindow_;
-    QTabWidget* tabWidget_;
+    void setNavButtonThemes();
+    void setCornerNavButtons();
+    void setAddTabButton();
 
-    QWidget* cornerNavButtons;
+private:
+    MainWindow* m_mainWindow_;
+    QTabWidget* m_tabWidget_;
 
-    QToolButton* backTabButton;
-    QToolButton* forwTabButton;
-    QToolButton* upTabButton;
+    FileModelOperations* m_fileModelOp;
 
-    bool m_forRightPane;
+    TableManager* m_tableManager;
+    TreeManager* m_treeManager;
+
+    QWidget* m_cornerNavButtons{};
+
+    QToolButton* m_backTabButton{};
+    QToolButton* m_forwTabButton{};
+    QToolButton* m_upTabButton{};
 
     // last opened tabs (when moving to another tab system should know the last one)
     int m_lastRightTabIndex = 0;
@@ -82,5 +92,5 @@ private:
     int m_persistentPreviousLeftTabIndex = 0;
 };
 
-
+FM_END_NAMESPACE
 #endif // TABMANAGER_H

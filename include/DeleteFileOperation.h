@@ -6,6 +6,8 @@
 #include <QObject>
 #include <QList>
 #include <QString>
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
 
 class DeleteFileOperation : public IFileOperation
 {
@@ -24,4 +26,5 @@ private:
     QList<QString> m_op_files_;
 };
 
+FM_END_NAMESPACE
 #endif // DELETEFILEOPERATION_H

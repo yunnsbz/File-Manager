@@ -2,8 +2,13 @@
 #include "ui/ui_settingsdialog.h"
 
 #include <QFile>
+#include <QApplication>
+#include <QTreeWidgetItem>
 
-SettingsDialog::SettingsDialog(QWidget *parent) :
+FM_BEGIN_NAMESPACE
+
+SettingsDialog::SettingsDialog(QWidget *parent)
+    :
     QDialog(parent),
     ui(new Ui::SettingsDialog)
 {
@@ -16,7 +21,7 @@ SettingsDialog::~SettingsDialog()
     delete ui;
 }
 
-void SettingsDialog::SetOldButtonStyle(bool buttonStyle)
+void SettingsDialog::setOldButtonStyle(bool buttonStyle)
 {
     if(buttonStyle){
         // style:
@@ -47,7 +52,7 @@ void SettingsDialog::SetOldButtonStyle(bool buttonStyle)
 
 void SettingsDialog::on_pushButton_clicked()
 {
-    SetOldButtonStyle(tabCloseButtonOld);
+    setOldButtonStyle(tabCloseButtonOld);
 
     if(tabCloseButtonOld)
     {
@@ -62,7 +67,7 @@ void SettingsDialog::on_pushButton_clicked()
 void SettingsDialog::onSettingItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* /*previous*/) {
     if (!current) return;
 
-    QString settingsName = current->text(0);
+    const QString settingsName = current->text(0);
 
     // TODO (yunnsbz): change this to enum and switch case
 
@@ -74,3 +79,5 @@ void SettingsDialog::onSettingItemChanged(QTreeWidgetItem* current, QTreeWidgetI
         ui->stackedWidget->setCurrentIndex(2);
     // ... vb.
 }
+
+FM_END_NAMESPACE

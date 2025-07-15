@@ -3,6 +3,10 @@
 
 #include <QObject>
 #include <QTableView>
+#include <QTabWidget>
+
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
 
 class FileModelOperations;
 
@@ -11,23 +15,32 @@ class TableManager : public QObject
     Q_OBJECT
 
 public:
-    explicit TableManager(QTableView* tableView, FileModelOperations* fileModelOp, QObject* parent);
+    explicit TableManager(QTabWidget* tabWidget, QTableView* tableView, FileModelOperations* fileModelOp, QObject* parent);
 
+signals:
+    void tableDoubleClicked(const QModelIndex &modelIndex);
+
+private slots:
+    void onTableDoubleClicked(const QModelIndex &modelIndex);
 
 public:
-    void SetTableToDefault();
-    void SetTableContent(int tabIndex);
+    void setTableToDefault();
+    void setTableContent(int tabIndex);
     void navigateToFolder(int tabIndex, QModelIndex firstColumnIndex);
-    void SetColumnResize();
-    void openMediaWindow(const QString);
+    void setColumnResize();
+    void openMediaWindow(QString);
 
-protected:
-
+    void setRootIndex(QModelIndex modelIndex);
 
 private:
-    FileModelOperations* fileModelOp_;
+    QTabWidget* m_tabWidget;
 
-    QTableView* tableView_;
+    FileModelOperations* m_fileModelOp_;
+
+    QTableView* m_tableView_;
+
 };
+
+FM_END_NAMESPACE
 
 #endif // TABLEMANAGER_H
