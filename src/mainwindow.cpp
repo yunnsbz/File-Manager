@@ -279,6 +279,8 @@ void MainWindow::upperFolderOnClick()
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
+
+        SetLabelText_(m_tabManagerRight->getFileModelOp()->getCurrentPath(tabIndex));
     }
     else
     {
@@ -295,6 +297,8 @@ void MainWindow::upperFolderOnClick()
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
+
+        SetLabelText_(m_tabManagerLeft->getFileModelOp()->getCurrentPath(tabIndex));
     }
 }
 
@@ -310,6 +314,8 @@ void MainWindow::backButtonOnClick()
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
+
+        SetLabelText_(m_tabManagerRight->getFileModelOp()->getCurrentPath(tabIndex));
     }
     else if(m_columnViewActive){
         scrollColumnView(-1);
@@ -324,6 +330,8 @@ void MainWindow::backButtonOnClick()
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
+
+        SetLabelText_(m_tabManagerLeft->getFileModelOp()->getCurrentPath(tabIndex));
     }
 }
 
@@ -357,6 +365,8 @@ void MainWindow::forwardButtonOnClick()
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
+
+        SetLabelText_(m_tabManagerRight->getFileModelOp()->getCurrentPath(tabIndex));
     }
     else if(m_columnViewActive){
         scrollColumnView(1);
@@ -371,6 +381,8 @@ void MainWindow::forwardButtonOnClick()
 
         // buton kontrolü:
         updateNavButtons(tabIndex);
+
+        SetLabelText_(m_tabManagerLeft->getFileModelOp()->getCurrentPath(tabIndex));
     }
 }
 
