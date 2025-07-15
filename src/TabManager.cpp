@@ -6,7 +6,8 @@
 #include <QToolButton>
 #include <QTabBar>
 #include <QBoxLayout>
-#include <QFileSystemModel>
+
+FM_BEGIN_NAMESPACE
 
 TabManager::TabManager(QTabWidget* tabWidget, bool forRightPane, QObject* parent)
     :
@@ -219,3 +220,5 @@ void TabManager::moveTabWidget(int index)
 
     setPreviousLeftTabIndex(index);
 }
+
+FM_END_NAMESPACE

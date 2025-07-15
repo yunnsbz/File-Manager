@@ -10,6 +10,8 @@
 #include <QList>
 #include <QtLogging>
 
+FM_BEGIN_NAMESPACE
+
 FileOperationView::FileOperationView(QObject *parent)
     :
     QObject(parent),
@@ -159,3 +161,5 @@ void FileOperationView::onPasteButtonClicked()
                         m_mainWindow->getTabWidgetLeft()->currentIndex()));
     }
 }
+
+FM_END_NAMESPACE

@@ -9,6 +9,9 @@
 #include <QTabWidget>
 #include <QModelIndex>
 
+#include <FM_Macros.hpp>
+FM_BEGIN_NAMESPACE
+
 class FileModelOperations;
 
 class TreeManager : public QObject
@@ -42,5 +45,7 @@ private:
     // treeView için her sekmede açılmış yolları tutar:
     QMap<int, QList<QString>> ExpandedPathsMap;
 };
+
+FM_END_NAMESPACE
 
 #endif // TREEMANAGER_H

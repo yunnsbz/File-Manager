@@ -4,9 +4,11 @@
 
 #include <algorithm>
 
+FM_BEGIN_NAMESPACE
+
 FileModelOperations::FileModelOperations()
-:
-fileModel(new QFileSystemModel(this))
+    :
+    fileModel(new QFileSystemModel(this))
 {
     // set to disk directory
     fileModel->setRootPath("");
@@ -121,3 +123,5 @@ auto FileModelOperations::GetTabModelIndex(int tabIndex) -> QModelIndex
     }
     return {};
 }
+
+FM_END_NAMESPACE

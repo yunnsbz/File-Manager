@@ -13,9 +13,9 @@
 #include <QSplitter>
 
 #include <FM_Macros.hpp>
+
 FM_BEGIN_NAMESPACE
 
-class QFileSystemModel;
 class MainWindow;
 
 class TabManager : public QObject

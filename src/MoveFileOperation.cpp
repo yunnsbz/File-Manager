@@ -5,6 +5,8 @@
 
 #include <utility>
 
+FM_BEGIN_NAMESPACE
+
 MoveFileOperation::MoveFileOperation(QSet<QString> SourcePaths, QString destinationPath, bool shouldRemove, QObject* parent)
     :
     IFileOperation(parent),
@@ -161,3 +163,5 @@ bool MoveFileOperation::copyDirectoryRecursively(const QString &srcPath, const Q
 
     return true;
 }
+
+FM_END_NAMESPACE

@@ -20,6 +20,13 @@
 #include <QStackedWidget>
 
 #include <FM_Macros.hpp>
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class MainWindow;
+}
+QT_END_NAMESPACE
+
 FM_BEGIN_NAMESPACE
 
 class ApplicationStateHandler;
@@ -34,12 +41,6 @@ class SettingsDialog;
 class FileOperationView;
 class MenuBarView;
 class EventHandler;
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {

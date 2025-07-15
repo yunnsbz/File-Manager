@@ -7,6 +7,8 @@
 #include <QColor>
 #include <QApplication>
 
+FM_BEGIN_NAMESPACE
+
 ThemeManger::ThemeManger(QObject *parent)
     :
     QObject(parent),
@@ -58,3 +60,5 @@ bool ThemeManger::isDarkTheme() {
 
     return brightness < 128; // 0-255; 128'den düşükse koyu temadır
 }
+
+FM_END_NAMESPACE

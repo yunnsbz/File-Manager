@@ -33,6 +33,8 @@
 #include <QIcon>
 #include <QDir>
 
+FM_BEGIN_NAMESPACE
+
 MainWindow::UIManager::UIManager(Ui::MainWindow*& theUi, QMainWindow* pWnd)
 {
     theUi->setupUi(pWnd);
@@ -773,3 +775,5 @@ void MainWindow::on_toolHistoryButton_clicked()
     popupFrame->move(ui->toolHistoryButton->mapToGlobal(QPoint(-270, ui->toolHistoryButton->height())));
     popupFrame->show();
 }
+
+FM_END_NAMESPACE

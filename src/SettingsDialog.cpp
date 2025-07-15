@@ -5,7 +5,10 @@
 #include <QApplication>
 #include <QTreeWidgetItem>
 
-SettingsDialog::SettingsDialog(QWidget *parent) :
+FM_BEGIN_NAMESPACE
+
+SettingsDialog::SettingsDialog(QWidget *parent)
+    :
     QDialog(parent),
     ui(new Ui::SettingsDialog)
 {
@@ -76,3 +79,5 @@ void SettingsDialog::onSettingItemChanged(QTreeWidgetItem* current, QTreeWidgetI
         ui->stackedWidget->setCurrentIndex(2);
     // ... vb.
 }
+
+FM_END_NAMESPACE

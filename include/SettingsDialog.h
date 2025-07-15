@@ -6,10 +6,12 @@
 #include <QString>
 #include <QTreeWidget>
 #include <FM_Macros.hpp>
-FM_BEGIN_NAMESPACE
+
 namespace Ui {
 class SettingsDialog;
 }
+
+FM_BEGIN_NAMESPACE
 
 class SettingsDialog : public QDialog
 {

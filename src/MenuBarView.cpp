@@ -9,6 +9,8 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
+FM_BEGIN_NAMESPACE
+
 MenuBarView::MenuBarView(QObject *parent)
     :
     QObject(parent),
@@ -142,3 +144,5 @@ void MenuBarView::onAboutTriggered()
     dialog.setFixedSize(300, 200);
     dialog.exec();
 }
+
+FM_END_NAMESPACE

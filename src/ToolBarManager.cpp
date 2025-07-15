@@ -4,6 +4,8 @@
 
 #include <QStyle>
 
+FM_BEGIN_NAMESPACE
+
 ToolBarManager::ToolBarManager(QHBoxLayout* toolBar, QObject* parent)
     :
     QObject(parent),
@@ -30,3 +32,5 @@ void ToolBarManager::SetUpButtonEnabled(bool enabled)
 {
     mainWindow_->getUI()->toolUpButton->setEnabled(enabled);
 }
+
+FM_END_NAMESPACE

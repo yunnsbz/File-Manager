@@ -7,6 +7,8 @@
 
 #include <algorithm>
 
+FM_BEGIN_NAMESPACE
+
 TreeManager::TreeManager(QTreeView* treeView, FileModelOperations* fileModelOp, QTabWidget* tabWidget, QObject* parent)
     :
     QObject(parent),
@@ -129,3 +131,5 @@ void TreeManager::ExpandTreeView(const QModelIndex &modelIndex)
         treeView_->expand(modelIndex);
     }
 }
+
+FM_END_NAMESPACE

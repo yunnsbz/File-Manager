@@ -1,6 +1,8 @@
 #include "ApplicationStateHandler.h"
 #include "mainwindow.hpp"
 
+FM_BEGIN_NAMESPACE
+
 ApplicationStateHandler::ApplicationStateHandler(QObject *parent)
     :
     mainWindow_(static_cast<MainWindow*>(parent))
@@ -50,3 +52,5 @@ ViewStates ApplicationStateHandler::GetCurrentViewState()
     const int saved = settings.value(SettingName_ViewState, static_cast<int>(ViewStates::SINGLE_TABLE_W_TREE)).toInt();
     return static_cast<ViewStates>(saved);
 }
+
+FM_END_NAMESPACE

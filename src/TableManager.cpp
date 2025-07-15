@@ -19,6 +19,8 @@
 #include <QVector>
 #include <QWidget>
 
+FM_BEGIN_NAMESPACE
+
 TableManager::TableManager(QTableView* tableView, FileModelOperations* fileModelOp, QObject *parent)
     :
     QObject(parent),
@@ -149,5 +151,4 @@ void TableManager::openMediaWindow(const QString filePath)
     window->show();
 }
 
-
-
+FM_END_NAMESPACE

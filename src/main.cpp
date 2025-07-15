@@ -11,7 +11,7 @@ int main(int argc, char **argv)
 {
     const QApplication app(argc, argv);
 
-    const MainWindow wnd{};
+    const file_manager::MainWindow wnd{};
 
     QString qss;
     QFile file1(":/resources/styles/styleDark.qss");

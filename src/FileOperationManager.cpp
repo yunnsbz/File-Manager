@@ -12,6 +12,8 @@
 
 #include <utility>
 
+FM_BEGIN_NAMESPACE
+
 FileOperationManager::FileOperationManager(QObject * parent)
     :
     QObject(parent),
@@ -141,4 +143,6 @@ void FileOperationManager::onError(const QString &msg) {
 void FileOperationManager::onFinished(const QString &info) {
     qDebug() << "Operation Finished:" << info;
 }
+
+FM_END_NAMESPACE
 
