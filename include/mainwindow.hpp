@@ -57,7 +57,11 @@ public:
     void SetTabContent(int tabIndex, bool rightPane);
     void OnTabMoved(int toIndex, int fromIndex);
     void OnTabMoved2(int toIndex, int fromIndex);
-    void updateNavButtons(int tabIndex, bool forRightPane);
+
+    /**
+     * m_isWorkingOnRightPane değeri doğru bir şekilde set edilmeden çağırılmamalıdır.
+     */
+    void updateNavButtons(const int tabIndex);
 
     // nav buttons:
     void upperFolderOnClick(bool OnRightPane);

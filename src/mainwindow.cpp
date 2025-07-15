@@ -102,14 +102,14 @@ MainWindow::MainWindow(QWidget* parent)
         m_isWorkingOnLeftPane = true;
         m_isWorkingOnRightPane = false;
         const int tabIndex = getTabWidgetLeft()->currentIndex();
-        updateNavButtons(tabIndex, false);
+        updateNavButtons(tabIndex);
         SetLabelText_(getFileModelOpLeft()->GetCurrentPath(tabIndex));
     });
     connect(m_eventHandler, &EventHandler::tabRightClicked, this, [this](){
         m_isWorkingOnLeftPane = false;
         m_isWorkingOnRightPane = true;
         const int tabIndex = getTabWidgetRight()->currentIndex();
-        updateNavButtons(tabIndex, true);
+        updateNavButtons(tabIndex);
         SetLabelText_(getFileModelOpRight()->GetCurrentPath(tabIndex));
     });
 
@@ -249,9 +249,9 @@ void MainWindow::ActivateTreeView()
     ui->splitterRight->setHandleWidth(5);
 }
 
-void MainWindow::updateNavButtons(int const tabIndex, bool forRightPane)
+void MainWindow::updateNavButtons(const int tabIndex)
 {
-    if(forRightPane)
+    if(isWorkingOnRightPane())
     {
         const bool backButtonEnable = !m_fileModelOpRight->IsBackHistoryEmpty(tabIndex);
         const bool forwardButtonEnable = !m_fileModelOpRight->IsForwardHistoryEmpty(tabIndex);
@@ -304,7 +304,7 @@ void MainWindow::upperFolderOnClick(bool OnRightPane)
         m_treeManagerRight->SetTreeContent(tabIndex);
 
         // buton kontrolü:
-        updateNavButtons(tabIndex, true);
+        updateNavButtons(tabIndex);
     }
     else
     {
@@ -319,7 +319,7 @@ void MainWindow::upperFolderOnClick(bool OnRightPane)
         m_treeManagerLeft->SetTreeContent(tabIndex);
 
         // buton kontrolü:
-        updateNavButtons(tabIndex, false);
+        updateNavButtons(tabIndex);
     }
 }
 
@@ -335,7 +335,7 @@ void MainWindow::BackButtonOnClick(bool OnRightPane)
         m_treeManagerRight->SetTreeContent(tabIndex);
 
         // buton kontrolü:
-        updateNavButtons(tabIndex, true);
+        updateNavButtons(tabIndex);
     }
     else if(m_columnViewActive){
         ScrollColumn(-1);
@@ -350,7 +350,7 @@ void MainWindow::BackButtonOnClick(bool OnRightPane)
         m_treeManagerLeft->SetTreeContent(tabIndex);
 
         // buton kontrolü:
-        updateNavButtons(tabIndex, false);
+        updateNavButtons(tabIndex);
     }
 }
 
@@ -384,7 +384,7 @@ void MainWindow::ForwardButtonOnClick(bool OnRightPane)
         m_treeManagerRight->SetTreeContent(tabIndex);
 
         // buton kontrolü:
-        updateNavButtons(tabIndex, true);
+        updateNavButtons(tabIndex);
     }
     else if(m_columnViewActive){
         ScrollColumn(1);
@@ -399,7 +399,7 @@ void MainWindow::ForwardButtonOnClick(bool OnRightPane)
         m_treeManagerLeft->SetTreeContent(tabIndex);
 
         // buton kontrolü:
-        updateNavButtons(tabIndex, false);
+        updateNavButtons(tabIndex);
     }
 }
 
@@ -518,7 +518,7 @@ void MainWindow::on_tabWidgetLeft_tabBarClicked(int tabIndex)
         m_tabManagerLeft->moveTabWidget(tabIndex);
         SetTabContent(tabIndex, false);
         // buton kontrolü:
-        updateNavButtons(tabIndex, false);
+        updateNavButtons(tabIndex);
     }
 
     SetLabelText_(m_fileModelOpLeft->GetCurrentPath(tabIndex));
@@ -534,7 +534,7 @@ void MainWindow::on_tabWidgetRight_tabBarClicked(int tabIndex)
         m_tabManagerRight->moveTabWidget(tabIndex);
         SetTabContent(tabIndex, true);
         // buton kontrolü:
-        updateNavButtons(tabIndex, true);
+        updateNavButtons(tabIndex);
     }
 
     SetLabelText_(m_fileModelOpRight->GetCurrentPath(tabIndex));
@@ -630,7 +630,7 @@ void MainWindow::on_fileTreeViewLeft_clicked(const QModelIndex &modelIndex)
     }
 
     // buton kontrolü:
-    updateNavButtons(tabIndex, false);
+    updateNavButtons(tabIndex);
 }
 
 void MainWindow::on_fileTreeViewRight_clicked(const QModelIndex &modelIndex)
@@ -646,7 +646,7 @@ void MainWindow::on_fileTreeViewRight_clicked(const QModelIndex &modelIndex)
     }
 
     // buton kontrolü:
-    updateNavButtons(tabIndex, true);
+    updateNavButtons(tabIndex);
 }
 
 void MainWindow::on_tableViewLeft_doubleClicked(const QModelIndex &modelIndex)
@@ -660,7 +660,7 @@ void MainWindow::on_tableViewLeft_doubleClicked(const QModelIndex &modelIndex)
     const auto tabIndex = ui->tabWidgetLeft->currentIndex();
 
     // buton kontrolü:
-    updateNavButtons(tabIndex, false);
+    updateNavButtons(tabIndex);
 
     const auto& path = static_cast<QFileSystemModel*>(ui->fileTreeViewLeft->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
@@ -677,7 +677,7 @@ void MainWindow::on_tableViewRight_doubleClicked(const QModelIndex &modelIndex)
     const auto tabIndex = ui->tabWidgetRight->currentIndex();
 
     // buton kontrolü:
-    updateNavButtons(tabIndex, true);
+    updateNavButtons(tabIndex);
 
     const auto& path = static_cast<QFileSystemModel*>(ui->fileTreeViewRight->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
