@@ -30,7 +30,7 @@ void MenuBarView::onColumnViewTriggered()
         m_mainWindow->DeactivateColumnView();
         if(m_mainWindow->isDualPaneActive()){
             if(m_mainWindow->isTreeViewActive()){
-                ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+                ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_WITH_TREE);
             }
             else{
                 ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE);
@@ -38,10 +38,10 @@ void MenuBarView::onColumnViewTriggered()
         }
         else{
             if(m_mainWindow->isTreeViewActive()){
-                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_PANE_WITH_TREE);
             }
             else{
-                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE);
+                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_PANE);
             }
         }
     }
@@ -67,7 +67,7 @@ void MenuBarView::onTreeViewTriggered()
             ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE);
         }
         else{
-            ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE);
+            ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_PANE);
         }
     }
     else
@@ -76,10 +76,10 @@ void MenuBarView::onTreeViewTriggered()
 
         // save state update
         if(m_mainWindow->isDualPaneActive()){
-            ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+            ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_WITH_TREE);
         }
         else{
-            ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+            ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_PANE_WITH_TREE);
         }
     }
 }
@@ -100,9 +100,9 @@ void MenuBarView::onDualPaneViewTriggered()
 
             // save state update
             if(m_mainWindow->isTreeViewActive())
-                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE_W_TREE);
+                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_PANE_WITH_TREE);
             else
-                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_TABLE);
+                ApplicationStateHandler::SetCurrentViewState(ViewStates::SINGLE_PANE);
         }
         else
         {
@@ -110,7 +110,7 @@ void MenuBarView::onDualPaneViewTriggered()
 
             // save state update
             if(m_mainWindow->isTreeViewActive())
-                ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_W_TREE);
+                ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE_WITH_TREE);
             else
                 ApplicationStateHandler::SetCurrentViewState(ViewStates::DUAL_PANE);
         }
