@@ -23,15 +23,16 @@ public:
 
 
 public:
-    auto GetFileModel() -> QFileSystemModel*;
-    auto GetTabModelIndex(int tabIndex) -> QModelIndex;
-    void SetTabModelIndex(int tabIndex, QModelIndex modelIndex);
-    auto GetFilePath(QModelIndex modelIndex) -> QString;
-    auto GetCurrentPath(int tabIndex) -> QString;
-    auto GetFileIndex(const QString& path) -> QModelIndex;
+    auto GetFileModel()                         -> QFileSystemModel*;
+    auto GetTabModelIndex(int tabIndex)         -> QModelIndex;
+    auto GetFilePath(QModelIndex modelIndex)    -> QString;
+    auto GetCurrentPath(int tabIndex)           -> QString;
+    auto GetFileIndex(const QString& path)      -> QModelIndex;
 
-    auto IsBackHistoryEmpty(int tabIndex) -> bool;
-    auto IsForwardHistoryEmpty(int tabIndex) -> bool;
+    void SetTabModelIndex(int tabIndex, QModelIndex modelIndex);
+
+    auto IsBackHistoryEmpty(int tabIndex)       -> bool;
+    auto IsForwardHistoryEmpty(int tabIndex)    -> bool;
 
     void RemoveTabModelIndex(int tabIndex);
     void swapTabModelIndexMap(int toIndex, int fromIndex);

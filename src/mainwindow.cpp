@@ -297,7 +297,7 @@ void MainWindow::upperFolderOnClick(bool OnRightPane)
 {
     if(OnRightPane)
     {
-        const auto tabIndex = ui->tabWidgetRight->currentIndex();
+        const auto tabIndex = getTabWidgetRight()->currentIndex();
 
         auto parentIndex = m_fileModelOpRight->GetFileModel()->parent(m_fileModelOpRight->GetTabModelIndex(tabIndex));
 
@@ -312,7 +312,7 @@ void MainWindow::upperFolderOnClick(bool OnRightPane)
     }
     else
     {
-        const auto tabIndex = ui->tabWidgetLeft->currentIndex();
+        const auto tabIndex = getTabWidgetLeft()->currentIndex();
 
         auto parentIndex = m_fileModelOpLeft->GetFileModel()->parent(m_fileModelOpLeft->GetTabModelIndex(tabIndex));
 
@@ -330,7 +330,7 @@ void MainWindow::upperFolderOnClick(bool OnRightPane)
 void MainWindow::BackButtonOnClick(bool OnRightPane)
 {
     if(OnRightPane){
-        const auto tabIndex = ui->tabWidgetRight->currentIndex();
+        const auto tabIndex = getTabWidgetRight()->currentIndex();
 
         m_fileModelOpRight->OnBackButtonClicked(tabIndex);
         //tree back onClick missing
@@ -345,7 +345,7 @@ void MainWindow::BackButtonOnClick(bool OnRightPane)
         ScrollColumn(-1);
     }
     else{
-        const auto tabIndex = ui->tabWidgetLeft->currentIndex();
+        const auto tabIndex = getTabWidgetLeft()->currentIndex();
 
         m_fileModelOpLeft->OnBackButtonClicked(tabIndex);
         //tree back onClick missing
@@ -379,7 +379,7 @@ void MainWindow::ScrollColumn(int direction)
 void MainWindow::ForwardButtonOnClick(bool OnRightPane)
 {
     if(OnRightPane){
-        const auto tabIndex = ui->tabWidgetRight->currentIndex();
+        const auto tabIndex = getTabWidgetRight()->currentIndex();
 
         m_fileModelOpRight->OnForwardButtonClicked(tabIndex);
         //tree back onClick missing
@@ -394,7 +394,7 @@ void MainWindow::ForwardButtonOnClick(bool OnRightPane)
         ScrollColumn(1);
     }
     else{
-        const auto tabIndex = ui->tabWidgetLeft->currentIndex();
+        const auto tabIndex = getTabWidgetLeft()->currentIndex();
 
         m_fileModelOpLeft->OnForwardButtonClicked(tabIndex);
         //tree back onClick missing
@@ -423,7 +423,7 @@ void MainWindow::on_toolForwardButton_clicked()
 
 void MainWindow::on_lineEdit_returnPressed()
 {
-    auto path = m_fileModelOpLeft->GetFilePath(m_fileModelOpLeft->GetTabModelIndex(ui->tabWidgetLeft->currentIndex()));
+    auto path = m_fileModelOpLeft->GetFilePath(m_fileModelOpLeft->GetTabModelIndex(getTabWidgetRight()->currentIndex()));
 
     if (path.isEmpty())
     {
@@ -501,13 +501,13 @@ void MainWindow::DeactivateDualPane()
 void MainWindow::DeactivateColumnView()
 {
     m_columnViewActive = false;
-    ui->stackedWidget->setCurrentIndex(0);
+    getStackedWidget()->setCurrentIndex(0);
 }
 
 void MainWindow::ActivateColumnView()
 {
     m_columnViewActive = true;
-    ui->stackedWidget->setCurrentIndex(1);
+    getStackedWidget()->setCurrentIndex(1);
     m_toolBarManager->SetBackButtonEnabled(true);
     m_toolBarManager->SetForwardButtonEnabled(true);
 }
@@ -546,10 +546,10 @@ void MainWindow::on_tabWidgetRight_tabBarClicked(int tabIndex)
 
 void MainWindow::on_tabWidgetLeft_tabCloseRequested(int index)
 {
-    if (ui->tabWidgetLeft->count() > 1)
+    if (getTabWidgetLeft()->count() > 1)
     {
         // move widget before closing current tab:
-        if (ui->tabWidgetLeft->currentIndex() == index)
+        if (getTabWidgetLeft()->currentIndex() == index)
         {
             if (index >= 1)
             {
@@ -561,13 +561,13 @@ void MainWindow::on_tabWidgetLeft_tabCloseRequested(int index)
             }
         }
 
-        ui->tabWidgetLeft->removeTab(index);
+        getTabWidgetLeft()->removeTab(index);
 
         m_treeManagerLeft->removeTabExpandedPaths(index);
         m_fileModelOpLeft->RemoveTabModelIndex(index);
 
-        m_tabManagerLeft->setPreviousLeftTabIndex(ui->tabWidgetLeft->currentIndex());
-        SetTabContent(ui->tabWidgetLeft->currentIndex(), false);
+        m_tabManagerLeft->setPreviousLeftTabIndex(getTabWidgetLeft()->currentIndex());
+        SetTabContent(getTabWidgetLeft()->currentIndex(), false);
 
         const int tabIndex = getTabWidgetLeft()->currentIndex();
         SetLabelText_(getFileModelOpLeft()->GetCurrentPath(tabIndex));
@@ -582,16 +582,16 @@ void MainWindow::on_tabWidgetLeft_tabCloseRequested(int index)
 
         // navigasyon sıfırlaması
         m_fileModelOpLeft->RemoveTabModelIndex(index);
-        updateNavButtons(ui->tabWidgetLeft->currentIndex());
+        updateNavButtons(getTabWidgetLeft()->currentIndex());
     }
 }
 
 void MainWindow::on_tabWidgetRight_tabCloseRequested(int index)
 {
-    if (ui->tabWidgetRight->count() > 1)
+    if (getTabWidgetRight()->count() > 1)
     {
         // move widget before closing current tab:
-        if (ui->tabWidgetRight->currentIndex() == index)
+        if (getTabWidgetRight()->currentIndex() == index)
         {
             if (index >= 1)
             {
@@ -603,13 +603,13 @@ void MainWindow::on_tabWidgetRight_tabCloseRequested(int index)
             }
         }
 
-        ui->tabWidgetRight->removeTab(index);
+        getTabWidgetRight()->removeTab(index);
 
         m_treeManagerRight->removeTabExpandedPaths(index);
         m_fileModelOpRight->RemoveTabModelIndex(index);
 
-        m_tabManagerRight->setPreviousLeftTabIndex(ui->tabWidgetRight->currentIndex());
-        SetTabContent(ui->tabWidgetRight->currentIndex(), true);
+        m_tabManagerRight->setPreviousLeftTabIndex(getTabWidgetRight()->currentIndex());
+        SetTabContent(getTabWidgetRight()->currentIndex(), true);
 
         const int tabIndex = getTabWidgetRight()->currentIndex();
         SetLabelText_(getFileModelOpRight()->GetCurrentPath(tabIndex));
@@ -624,21 +624,21 @@ void MainWindow::on_tabWidgetRight_tabCloseRequested(int index)
 
         // navigasyon sıfırlaması
         m_fileModelOpLeft->RemoveTabModelIndex(index);
-        updateNavButtons(ui->tabWidgetLeft->currentIndex());
+        updateNavButtons(getTabWidgetRight()->currentIndex());
     }
 }
 
 
 void MainWindow::on_fileTreeViewLeft_clicked(const QModelIndex &modelIndex)
 {
-    int const tabIndex = ui->tabWidgetLeft->currentIndex();
+    int const tabIndex = getTabWidgetLeft()->currentIndex();
     m_treeManagerLeft->navigateToFolder(modelIndex, tabIndex);
 
-    auto* fileModel = m_fileModelOpLeft->GetFileModel();
+    auto* fileModel = getFileModelOpLeft()->GetFileModel();
     // girilen yer klasör ise table view set edilir:
     if (fileModel->hasChildren(modelIndex))
     {
-        ui->tableViewLeft->setRootIndex(modelIndex);
+        getTableViewLeft()->setRootIndex(modelIndex);
     }
 
     // buton kontrolü:
@@ -647,14 +647,14 @@ void MainWindow::on_fileTreeViewLeft_clicked(const QModelIndex &modelIndex)
 
 void MainWindow::on_fileTreeViewRight_clicked(const QModelIndex &modelIndex)
 {
-    int const tabIndex = ui->tabWidgetRight->currentIndex();
+    int const tabIndex = getTabWidgetRight()->currentIndex();
     m_treeManagerRight->navigateToFolder(modelIndex, tabIndex);
 
-    auto* fileModel = m_fileModelOpRight->GetFileModel();
+    auto* fileModel = getFileModelOpRight()->GetFileModel();
     // girilen yer klasör ise table view set edilir:
     if (fileModel->hasChildren(modelIndex))
     {
-        ui->tableViewRight->setRootIndex(modelIndex);
+        getTableViewRight()->setRootIndex(modelIndex);
     }
 
     // buton kontrolü:
@@ -665,16 +665,16 @@ void MainWindow::on_tableViewLeft_doubleClicked(const QModelIndex &modelIndex)
 {
     const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
 
-    m_tableManagerLeft->navigateToFolder(ui->tabWidgetLeft->currentIndex(), firstColumnIndex);
+    m_tableManagerLeft->navigateToFolder(getTabWidgetLeft()->currentIndex(), firstColumnIndex);
 
     m_treeManagerLeft->ExpandTreeView(firstColumnIndex);
 
-    const auto tabIndex = ui->tabWidgetLeft->currentIndex();
+    const auto tabIndex = getTabWidgetLeft()->currentIndex();
 
     // buton kontrolü:
     updateNavButtons(tabIndex);
 
-    const auto& path = static_cast<QFileSystemModel*>(ui->fileTreeViewLeft->model())->filePath(firstColumnIndex);
+    const auto& path = static_cast<QFileSystemModel*>(getTreeViewLeft()->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
 }
 
@@ -682,16 +682,16 @@ void MainWindow::on_tableViewRight_doubleClicked(const QModelIndex &modelIndex)
 {
     const auto firstColumnIndex = modelIndex.siblingAtColumn(0); // her zaman ilk sütunu al
 
-    m_tableManagerRight->navigateToFolder(ui->tabWidgetRight->currentIndex(), firstColumnIndex);
+    m_tableManagerRight->navigateToFolder(getTabWidgetRight()->currentIndex(), firstColumnIndex);
 
     m_treeManagerRight->ExpandTreeView(firstColumnIndex);
 
-    const auto tabIndex = ui->tabWidgetRight->currentIndex();
+    const auto tabIndex = getTabWidgetRight()->currentIndex();
 
     // buton kontrolü:
     updateNavButtons(tabIndex);
 
-    const auto& path = static_cast<QFileSystemModel*>(ui->fileTreeViewRight->model())->filePath(firstColumnIndex);
+    const auto& path = static_cast<QFileSystemModel*>(getTreeViewRight()->model())->filePath(firstColumnIndex);
     SetLabelText_(path);
 }
 
