@@ -59,6 +59,7 @@ qt_add_executable(File-Manager
     .clang-format
     .clang-tidy
     include/EventHandler.h
+    include/FM_Macros.hpp
 )
 
 qt_add_resources(RESOURCE_SOURCES
