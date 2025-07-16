@@ -23,7 +23,7 @@ signals:
 private slots:
     void onTableDoubleClicked(const QModelIndex &modelIndex);
     void onContextMenuRequested(const QPoint &pos);
-    void callWin32OpenWithMenu(QModelIndex index);
+    void call_Win32_OpenWithMenu(QModelIndex index);
 
 public:
     void setTableToDefault();

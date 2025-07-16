@@ -63,7 +63,7 @@ void TableManager::onContextMenuRequested(const QPoint &pos)
 
     QMenu contextMenu;
     contextMenu.addAction("open with", this, [this, &index](){
-        callWin32OpenWithMenu(index);
+        call_Win32_OpenWithMenu(index);
     });
     contextMenu.addSeparator();
     contextMenu.addAction("action1", this, &TableManager::setTableToDefault);
@@ -75,12 +75,11 @@ void TableManager::onContextMenuRequested(const QPoint &pos)
 
 }
 
-void TableManager::callWin32OpenWithMenu(QModelIndex index)
+void TableManager::call_Win32_OpenWithMenu(QModelIndex index)
 {
-    QString filePath = m_fileModelOp_->getFileModel()->filePath(index);
+    const QString filePath = m_fileModelOp_->getFileModel()->filePath(index);
 #ifdef Q_OS_WIN32
-    SHELLEXECUTEINFO sei;
-    ZeroMemory(&sei, sizeof(SHELLEXECUTEINFO));
+    SHELLEXECUTEINFO sei{};
     sei.cbSize = sizeof(SHELLEXECUTEINFO);
     sei.fMask = SEE_MASK_INVOKEIDLIST;
     sei.hwnd = nullptr;
@@ -90,7 +89,7 @@ void TableManager::callWin32OpenWithMenu(QModelIndex index)
 
     if (!ShellExecuteEx(&sei)) {
         // Hata işleme
-        DWORD err = GetLastError();
+        const DWORD err = GetLastError();
         qDebug() << "ShellExecuteEx failed with error:" << err;
     }
 #endif
