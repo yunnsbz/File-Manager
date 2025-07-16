@@ -18,6 +18,7 @@
 #include <QFileInfo>
 #include <QVector>
 #include <QWidget>
+#include <QMenu>
 
 FM_BEGIN_NAMESPACE
 
@@ -34,6 +35,9 @@ TableManager::TableManager(QTabWidget* tabWidget, QTableView* tableView, FileMod
     tableView->verticalHeader()->setDefaultSectionSize(10);
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
+    tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(tableView, &QTableView::customContextMenuRequested, this, &TableManager::onContextMenuRequested);
     connect(tableView, &QTableView::doubleClicked, this, &TableManager::onTableDoubleClicked);
 }
 
@@ -44,6 +48,23 @@ void TableManager::onTableDoubleClicked(const QModelIndex &modelIndex)
     navigateToFolder(m_tabWidget->currentIndex(), firstColumnIndex);
 
     emit tableDoubleClicked(modelIndex);
+}
+
+void TableManager::onContextMenuRequested(const QPoint &pos)
+{
+    QModelIndex index = m_tableView_->indexAt(pos);
+        if (!index.isValid())
+            return;
+
+        QMenu contextMenu;
+        contextMenu.addAction("action0", this, &TableManager::setTableToDefault);
+        contextMenu.addSeparator();
+        contextMenu.addAction("action1", this, &TableManager::setTableToDefault);
+        contextMenu.addSeparator();
+        contextMenu.addAction("action2", this, &TableManager::setTableToDefault);
+        contextMenu.addAction("action3", this, &TableManager::setTableToDefault);
+        contextMenu.addAction("action4", this, &TableManager::setTableToDefault);
+        contextMenu.exec(m_tableView_->viewport()->mapToGlobal(pos));
 }
 
 void TableManager::setTableToDefault()
