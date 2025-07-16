@@ -1,6 +1,11 @@
 #include "TableManager.h"
 #include "FileModelOperations.h"
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#include <shellapi.h>
+#endif
+
 #include <QFileSystemModel>
 #include <QUrl>
 #include <QDesktopServices>
@@ -53,18 +58,42 @@ void TableManager::onTableDoubleClicked(const QModelIndex &modelIndex)
 void TableManager::onContextMenuRequested(const QPoint &pos)
 {
     QModelIndex index = m_tableView_->indexAt(pos);
-        if (!index.isValid())
-            return;
+    if (!index.isValid())
+        return;
 
-        QMenu contextMenu;
-        contextMenu.addAction("action0", this, &TableManager::setTableToDefault);
-        contextMenu.addSeparator();
-        contextMenu.addAction("action1", this, &TableManager::setTableToDefault);
-        contextMenu.addSeparator();
-        contextMenu.addAction("action2", this, &TableManager::setTableToDefault);
-        contextMenu.addAction("action3", this, &TableManager::setTableToDefault);
-        contextMenu.addAction("action4", this, &TableManager::setTableToDefault);
-        contextMenu.exec(m_tableView_->viewport()->mapToGlobal(pos));
+    QMenu contextMenu;
+    contextMenu.addAction("open with", this, [this, &index](){
+        callWin32OpenWithMenu(index);
+    });
+    contextMenu.addSeparator();
+    contextMenu.addAction("action1", this, &TableManager::setTableToDefault);
+    contextMenu.addSeparator();
+    contextMenu.addAction("action2", this, &TableManager::setTableToDefault);
+    contextMenu.addAction("action3", this, &TableManager::setTableToDefault);
+    contextMenu.addAction("action4", this, &TableManager::setTableToDefault);
+    contextMenu.exec(m_tableView_->viewport()->mapToGlobal(pos));
+
+}
+
+void TableManager::callWin32OpenWithMenu(QModelIndex index)
+{
+    QString filePath = m_fileModelOp_->getFileModel()->filePath(index);
+#ifdef Q_OS_WIN32
+    SHELLEXECUTEINFO sei;
+    ZeroMemory(&sei, sizeof(SHELLEXECUTEINFO));
+    sei.cbSize = sizeof(SHELLEXECUTEINFO);
+    sei.fMask = SEE_MASK_INVOKEIDLIST;
+    sei.hwnd = nullptr;
+    sei.lpVerb = L"openas";
+    sei.lpFile = reinterpret_cast<LPCWSTR>(filePath.utf16());
+    sei.nShow = SW_SHOWNORMAL;
+
+    if (!ShellExecuteEx(&sei)) {
+        // Hata işleme
+        DWORD err = GetLastError();
+        qDebug() << "ShellExecuteEx failed with error:" << err;
+    }
+#endif
 }
 
 void TableManager::setTableToDefault()

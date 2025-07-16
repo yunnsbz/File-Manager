@@ -118,6 +118,7 @@ target_link_libraries(File-Manager
         Qt6::MultimediaWidgets
         FatCxx::CompileOptions
         qt_clang_warning_suppress
+        shell32
 )
 
 include(GNUInstallDirs)
