@@ -3,7 +3,7 @@
 A cross-platform file manager application built with **Qt** and **C++**.  
 This project aims to deliver a lightweight, modern, and extensible file manager for both **Windows** and **Linux** platforms.
 
-⚠️ This project is currently in its early development stage and is NOT stable.
+⚠️ This project is currently in its early development stage and is **NOT** stable.
 
 ## Preview 
 ![preview](https://github.com/yunnsbz/File-Manager/blob/master/preview.png)
